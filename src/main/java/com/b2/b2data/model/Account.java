@@ -70,9 +70,9 @@ public class Account extends Entry {
         if (!(o instanceof Account account))
             return false;
 
-        return Objects.equals(id, account.id)
-                && Objects.equals(name, account.name)
-                && Objects.equals(element, account.element)
+        return id.equals(account.id)
+                && name.equals(account.name)
+                && element.equals(account.element)
                 && Objects.equals(player, account.player);
     }
 
