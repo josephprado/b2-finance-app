@@ -40,7 +40,7 @@ public class Player extends Entry {
             return false;
 
         return isBank == player.isBank
-                && id.equals(player.id)
+                && Objects.equals(id, player.id)
                 && name.equals(player.name);
     }
 
