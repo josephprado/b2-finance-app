@@ -25,13 +25,11 @@ class ElementServiceTests {
 
     @Autowired
     private ElementService svc;
-    private int recordCount;
     private List<Element> initialState;
 
     @BeforeAll
     void setup() {
         initialState = svc.findAll();
-        recordCount = initialState.size();
         assert initialState.size() == 10;
     }
 
@@ -127,7 +125,7 @@ class ElementServiceTests {
 
         int count = svc.findAll().size();
         svc.delete(element);
-        assertEquals(count, recordCount+1);
+        assertEquals(count, initialState.size()+1);
     }
 
     @Tag("save")
@@ -170,7 +168,7 @@ class ElementServiceTests {
 
         int count = svc.findAll().size();
         svc.delete(element);
-        assertEquals(count, recordCount+1);
+        assertEquals(count, initialState.size()+1);
     }
 
     @Tag("save")
@@ -189,11 +187,12 @@ class ElementServiceTests {
     @DisplayName("can delete one element")
     @Test
     public void delete_test1() {
-        Element element = svc.findById(99);
+        int id = 99;
+        Element element = svc.findById(id);
 
         svc.delete(element);
 
-        Element result = svc.findById(element.getId());
+        Element result = svc.findById(id);
         svc.save(element);
         assertNull(result);
     }
@@ -205,7 +204,7 @@ class ElementServiceTests {
         svc.delete(new Element(-1234567890, "-delete-test-2"));
 
         int count = svc.findAll().size();
-        assertEquals(count, recordCount);
+        assertEquals(count, initialState.size());
     }
 
     @Tag("delete")

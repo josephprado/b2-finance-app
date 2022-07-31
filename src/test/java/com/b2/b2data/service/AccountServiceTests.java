@@ -29,13 +29,11 @@ class AccountServiceTests {
 
     @Autowired
     private PlayerService pSvc;
-    private int recordCount;
     private List<Account> initialState;
 
     @BeforeAll
     void setup() {
         initialState = svc.findAll();
-        recordCount = initialState.size();
         assert initialState.size() == 20;
     }
 
@@ -158,7 +156,7 @@ class AccountServiceTests {
 
         int count = svc.findAll().size();
         svc.delete(account);
-        assertEquals(count, recordCount+1);
+        assertEquals(count, initialState.size()+1);
     }
 
     @Tag("save")
@@ -202,7 +200,7 @@ class AccountServiceTests {
 
         int count = svc.findAll().size();
         svc.delete(account);
-        assertEquals(count, recordCount+1);
+        assertEquals(count, initialState.size()+1);
     }
 
     @Tag("save")
@@ -221,11 +219,12 @@ class AccountServiceTests {
     @DisplayName("can delete one account")
     @Test
     public void delete_test1() {
-        Account account = svc.findById("99");
+        String id = "99";
+        Account account = svc.findById(id);
 
         svc.delete(account);
 
-        Account result = svc.findById(account.getId());
+        Account result = svc.findById(id);
         svc.save(account);
         assertNull(result);
     }
@@ -237,7 +236,7 @@ class AccountServiceTests {
         svc.delete(new Account("1234567890", "-delete-test-2", eSvc.findById(99)));
 
         int count = svc.findAll().size();
-        assertEquals(count, recordCount);
+        assertEquals(count, initialState.size());
     }
 
     @Tag("delete")
