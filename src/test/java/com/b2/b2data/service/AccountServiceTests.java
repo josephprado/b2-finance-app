@@ -17,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 // allows @BeforeAll annotation
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-// resets the database after each test
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AccountServiceTests {
 
     @Autowired
