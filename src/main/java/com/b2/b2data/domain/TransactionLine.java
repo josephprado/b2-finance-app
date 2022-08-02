@@ -1,56 +1,34 @@
-package com.b2.b2data.model;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+package com.b2.b2data.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
 
-/**
- * Represents a single line of a parent {@link Transaction}
- */
 @Entity
 @Table(name = "gl_transaction_line")
 @IdClass(TransactionLineId.class)
-@NamedEntityGraphs({
-        @NamedEntityGraph(name = TransactionLine.WITH_PLAYER, attributeNodes = {@NamedAttributeNode("player")}),
-        @NamedEntityGraph(name = TransactionLine.WITH_ACCOUNT, attributeNodes = {@NamedAttributeNode("account")}),
-        @NamedEntityGraph(
-                name = TransactionLine.WITH_ALL_FIELDS,
-                attributeNodes = {
-                        @NamedAttributeNode(value = "account", subgraph = "account.all"),
-                        @NamedAttributeNode("player")
-                },
-                subgraphs = @NamedSubgraph(
-                        name = "account.all",
-                        attributeNodes = {@NamedAttributeNode("element"), @NamedAttributeNode("player")}
-                )
-        )
-})
 public class TransactionLine extends Entry {
 
-    public static final String WITH_PLAYER = "graph.transactionLine.player";
-    public static final String WITH_ACCOUNT = "graph.transactionLine.account";
-    public static final String WITH_ALL_FIELDS = "graph.transactionLine.all";
-
     @Id
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
-            name = "transaction_id",
+            name = "gl_transaction_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "fk__gl_transaction_line__gl_transaction_id"),
             nullable = false
     )
+    @NotNull
     private Transaction transaction;
 
     @Id
     @Column(name = "line_id")
-    private Integer lineId;
+    @NotNull
+    private Integer line;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
-            name = "account_id",
+            name = "gl_account_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "fk__gl_transaction_line__gl_account_id"),
             nullable = false
@@ -78,11 +56,9 @@ public class TransactionLine extends Entry {
     public TransactionLine() {
     }
 
-    public TransactionLine(Transaction transaction, Integer lineId,
-                           Account account, double amount) {
-
+    public TransactionLine(Transaction transaction, Integer line, Account account, double amount) {
         this.transaction = transaction;
-        this.lineId = lineId;
+        this.line = line;
         this.account = account;
         this.amount = amount;
     }
@@ -96,7 +72,7 @@ public class TransactionLine extends Entry {
             return false;
         return Double.compare(that.amount, amount) == 0
                 && transaction.equals(that.transaction)
-                && lineId.equals(that.lineId)
+                && line.equals(that.line)
                 && account.equals(that.account)
                 && Objects.equals(player, that.player)
                 && Objects.equals(memo, that.memo)
@@ -105,23 +81,22 @@ public class TransactionLine extends Entry {
 
     @Override
     public int hashCode() {
-        return Objects.hash(transaction, lineId, account, player, amount, memo, dateReconciled);
+        return Objects.hash(transaction, line, account, player, amount, memo, dateReconciled);
     }
 
     @Override
     public String toString() {
         return "TransactionLine{" +
                 "transaction=" + transaction.getId() +
-                ", lineId=" + lineId +
-                ", account=" + account.getId() +
-                ", player=" + player.getId() +
+                ", line=" + line +
+                ", account=" + account.getName() +
+                ", player=" + (player != null ? player.getName() : "null") +
                 ", amount=" + amount +
                 ", memo='" + memo + '\'' +
                 ", dateReconciled=" + dateReconciled +
                 '}';
     }
 
-    @JsonBackReference
     public Transaction getTransaction() {
         return transaction;
     }
@@ -130,15 +105,14 @@ public class TransactionLine extends Entry {
         this.transaction = transaction;
     }
 
-    public Integer getLineId() {
-        return lineId;
+    public Integer getLine() {
+        return line;
     }
 
-    public void setLineId(Integer lineId) {
-        this.lineId = lineId;
+    public void setLine(Integer line) {
+        this.line = line;
     }
 
-    @JsonBackReference
     public Account getAccount() {
         return account;
     }
@@ -147,7 +121,6 @@ public class TransactionLine extends Entry {
         this.account = account;
     }
 
-    @JsonBackReference
     public Player getPlayer() {
         return player;
     }

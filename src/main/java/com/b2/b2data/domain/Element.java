@@ -1,29 +1,32 @@
-package com.b2.b2data.model;
+package com.b2.b2data.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-/**
- * Represents an accounting element (e.g., Asset, Liability, etc.)
- */
 @Entity
 @Table(name = "element")
 public class Element extends Entry {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "number", unique = true, nullable = false)
+    @NotNull
+    private Integer number;
+
+    @Column(name = "name", unique = true, nullable = false)
     @NotBlank
     private String name;
 
     public Element() {
     }
 
-    public Element(Integer id, String name) {
-        this.id = id;
+    public Element(Integer number, String name) {
+        this.number = number;
         this.name = name;
     }
 
@@ -35,18 +38,21 @@ public class Element extends Entry {
         if (!(o instanceof Element element))
             return false;
 
-        return id.equals(element.id) && name.equals(element.name);
+        return Objects.equals(id, element.id)
+                && number.equals(element.number)
+                && name.equals(element.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, number, name);
     }
 
     @Override
     public String toString() {
         return "Element{" +
                 "id=" + id +
+                ", number=" + number +
                 ", name='" + name + '\'' +
                 '}';
     }
@@ -57,6 +63,14 @@ public class Element extends Entry {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public String getName() {

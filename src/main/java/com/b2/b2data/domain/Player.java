@@ -1,12 +1,10 @@
-package com.b2.b2data.model;
+package com.b2.b2data.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-/**
- * Represents a person, company, or other entity (such as a vendor, bank, customer, etc.)
- */
 @Entity
 @Table(name = "player")
 public class Player extends Entry {
@@ -14,13 +12,14 @@ public class Player extends Entry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", unique = true, nullable = false)
     @NotBlank
     private String name;
 
     @Column(name = "is_bank", nullable = false)
+    @NotNull
     private boolean isBank;
 
     public Player() {
@@ -58,11 +57,11 @@ public class Player extends Entry {
                 '}';
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
