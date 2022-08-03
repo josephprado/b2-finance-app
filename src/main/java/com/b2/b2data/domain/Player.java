@@ -38,9 +38,9 @@ public class Player extends Entry {
         if (!(o instanceof Player player))
             return false;
 
-        return isBank == player.isBank
-                && Objects.equals(id, player.id)
-                && name.equals(player.name);
+        return Objects.equals(id, player.id)
+                && name.equals(player.name)
+                && isBank == player.isBank;
     }
 
     @Override
