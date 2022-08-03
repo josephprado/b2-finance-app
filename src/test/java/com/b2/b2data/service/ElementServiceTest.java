@@ -78,13 +78,6 @@ public class ElementServiceTest {
             Element element = svc.findByNumber(1234567890);
             assertNull(element);
         }
-
-        @DisplayName("search for null number returns null")
-        @Test
-        public void findByNumber_test3() {
-            Element element = svc.findByNumber(null);
-            assertNull(element);
-        }
     }
 
     /**

@@ -23,7 +23,7 @@ public class ElementService {
         return REPO.findById(id).orElse(null);
     }
 
-    public Element findByNumber(Integer number) {
+    public Element findByNumber(int number) {
         return REPO.findByNumber(number).orElse(null);
     }
 
