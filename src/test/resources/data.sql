@@ -21,7 +21,7 @@ VALUES
 ('Bank of America', true), -- 2
 ('US Bank', true),         -- 3
 ('Vanguard', true),        -- 4
-('M1 Finance', true),      -- 5
+('McDonald\'s', false),    -- 5
 ('Walmart', false),        -- 6
 ('Target', false),         -- 7
 ('Costco', false),         -- 8
