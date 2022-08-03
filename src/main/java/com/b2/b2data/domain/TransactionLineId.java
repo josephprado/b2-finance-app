@@ -11,6 +11,11 @@ public class TransactionLineId implements Serializable {
     public TransactionLineId() {
     }
 
+    public TransactionLineId(Integer transaction, Integer line) {
+        this.transaction = transaction;
+        this.line = line;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
