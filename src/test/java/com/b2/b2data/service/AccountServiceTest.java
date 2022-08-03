@@ -5,12 +5,15 @@ import com.b2.b2data.domain.Element;
 import com.b2.b2data.domain.Player;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -157,19 +160,27 @@ public class AccountServiceTest {
     public class FindAllByElement {
 
         @DisplayName("can find all by element")
-        @Test
-        public void findAllByElement_test1() {
-            Element element = eSvc.findById(1);
+        @ParameterizedTest
+        @MethodSource("findAllByElement_test1_generator")
+        public void findAllByElement_test1(int elementId, int expectedCount) {
+            Element element = eSvc.findById(elementId);
             int count = svc.findAll(element).size();
-            assertEquals(count, 2);
+            assertEquals(count, expectedCount);
         }
 
-        @DisplayName("can find all by element (2)")
-        @Test
-        public void findAllByElement_test2() {
-            Element element = eSvc.findById(2);
-            int count = svc.findAll(element).size();
-            assertEquals(count, 1);
+        private static Stream<Arguments> findAllByElement_test1_generator() {
+            return Stream.of(
+                    Arguments.of(1, 2),
+                    Arguments.of(2, 1),
+                    Arguments.of(3, 1),
+                    Arguments.of(4, 2),
+                    Arguments.of(5, 2),
+                    Arguments.of(6, 2),
+                    Arguments.of(7, 0),
+                    Arguments.of(8, 0),
+                    Arguments.of(9, 0),
+                    Arguments.of(10, 0)
+            );
         }
     }
 
@@ -181,11 +192,27 @@ public class AccountServiceTest {
     public class FindAllByPlayer {
 
         @DisplayName("can find all by player")
-        @Test
-        public void findAllByPlayer_test1() {
-            Player player = pSvc.findById(1);
+        @ParameterizedTest
+        @MethodSource("findAllByPlayer_test1_generator")
+        public void findAllByPlayer_test1(Integer playerId, int expectedCount) {
+            Player player = pSvc.findById(playerId);
             int count = svc.findAll(player).size();
-            assertEquals(count, 1);
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllByPlayer_test1_generator() {
+            return Stream.of(
+                    Arguments.of(1, 1),
+                    Arguments.of(2, 1),
+                    Arguments.of(3, 0),
+                    Arguments.of(4, 0),
+                    Arguments.of(5, 0),
+                    Arguments.of(6, 0),
+                    Arguments.of(7, 0),
+                    Arguments.of(8, 0),
+                    Arguments.of(9, 0),
+                    Arguments.of(10, 0)
+            );
         }
 
         @DisplayName("can find all by player (2)")
