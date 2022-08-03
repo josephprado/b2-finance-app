@@ -87,8 +87,8 @@ public class Account extends Entry {
                 "id=" + id +
                 ", number='" + number + '\'' +
                 ", name='" + name + '\'' +
-                ", element=" + element.getName() +
-                ", player=" + (player != null ? player.getName() : "null") +
+                ", element='" + element.getName() + '\'' +
+                ", player='" + (player != null ? player.getName() : "null") + '\'' +
                 '}';
     }
 

@@ -89,8 +89,8 @@ public class TransactionLine extends Entry {
         return "TransactionLine{" +
                 "transaction=" + transaction.getId() +
                 ", line=" + line +
-                ", account=" + account.getName() +
-                ", player=" + (player != null ? player.getName() : "null") +
+                ", account='" + account.getName() + '\'' +
+                ", player='" + (player != null ? player.getName() : "null") + '\'' +
                 ", amount=" + amount +
                 ", memo='" + memo + '\'' +
                 ", dateReconciled=" + dateReconciled +
