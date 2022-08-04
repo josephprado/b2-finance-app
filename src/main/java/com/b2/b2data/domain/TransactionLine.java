@@ -8,7 +8,55 @@ import java.util.Objects;
 @Entity
 @Table(name = "gl_transaction_line")
 @IdClass(TransactionLineId.class)
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = TransactionLine.WITH_ALL,
+                attributeNodes = {
+                        @NamedAttributeNode(value = "transaction"),
+                        @NamedAttributeNode(value = "account", subgraph = "account.all"),
+                        @NamedAttributeNode(value = "player")
+                },
+                subgraphs = {
+                        @NamedSubgraph(
+                                name = "account.all",
+                                attributeNodes = {@NamedAttributeNode("element"), @NamedAttributeNode("player")}
+                        )
+                }),
+        @NamedEntityGraph(
+                name = TransactionLine.WITHOUT_TRANSACTION,
+                attributeNodes = {
+                        @NamedAttributeNode(value = "account", subgraph = "account.all"),
+                        @NamedAttributeNode(value = "player")
+                },
+                subgraphs = {
+                        @NamedSubgraph(
+                                name = "account.all",
+                                attributeNodes = {@NamedAttributeNode("element"), @NamedAttributeNode("player")}
+                        )
+                }),
+        @NamedEntityGraph(
+                name = TransactionLine.WITHOUT_ACCOUNT,
+                attributeNodes = {@NamedAttributeNode(value = "transaction"), @NamedAttributeNode("player")}
+        ),
+        @NamedEntityGraph(
+                name = TransactionLine.WITHOUT_PLAYER,
+                attributeNodes = {
+                        @NamedAttributeNode(value = "transaction"),
+                        @NamedAttributeNode(value = "account", subgraph = "account.all")
+                },
+                subgraphs = {
+                        @NamedSubgraph(
+                                name = "account.all",
+                                attributeNodes = {@NamedAttributeNode("element"), @NamedAttributeNode("player")}
+                        )
+                })
+})
 public class TransactionLine extends Entry {
+
+    public static final String WITH_ALL = "graph.transactionLine.all";
+    public static final String WITHOUT_TRANSACTION = "graph.transactionLine.withoutTransaction";
+    public static final String WITHOUT_ACCOUNT = "graph.transactionLine.withoutAccount";
+    public static final String WITHOUT_PLAYER = "graph.transactionLine.withoutPlayer";
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -70,9 +118,10 @@ public class TransactionLine extends Entry {
 
         if (!(o instanceof TransactionLine that))
             return false;
-        return Double.compare(that.amount, amount) == 0
-                && transaction.equals(that.transaction)
+
+        return transaction.equals(that.transaction)
                 && line.equals(that.line)
+                && Double.compare(that.amount, amount) == 0
                 && account.equals(that.account)
                 && Objects.equals(player, that.player)
                 && Objects.equals(memo, that.memo)

@@ -3,8 +3,6 @@ package com.b2.b2data.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,22 +21,12 @@ public class Transaction extends Entry {
     @Column(name = "memo")
     private String memo;
 
-    @OneToMany(
-            mappedBy = "transaction",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @NotNull
-    private List<TransactionLine> lines;
-
     public Transaction() {
     }
 
     public Transaction(LocalDate date, String memo) {
         this.date = date;
         this.memo = memo;
-        this.lines = new ArrayList<>();
     }
 
     @Override
@@ -51,13 +39,12 @@ public class Transaction extends Entry {
 
         return Objects.equals(id, that.id)
                 && date.equals(that.date)
-                && Objects.equals(memo, that.memo)
-                && lines.equals(that.lines);
+                && Objects.equals(memo, that.memo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, memo, lines);
+        return Objects.hash(id, date, memo);
     }
 
     @Override
@@ -66,7 +53,6 @@ public class Transaction extends Entry {
                 "id=" + id +
                 ", date=" + date +
                 ", memo='" + memo + '\'' +
-                ", lines=" + lines.stream().map(TransactionLine::getLine) +
                 '}';
     }
 
@@ -92,13 +78,5 @@ public class Transaction extends Entry {
 
     public void setMemo(String memo) {
         this.memo = memo;
-    }
-
-    public List<TransactionLine> getLines() {
-        return lines;
-    }
-
-    public void setLines(List<TransactionLine> lines) {
-        this.lines = lines;
     }
 }

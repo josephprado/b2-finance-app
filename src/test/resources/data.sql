@@ -61,30 +61,30 @@ VALUES
 INSERT INTO gl_transaction_line
 (gl_transaction_id, line_id, gl_account_id, player_id, amount, memo, date_reconciled)
 VALUES
-(1, 1, 7, 6, 100, 'memo', NULL),
-(1, 2, 7, 6, 50, 'memo', NULL),
-(1, 3, 7, 6, 25, 'memo', NULL),
-(1, 4, 1, 6, -175, 'memo', NULL),
+(1, 1, 7, 6, 100, '1-memo', NULL),
+(1, 2, 7, 6, 50, '2-memo', NULL),
+(1, 3, 7, 6, 25, '3-memo', NULL),
+(1, 4, 1, 6, -175, '4-memo', NULL),
 
-(2, 1, 8, 9, 100, 'memo', NULL),
-(2, 2, 8, 9, 200, 'memo', NULL),
-(2, 3, 8, 9, 300, 'memo', NULL),
-(2, 4, 2, 9, -600, 'memo', NULL),
+(2, 1, 8, 9, 100, '1.memo', NULL),
+(2, 2, 8, 9, 200, '2.memo', NULL),
+(2, 3, 8, 9, 300, '3.memo', NULL),
+(2, 4, 2, 9, -600, '4.memo', NULL),
 
-(3, 1, 1, 1, 300, 'memo', NULL),
-(3, 2, 5, 1, -300, 'memo', NULL),
+(3, 1, 1, 1, 300, 'memo-1', NULL),
+(3, 2, 5, 1, -300, 'memo-2', NULL),
 
-(4, 1, 2, 2, 400, 'memo', NULL),
-(4, 2, 6, 2, -400, 'memo', NULL),
+(4, 1, 2, 2, 400, 'memo.1', NULL),
+(4, 2, 6, 2, -400, 'memo.2', NULL),
 
-(5, 1, 7, 6, 500, 'memo', NULL),
-(5, 2, 1, 6, -500, 'memo', NULL),
+(5, 1, 7, 6, 500, 'me1mo', NULL),
+(5, 2, 1, 6, -500, 'me2mo', NULL),
 
-(6, 1, 7, 6, 600, 'memo', NULL),
-(6, 2, 1, 6, -600, 'memo', NULL),
+(6, 1, 7, 6, 600, 'me-1-mo', NULL),
+(6, 2, 1, 6, -600, 'me-2-mo', NULL),
 
-(7, 1, 7, 6, 700, 'memo', NULL),
-(7, 2, 1, 6, -700, 'memo', NULL),
+(7, 1, 7, 6, 700, '1memo1', NULL),
+(7, 2, 1, 6, -700, '2memo2', NULL),
 
 (8, 1, 7, 6, 800, 'memo', NULL),
 (8, 2, 1, 6, -800, 'memo', NULL),
