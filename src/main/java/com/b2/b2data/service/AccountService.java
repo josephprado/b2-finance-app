@@ -1,92 +1,59 @@
 package com.b2.b2data.service;
 
-import com.b2.b2data.model.Element;
-import com.b2.b2data.model.Player;
-import com.b2.b2data.repository.AccountDAO;
-import com.b2.b2data.model.Account;
+import com.b2.b2data.domain.Account;
+import com.b2.b2data.domain.Element;
+import com.b2.b2data.domain.Player;
+import com.b2.b2data.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Provides services for manipulating {@link Account} records
- */
 @Service
 public class AccountService {
 
-    private final AccountDAO DAO;
+    private final AccountRepository REPO;
 
     @Autowired
-    public AccountService(AccountDAO DAO) {
-        this.DAO = DAO;
+    public AccountService(AccountRepository repo) {
+        REPO = repo;
     }
 
-    /**
-     * Finds the account with the given id
-     *
-     * @param id The id of an account
-     * @return The account with the given id, or null if it does not exist
-     */
-    public Account findById(String id) {
-        return DAO.findById(id).orElse(null);
+    public Account findById(int id) {
+        return REPO.findById(id).orElse(null);
     }
 
-    /**
-     * Finds the account with the given name
-     *
-     * @param name The name of an account
-     * @return The account with the given name, or null if it does not exist
-     */
+    public Account findByNumber(String number) {
+        return REPO.findByNumber(number).orElse(null);
+    }
+
     public Account findByName(String name) {
-        return DAO.findByName(name).orElse(null);
+        return REPO.findByName(name).orElse(null);
     }
 
-    /**
-     * Finds all accounts in the database
-     *
-     * @return A list of accounts ordered by id
-     */
     public List<Account> findAll() {
-        return DAO.findAllByOrderById();
+        return REPO.findAllByOrderByNumber();
     }
 
-    /**
-     * Finds all accounts with the given element
-     *
-     * @param element An element
-     * @return A list of all accounts with the given element, sorted by id
-     */
     public List<Account> findAll(Element element) {
-        return DAO.findAllByElementOrderById(element);
+        return REPO.findAllByElementOrderByNumber(element);
     }
 
-    /**
-     * Finds all accounts with the given player
-     *
-     * @param player A player
-     * @return A list of all accounts with the given player, sorted by id
-     */
     public List<Account> findAll(Player player) {
-        return DAO.findAllByPlayerOrderById(player);
+        return REPO.findAllByPlayerOrderByNumber(player);
     }
 
-    /**
-     * Saves the account to the database
-     *
-     * @param account An account to save
-     * @return The saved account
-     */
+    @Transactional
+    @Modifying
     public Account save(Account account) {
-        return DAO.save(account);
+        return REPO.save(account);
     }
 
-    /**
-     * Deletes the given account
-     *
-     * @param account An account to delete
-     */
+    @Transactional
+    @Modifying
     public void delete(Account account) {
-        DAO.delete(account);
+        REPO.delete(account);
     }
 }

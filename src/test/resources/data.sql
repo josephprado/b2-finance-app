@@ -1,74 +1,99 @@
 USE b2_test;
 
 INSERT INTO element
-(id, name, created_at, created_by)
+(number, name)
 VALUES
-(1, 'Asset', CURRENT_DATE, 'DBA'),
-(2, 'Liability', CURRENT_DATE, 'DBA'),
-(3, 'Equity', CURRENT_DATE, 'DBA'),
-(4, 'Income', CURRENT_DATE, 'DBA'),
-(5, 'Expense', CURRENT_DATE, 'DBA'),
-(6, 'Accumulated Other Comprehensive Income', CURRENT_DATE, 'DBA'),
-(0, 'Statistic', CURRENT_DATE, 'DBA'),
-(99, 'TEST', CURRENT_DATE, 'DBA'),
-(999, ' `1234567890-=~!@#$%^&*()_+[]\\{}|;\':",./<>?`', CURRENT_DATE, 'DBA'),
-(-1, 'Other', CURRENT_DATE, 'DBA');
+(1, 'Asset'),
+(2, 'Liability'),
+(3, 'Equity'),
+(4, 'Income'),
+(5, 'Expense'),
+(6, 'Accumulated Other Comprehensive Income'),
+(0, 'ZERO'),
+(99, 'NINETY-NINE'),
+(999, 'NINE-NINETY-NINE'),
+(-1, 'NEGATIVE-ONE');
 
 INSERT INTO player
-(name, is_bank, created_at, created_by)
+(name, is_bank)
 VALUES
-('McDonald\'s', FALSE, CURRENT_DATE, 'DBA'),    -- 1
-('Target', FALSE, CURRENT_DATE, 'DBA'),         -- 2
-('Costco', FALSE, CURRENT_DATE, 'DBA'),         -- 3
-('Chase Bank', TRUE, CURRENT_DATE, 'DBA'),      -- 4
-('US Bank', TRUE, CURRENT_DATE, 'DBA'),         -- 5
-('Bank of America', TRUE, CURRENT_DATE, 'DBA'), -- 6
-('Google', FALSE, CURRENT_DATE, 'DBA'),         -- 7
-('King County', FALSE, CURRENT_DATE, 'DBA'),    -- 8
-(' `1234567890-=~!@#$%^&*()_+[]\\{}|;\':",./<>?`', TRUE, CURRENT_DATE, 'DBA'); --9
+('Chase Bank', true),      -- 1
+('Bank of America', true), -- 2
+('US Bank', true),         -- 3
+('Vanguard', true),        -- 4
+('McDonald\'s', false),    -- 5
+('Walmart', false),        -- 6
+('Target', false),         -- 7
+('Costco', false),         -- 8
+('Amazon', false),         -- 9
+('99', false);             -- 10
 
 INSERT INTO gl_account
-(id, player_id, element_id, name, created_at, created_by)
+(number, name, element_id, player_id)
 VALUES
-('1000', NULL, 1, 'Cash', CURRENT_DATE, 'DBA'),
-('1001', 4, 1, 'Chase Checking', CURRENT_DATE, 'DBA'),
-('1002', 4, 1, 'Chase Savings', CURRENT_DATE, 'DBA'),
-('1003', 5, 1, 'USB Checking', CURRENT_DATE, 'DBA'),
-('1004', 6, 1, 'BOA Checking', CURRENT_DATE, 'DBA'),
-('2000', NULL, 2, 'Accounts Payable', CURRENT_DATE, 'DBA'),
-('2010', 4, 2, 'USB Mortgage', CURRENT_DATE, 'DBA'),
-('4000', NULL, 4, 'Wages & Salaries', CURRENT_DATE, 'DBA'),
-('4001', NULL, 4, 'Payroll Tax', CURRENT_DATE, 'DBA'),
-('4010', NULL, 4, 'Interest Income', CURRENT_DATE, 'DBA'),
-('5000', NULL, 5, 'Property Tax', CURRENT_DATE, 'DBA'),
-('5001', NULL, 5, 'Mortgage Principal', CURRENT_DATE, 'DBA'),
-('5002', NULL, 5, 'Mortgage Interest', CURRENT_DATE, 'DBA'),
-('5010', NULL, 5, 'Groceries', CURRENT_DATE, 'DBA'),
-('5011', NULL, 5, 'Dining Out', CURRENT_DATE, 'DBA'),
-('0', NULL, 5, 'Statistic', CURRENT_DATE, 'DBA'),
-('99', NULL, 5, 'TEST', CURRENT_DATE, 'DBA'),
-('999', NULL, 5, 'Other', CURRENT_DATE, 'DBA'),
-(' `1234567890-=~!@#$%^&*()_+[]\\{}|;\':",./<>?`', NULL, 5, 'ABC', CURRENT_DATE, 'DBA'),
-('ABC', NULL, 5, ' `1234567890-=~!@#$%^&*()_+[]\\{}|;\':",./<>?`', CURRENT_DATE, 'DBA');
+('1000', 'Checking', 1, 1),                -- 1
+('1001', 'Savings', 1, 2),                 -- 2
+('2000', 'Accounts Payable', 2, NULL),     -- 3
+('3000', 'Retained Earnings', 3, NULL),    -- 4
+('4000', 'Salary', 4, NULL),               -- 5
+('4001', 'Interest Income', 4, NULL),      -- 6
+('5000', 'Food', 5, NULL),                 -- 7
+('5001', 'Entertainment', 5, NULL),        -- 8
+('6000', 'Unrealized Gain/Loss', 6, NULL), -- 9
+('99', 'NINETY-NINE', 6, NULL);            -- 10
 
 INSERT INTO gl_transaction
-(date_entered, created_at, created_by)
+(date_entered, memo)
 VALUES
-('2022-06-25', CURRENT_DATE, 'DBA'), -- 1
-('2022-05-01', CURRENT_DATE, 'DBA'), -- 2
-('2022-05-01', CURRENT_DATE, 'DBA'), -- 3
-('2022-05-31', CURRENT_DATE, 'DBA'); -- 4
+('2022-01-31', 'memo-1'), -- 1
+('2022-02-28', 'memo_2'), -- 2
+('2022-03-31', 'memo.3'), -- 3
+('2022-04-30', 'memo:4'), -- 4
+('2022-05-31', '5-memo'), -- 5
+('2022-06-30', '6_memo'), -- 6
+('2022-08-31', '8.memo'), -- 7
+('2022-08-31', '8:memo'), -- 8
+('2022-09-30', '9memo9'), -- 9
+('2022-10-31', '0memo0'), -- 10
+('2022-11-30', 'me-mo'),  -- 11
+('2022-12-31', '99');     -- 12
 
 INSERT INTO gl_transaction_line
-(transaction_id, line_id, account_id, player_id, amount, memo, date_reconciled, created_at, created_by)
+(gl_transaction_id, line_id, gl_account_id, player_id, amount, memo, date_reconciled)
 VALUES
-(1, 1, '1001', 7, 2500, 'Salary', NULL, CURRENT_DATE, 'DBA'),
-(1, 2, '4000', 7, -3000, 'Salary', NULL, CURRENT_DATE, 'DBA'),
-(1, 3, '4001', 7, 500, 'Salary', NULL, CURRENT_DATE, 'DBA'),
-(2, 1, '5000', 8, 200, 'Property Tax', NULL, CURRENT_DATE, 'DBA'),
-(2, 2, '1001', 8, 200, 'Property Tax', NULL, CURRENT_DATE, 'DBA'),
-(3, 1, '5001', 5, 500, 'Mortgage Principal', NULL, CURRENT_DATE, 'DBA'),
-(3, 2, '5002', 5, 400, 'Mortgage Interest', NULL, CURRENT_DATE, 'DBA'),
-(3, 3, '1003', 5, -900, 'Mortgage', NULL, CURRENT_DATE, 'DBA'),
-(4, 1, '1000', 5, 10000, 'ABC', NULL, CURRENT_DATE, 'DBA'),
-(4, 2, '1000', 5, -10000, ' `1234567890-=~!@#$%^&*()_+[]\\{}|;\':",./<>?`', NULL, CURRENT_DATE, 'DBA');
+(1, 1, 7, 6, 100, '1-memo', NULL),
+(1, 2, 7, 6, 50, '2-memo', NULL),
+(1, 3, 7, 6, 25, '3-memo', NULL),
+(1, 4, 1, 6, -175, '4-memo', NULL),
+
+(2, 1, 8, 9, 100, '1.memo', NULL),
+(2, 2, 8, 9, 200, '2.memo', NULL),
+(2, 3, 8, 9, 300, '3.memo', NULL),
+(2, 4, 2, 9, -600, '4.memo', NULL),
+
+(3, 1, 1, 1, 300, 'memo-1', NULL),
+(3, 2, 5, 1, -300, 'memo-2', NULL),
+
+(4, 1, 2, 2, 400, 'memo.1', NULL),
+(4, 2, 6, 2, -400, 'memo.2', NULL),
+
+(5, 1, 7, 6, 500, 'me1mo', NULL),
+(5, 2, 1, 6, -500, 'me2mo', NULL),
+
+(6, 1, 7, 6, 600, 'me-1-mo', NULL),
+(6, 2, 1, 6, -600, 'me-2-mo', NULL),
+
+(7, 1, 7, 6, 700, '1memo1', NULL),
+(7, 2, 1, 6, -700, '2memo2', NULL),
+
+(8, 1, 7, 6, 800, 'memo', NULL),
+(8, 2, 1, 6, -800, 'memo', NULL),
+
+(9, 1, 7, 6, 900, 'memo', NULL),
+(9, 2, 1, 6, -900, 'memo', NULL),
+
+(10, 1, 7, 6, 1000, 'memo', NULL),
+(10, 2, 1, 6, -1000, 'memo', NULL),
+
+(11, 1, 7, 6, 1100, 'memo', NULL),
+(11, 2, 1, 6, -1100, 'memo', NULL);

@@ -1,37 +1,36 @@
-package com.b2.b2data.model;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+package com.b2.b2data.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-/**
- * Represents a general ledger account
- */
 @Entity
 @Table(name = "gl_account")
 @NamedEntityGraphs({
-        @NamedEntityGraph(name = Account.WITH_ELEMENT, attributeNodes = @NamedAttributeNode("element")),
-        @NamedEntityGraph(name = Account.WITH_PLAYER, attributeNodes =  @NamedAttributeNode("player")),
         @NamedEntityGraph(
-                name = Account.WITH_ALL_FIELDS,
+                name = Account.WITH_ALL,
                 attributeNodes = {@NamedAttributeNode("element"), @NamedAttributeNode("player")}
-        )
+        ),
+        @NamedEntityGraph(name = Account.WITH_ELEMENT, attributeNodes = @NamedAttributeNode("element")),
+        @NamedEntityGraph(name = Account.WITH_PLAYER, attributeNodes = @NamedAttributeNode("player"))
 })
 public class Account extends Entry {
 
+    public static final String WITH_ALL = "graph.account.all";
     public static final String WITH_ELEMENT = "graph.account.element";
     public static final String WITH_PLAYER = "graph.account.player";
-    public static final String WITH_ALL_FIELDS = "graph.account.all";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @NotBlank
-    private String id;
+    private Integer id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "number", unique = true, nullable = false)
+    @NotBlank
+    private String number;
+
+    @Column(name = "name", unique = true, nullable = false)
     @NotBlank
     private String name;
 
@@ -56,8 +55,8 @@ public class Account extends Entry {
     public Account() {
     }
 
-    public Account(String id, String name, Element element) {
-        this.id = id;
+    public Account(String number, String name, Element element) {
+        this.number = number;
         this.name = name;
         this.element = element;
     }
@@ -71,32 +70,42 @@ public class Account extends Entry {
             return false;
 
         return Objects.equals(id, account.id)
-                && Objects.equals(name, account.name)
-                && Objects.equals(element, account.element)
+                && number.equals(account.number)
+                && name.equals(account.name)
+                && element.equals(account.element)
                 && Objects.equals(player, account.player);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, element, player);
+        return Objects.hash(id, number, name, element, player);
     }
 
     @Override
     public String toString() {
         return "Account{" +
-                "id='" + id + '\'' +
+                "id=" + id +
+                ", number='" + number + '\'' +
                 ", name='" + name + '\'' +
-                ", element=" + element +
-                ", player=" + player +
+                ", element='" + element.getName() + '\'' +
+                ", player='" + (player != null ? player.getName() : "null") + '\'' +
                 '}';
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getName() {
@@ -107,7 +116,6 @@ public class Account extends Entry {
         this.name = name;
     }
 
-    @JsonBackReference
     public Element getElement() {
         return element;
     }
@@ -116,7 +124,6 @@ public class Account extends Entry {
         this.element = element;
     }
 
-    @JsonBackReference
     public Player getPlayer() {
         return player;
     }

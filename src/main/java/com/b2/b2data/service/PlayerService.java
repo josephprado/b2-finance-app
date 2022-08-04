@@ -1,70 +1,49 @@
 package com.b2.b2data.service;
 
-import com.b2.b2data.model.Player;
-import com.b2.b2data.repository.PlayerDAO;
+import com.b2.b2data.domain.Player;
+import com.b2.b2data.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Provides services for manipulating {@link Player} records
- */
 @Service
 public class PlayerService {
 
-    private final PlayerDAO DAO;
+    private final PlayerRepository REPO;
 
     @Autowired
-    public PlayerService(PlayerDAO DAO) {
-        this.DAO = DAO;
+    public PlayerService(PlayerRepository repo) {
+        REPO = repo;
     }
 
-    /**
-     * Finds the player with the given id
-     *
-     * @param id The id of a player
-     * @return The player with the given id, or null if it does not exist
-     */
-    public Player findById(long id) {
-        return DAO.findById(id).orElse(null);
+    public Player findById(int id) {
+        return REPO.findById(id).orElse(null);
     }
 
-    /**
-     * Finds the player with the given name
-     *
-     * @param name The name of a player
-     * @return The player with the given name, or null if it does not exist
-     */
     public Player findByName(String name) {
-        return DAO.findByName(name).orElse(null);
+        return REPO.findByName(name).orElse(null);
     }
 
-    /**
-     * Finds all players in the database
-     *
-     * @return A list of players ordered by id
-     */
     public List<Player> findAll() {
-        return DAO.findAllByOrderById();
+        return REPO.findAllByOrderByName();
     }
 
-    /**
-     * Saves the player to the database
-     *
-     * @param player A player to save
-     * @return The saved player
-     */
+    public List<Player> findAllBanks(boolean isBank) {
+        return REPO.findAllByIsBankOrderByName(isBank);
+    }
+
+    @Transactional
+    @Modifying
     public Player save(Player player) {
-        return DAO.save(player);
+        return REPO.save(player);
     }
 
-    /**
-     * Deletes the given player
-     *
-     * @param player A player to delete
-     */
+    @Transactional
+    @Modifying
     public void delete(Player player) {
-        DAO.delete(player);
+        REPO.delete(player);
     }
 }
