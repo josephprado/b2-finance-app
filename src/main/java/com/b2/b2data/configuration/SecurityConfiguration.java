@@ -14,12 +14,13 @@ public class SecurityConfiguration {
         // cross site request forgery
         // all methods resulting in data change (POST, DELETE, etc.) are blocked by default
         // by spring security; ignore for selected paths
-        http.csrf().ignoringAntMatchers("/h2-console/**");
+        http.csrf()
+                .ignoringAntMatchers("/h2-console/**")
+                .ignoringAntMatchers("/api/**");
 
-        // TODO: replace with .mvcMatchers(...).authenticated()/.permitAll() for each page
-        // for any request, require authentication
-        // default username is user, password is printed on console
-        http.authorizeHttpRequests().anyRequest().authenticated();
+        // specify authorization requirements for each request path
+        http.authorizeHttpRequests()/*.anyRequest().permitAll();*/
+                .mvcMatchers("/api/**").authenticated();
 
         // allows credentials via login form
         // use .loginPage(String loginPage) to use a custom login page
