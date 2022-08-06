@@ -43,7 +43,12 @@ public class ElementService {
 
     @Transactional
     @Modifying
-    public void delete(Element element) {
+    public boolean delete(Element element) {
+
+        if (!REPO.existsById(element.getId()))
+            return false;
+
         REPO.delete(element);
+        return !REPO.existsById(element.getId());
     }
 }

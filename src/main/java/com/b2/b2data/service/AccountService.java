@@ -53,7 +53,12 @@ public class AccountService {
 
     @Transactional
     @Modifying
-    public void delete(Account account) {
+    public boolean delete(Account account) {
+
+        if (!REPO.existsById(account.getId()))
+            return false;
+
         REPO.delete(account);
+        return !REPO.existsById(account.getId());
     }
 }

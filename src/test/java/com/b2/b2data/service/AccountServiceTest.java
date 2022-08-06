@@ -251,6 +251,20 @@ public class AccountServiceTest {
             svc.delete(account);
             assertTrue(saved);
         }
+
+        @DisplayName("can update one account")
+        @Test
+        public void save_test3() {
+            String number = "99";
+            Account account = svc.findByNumber(number);
+            String originalName = account.getName();
+            account.setName("-save-test-3-");
+            svc.save(account);
+            String newName = svc.findByNumber(number).getName();
+            account.setName(originalName);
+            svc.save(account);
+            assertNotEquals(newName, originalName);
+        }
     }
 
     /**
@@ -268,8 +282,7 @@ public class AccountServiceTest {
                     new Account(number, "-delete-test-1-", eSvc.findById(1))
             );
             assert svc.findByNumber(number) != null;
-            svc.delete(account);
-            boolean deleted = svc.findByNumber(number) == null;
+            boolean deleted = svc.delete(account);
             assertTrue(deleted);
         }
     }

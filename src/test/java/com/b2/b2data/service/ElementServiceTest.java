@@ -160,6 +160,20 @@ public class ElementServiceTest {
             svc.delete(element);
             assertTrue(saved);
         }
+
+        @DisplayName("can update one element")
+        @Test
+        public void save_test3() {
+            int number = 99;
+            Element element = svc.findByNumber(number);
+            String originalName = element.getName();
+            element.setName("-save-test-3-");
+            svc.save(element);
+            String newName = svc.findByNumber(number).getName();
+            element.setName(originalName);
+            svc.save(element);
+            assertNotEquals(newName, originalName);
+        }
     }
 
     /**
@@ -175,8 +189,7 @@ public class ElementServiceTest {
             int number = 1234567890;
             Element element = svc.save(new Element(number, "-delete-test-1-"));
             assert svc.findByNumber(number) != null;
-            svc.delete(element);
-            boolean deleted = svc.findByNumber(number) == null;
+            boolean deleted = svc.delete(element);
             assertTrue(deleted);
         }
     }

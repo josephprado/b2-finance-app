@@ -1,9 +1,6 @@
 package com.b2.b2data.service;
 
-import com.b2.b2data.domain.Account;
-import com.b2.b2data.domain.Player;
-import com.b2.b2data.domain.Transaction;
-import com.b2.b2data.domain.TransactionLine;
+import com.b2.b2data.domain.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -262,6 +259,21 @@ public class TransactionLineServiceTest {
             svc.delete(line);
             assertTrue(saved);
         }
+
+        @DisplayName("can update one line")
+        @Test
+        public void save_test3() {
+            int tranId = 11;
+            int lineId = 1;
+            TransactionLine line = svc.findById(tranId, lineId);
+            String originalMemo = line.getMemo();
+            line.setMemo("-save-test-3-");
+            svc.save(line);
+            String newMemo = svc.findById(tranId, lineId).getMemo();
+            line.setMemo(originalMemo);
+            svc.save(line);
+            assertNotEquals(newMemo, originalMemo);
+        }
     }
 
     /**
@@ -279,8 +291,7 @@ public class TransactionLineServiceTest {
             TransactionLine line =
                     svc.save(new TransactionLine(tSvc.findById(tranId), lineId, aSvc.findById(1), 100.00));
             assert svc.findById(tranId, lineId) != null;
-            svc.delete(line);
-            boolean deleted = svc.findById(tranId, lineId) == null;
+            boolean deleted = svc.delete(line);
             assertTrue(deleted);
         }
     }

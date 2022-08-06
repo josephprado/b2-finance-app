@@ -44,7 +44,12 @@ public class TransactionService {
 
     @Transactional
     @Modifying
-    public void delete(Transaction transaction) {
+    public boolean delete(Transaction transaction) {
+
+        if (!REPO.existsById(transaction.getId()))
+            return false;
+
         REPO.delete(transaction);
+        return !REPO.existsById(transaction.getId());
     }
 }

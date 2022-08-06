@@ -43,7 +43,12 @@ public class PlayerService {
 
     @Transactional
     @Modifying
-    public void delete(Player player) {
+    public boolean delete(Player player) {
+
+        if (!REPO.existsById(player.getId()))
+            return false;
+
         REPO.delete(player);
+        return !REPO.existsById(player.getId());
     }
 }

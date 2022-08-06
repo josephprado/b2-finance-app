@@ -158,6 +158,20 @@ public class PlayerServiceTest {
             svc.delete(player);
             assertTrue(saved);
         }
+
+        @DisplayName("can update one player")
+        @Test
+        public void save_test3() {
+            int id = 10;
+            Player player = svc.findById(id);
+            String originalName = player.getName();
+            player.setName("-save-test-3-");
+            svc.save(player);
+            String newName = svc.findById(id).getName();
+            player.setName(originalName);
+            svc.save(player);
+            assertNotEquals(newName, originalName);
+        }
     }
 
     /**
@@ -173,8 +187,7 @@ public class PlayerServiceTest {
             String name = "-delete-test-1-";
             Player player = svc.save(new Player(name, true));
             assert svc.findByName(name) != null;
-            svc.delete(player);
-            boolean deleted = svc.findByName(name) == null;
+            boolean deleted = svc.delete(player);
             assertTrue(deleted);
         }
     }

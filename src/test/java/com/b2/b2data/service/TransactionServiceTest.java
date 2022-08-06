@@ -153,6 +153,20 @@ public class TransactionServiceTest {
             svc.delete(transaction);
             assertTrue(saved);
         }
+
+        @DisplayName("can update one transaction")
+        @Test
+        public void save_test3() {
+            int id = 10;
+            Transaction transaction = svc.findById(id);
+            String originalMemo = transaction.getMemo();
+            transaction.setMemo("-save-test-3-");
+            svc.save(transaction);
+            String newMemo = svc.findById(id).getMemo();
+            transaction.setMemo(originalMemo);
+            svc.save(transaction);
+            assertNotEquals(newMemo, originalMemo);
+        }
     }
 
     /**
@@ -168,8 +182,7 @@ public class TransactionServiceTest {
             String memo = "-delete-test-1-";
             Transaction transaction = svc.save(new Transaction(LocalDate.now(), memo));
             assert svc.findAll(memo).size() == 1;
-            svc.delete(transaction);
-            boolean deleted = svc.findAll(memo).size() == 0;
+            boolean deleted = svc.delete(transaction);
             assertTrue(deleted);
         }
     }
