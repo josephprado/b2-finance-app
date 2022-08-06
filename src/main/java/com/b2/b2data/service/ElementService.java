@@ -45,7 +45,7 @@ public class ElementService {
     @Modifying
     public boolean delete(Element element) {
 
-        if (!REPO.existsById(element.getId()))
+        if (element == null || !REPO.existsById(element.getId()))
             return false;
 
         REPO.delete(element);

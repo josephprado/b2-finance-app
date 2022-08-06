@@ -55,7 +55,7 @@ public class AccountService {
     @Modifying
     public boolean delete(Account account) {
 
-        if (!REPO.existsById(account.getId()))
+        if (account == null || !REPO.existsById(account.getId()))
             return false;
 
         REPO.delete(account);

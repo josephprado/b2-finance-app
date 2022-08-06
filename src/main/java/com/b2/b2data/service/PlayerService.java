@@ -45,7 +45,7 @@ public class PlayerService {
     @Modifying
     public boolean delete(Player player) {
 
-        if (!REPO.existsById(player.getId()))
+        if (player == null || !REPO.existsById(player.getId()))
             return false;
 
         REPO.delete(player);

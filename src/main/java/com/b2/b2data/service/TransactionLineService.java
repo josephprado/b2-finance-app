@@ -53,7 +53,8 @@ public class TransactionLineService {
     @Modifying
     public boolean delete(TransactionLine line) {
 
-        if (!REPO.existsById(new TransactionLineId(line.getTransaction().getId(), line.getLine())))
+        if (line == null ||
+                !REPO.existsById(new TransactionLineId(line.getTransaction().getId(), line.getLine())))
             return false;
 
         REPO.delete(line);
