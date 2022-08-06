@@ -19,7 +19,7 @@ public class PlayerService {
         REPO = repo;
     }
 
-    public Player findById(int id) {
+    public Player findById(Integer id) {
         return REPO.findById(id).orElse(null);
     }
 
@@ -31,7 +31,7 @@ public class PlayerService {
         return REPO.findAllByOrderByName();
     }
 
-    public List<Player> findAllBanks(boolean isBank) {
+    public List<Player> findAllBanks(Boolean isBank) {
         return REPO.findAllByIsBankOrderByName(isBank);
     }
 

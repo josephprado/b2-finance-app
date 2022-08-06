@@ -19,11 +19,11 @@ public class ElementService {
         REPO = repo;
     }
 
-    public Element findById(int id) {
+    public Element findById(Integer id) {
         return REPO.findById(id).orElse(null);
     }
 
-    public Element findByNumber(int number) {
+    public Element findByNumber(Integer number) {
         return REPO.findByNumber(number).orElse(null);
     }
 

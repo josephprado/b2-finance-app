@@ -19,7 +19,7 @@ public class TransactionLineService {
         REPO = repo;
     }
 
-    public TransactionLine findById(int transactionId, int lineId) {
+    public TransactionLine findById(Integer transactionId, Integer lineId) {
         return REPO.findById(new TransactionLineId(transactionId, lineId)).orElse(null);
     }
 

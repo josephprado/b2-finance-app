@@ -12,5 +12,5 @@ public interface PlayerRepository extends PagingAndSortingRepository<Player,Inte
 
     Optional<Player> findByName(String name);
     List<Player> findAllByOrderByName();
-    List<Player> findAllByIsBankOrderByName(boolean isBank);
+    List<Player> findAllByIsBankOrderByName(Boolean isBank);
 }

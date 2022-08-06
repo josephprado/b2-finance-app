@@ -93,7 +93,8 @@ public class TransactionLine extends Entry {
     private Player player;
 
     @Column(name = "amount", nullable = false)
-    private double amount;
+    @NotNull
+    private Double amount;
 
     @Column(name = "memo")
     private String memo;
@@ -104,7 +105,7 @@ public class TransactionLine extends Entry {
     public TransactionLine() {
     }
 
-    public TransactionLine(Transaction transaction, Integer line, Account account, double amount) {
+    public TransactionLine(Transaction transaction, Integer line, Account account, Double amount) {
         this.transaction = transaction;
         this.line = line;
         this.account = account;
@@ -121,7 +122,7 @@ public class TransactionLine extends Entry {
 
         return transaction.equals(that.transaction)
                 && line.equals(that.line)
-                && Double.compare(that.amount, amount) == 0
+                && amount.equals(that.amount)
                 && account.equals(that.account)
                 && Objects.equals(player, that.player)
                 && Objects.equals(memo, that.memo)
@@ -178,11 +179,11 @@ public class TransactionLine extends Entry {
         this.player = player;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

@@ -20,12 +20,12 @@ public class Player extends Entry {
 
     @Column(name = "is_bank", nullable = false)
     @NotNull
-    private boolean isBank;
+    private Boolean isBank;
 
     public Player() {
     }
 
-    public Player(String name, boolean isBank) {
+    public Player(String name, Boolean isBank) {
         this.name = name;
         this.isBank = isBank;
     }
@@ -40,7 +40,7 @@ public class Player extends Entry {
 
         return Objects.equals(id, player.id)
                 && name.equals(player.name)
-                && isBank == player.isBank;
+                && isBank.equals(player.isBank);
     }
 
     @Override
@@ -73,11 +73,11 @@ public class Player extends Entry {
         this.name = name;
     }
 
-    public boolean isBank() {
+    public Boolean getBank() {
         return isBank;
     }
 
-    public void setBank(boolean bank) {
+    public void setBank(Boolean bank) {
         isBank = bank;
     }
 }

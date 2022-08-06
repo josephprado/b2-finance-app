@@ -20,7 +20,7 @@ public class TransactionService {
         REPO = repo;
     }
 
-    public Transaction findById(int id) {
+    public Transaction findById(Integer id) {
         return REPO.findById(id).orElse(null);
     }
 

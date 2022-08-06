@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface ElementRepository extends PagingAndSortingRepository<Element,Integer> {
 
-    Optional<Element> findByNumber(int number);
+    Optional<Element> findByNumber(Integer number);
     Optional<Element> findByName(String name);
     List<Element> findAllByOrderByNumber();
 }

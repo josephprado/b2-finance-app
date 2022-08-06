@@ -21,7 +21,7 @@ public class AccountService {
         REPO = repo;
     }
 
-    public Account findById(int id) {
+    public Account findById(Integer id) {
         return REPO.findById(id).orElse(null);
     }
 
