@@ -12,51 +12,73 @@ import java.util.Objects;
         @NamedEntityGraph(
                 name = TransactionLine.WITH_ALL,
                 attributeNodes = {
-                        @NamedAttributeNode(value = "transaction"),
-                        @NamedAttributeNode(value = "account", subgraph = "account.all"),
-                        @NamedAttributeNode(value = "player")
+                        @NamedAttributeNode(TransactionLine.TRANSACTION),
+                        @NamedAttributeNode(value = TransactionLine.ACCOUNT, subgraph = "account.all"),
+                        @NamedAttributeNode(TransactionLine.PLAYER)
                 },
                 subgraphs = {
                         @NamedSubgraph(
                                 name = "account.all",
-                                attributeNodes = {@NamedAttributeNode("element"), @NamedAttributeNode("player")}
+                                attributeNodes = {
+                                        @NamedAttributeNode(Account.ELEMENT),
+                                        @NamedAttributeNode(Account.PLAYER)
+                                }
                         )
                 }),
         @NamedEntityGraph(
                 name = TransactionLine.WITHOUT_TRANSACTION,
                 attributeNodes = {
-                        @NamedAttributeNode(value = "account", subgraph = "account.all"),
-                        @NamedAttributeNode(value = "player")
+                        @NamedAttributeNode(value = TransactionLine.ACCOUNT, subgraph = "account.all"),
+                        @NamedAttributeNode(TransactionLine.PLAYER)
                 },
                 subgraphs = {
                         @NamedSubgraph(
                                 name = "account.all",
-                                attributeNodes = {@NamedAttributeNode("element"), @NamedAttributeNode("player")}
+                                attributeNodes = {
+                                        @NamedAttributeNode(Account.ELEMENT),
+                                        @NamedAttributeNode(Account.PLAYER)
+                                }
                         )
                 }),
         @NamedEntityGraph(
                 name = TransactionLine.WITHOUT_ACCOUNT,
-                attributeNodes = {@NamedAttributeNode(value = "transaction"), @NamedAttributeNode("player")}
+                attributeNodes = {
+                        @NamedAttributeNode(TransactionLine.TRANSACTION),
+                        @NamedAttributeNode(TransactionLine.PLAYER)
+                }
         ),
         @NamedEntityGraph(
                 name = TransactionLine.WITHOUT_PLAYER,
                 attributeNodes = {
-                        @NamedAttributeNode(value = "transaction"),
-                        @NamedAttributeNode(value = "account", subgraph = "account.all")
+                        @NamedAttributeNode(TransactionLine.TRANSACTION),
+                        @NamedAttributeNode(value = TransactionLine.ACCOUNT, subgraph = "account.all")
                 },
                 subgraphs = {
                         @NamedSubgraph(
                                 name = "account.all",
-                                attributeNodes = {@NamedAttributeNode("element"), @NamedAttributeNode("player")}
+                                attributeNodes = {
+                                        @NamedAttributeNode(Account.ELEMENT),
+                                        @NamedAttributeNode(Account.PLAYER)
+                                }
                         )
                 })
 })
 public class TransactionLine extends Entry {
 
+    // entity graphs
     public static final String WITH_ALL = "graph.transactionLine.all";
     public static final String WITHOUT_TRANSACTION = "graph.transactionLine.withoutTransaction";
     public static final String WITHOUT_ACCOUNT = "graph.transactionLine.withoutAccount";
     public static final String WITHOUT_PLAYER = "graph.transactionLine.withoutPlayer";
+
+    // field names
+    public static final String TRANSACTION = "transaction";
+    public static final String LINE = "line";
+    public static final String ACCOUNT = "account";
+    public static final String PLAYER = "player";
+    public static final String AMOUNT = "amount";
+    public static final String MEMO = "memo";
+    public static final String DATE_RECONCILED = "dateReconciled";
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

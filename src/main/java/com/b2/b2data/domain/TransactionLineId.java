@@ -5,6 +5,10 @@ import java.util.Objects;
 
 public class TransactionLineId implements Serializable {
 
+    // field names
+    public static final String TRANSACTION = "transaction";
+    public static final String LINE = "line";
+
     private Integer transaction;
     private Integer line;
 

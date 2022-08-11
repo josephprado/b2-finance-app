@@ -9,6 +9,11 @@ import java.util.Objects;
 @Table(name = "player")
 public class Player extends Entry {
 
+    // field names
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String IS_BANK = "isBank";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

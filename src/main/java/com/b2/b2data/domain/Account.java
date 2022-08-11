@@ -10,16 +10,24 @@ import java.util.Objects;
 @NamedEntityGraphs({
         @NamedEntityGraph(
                 name = Account.WITH_ALL,
-                attributeNodes = {@NamedAttributeNode("element"), @NamedAttributeNode("player")}
+                attributeNodes = {@NamedAttributeNode(Account.ELEMENT), @NamedAttributeNode(Account.PLAYER)}
         ),
-        @NamedEntityGraph(name = Account.WITH_ELEMENT, attributeNodes = @NamedAttributeNode("element")),
-        @NamedEntityGraph(name = Account.WITH_PLAYER, attributeNodes = @NamedAttributeNode("player"))
+        @NamedEntityGraph(name = Account.WITH_ELEMENT, attributeNodes = @NamedAttributeNode(Account.ELEMENT)),
+        @NamedEntityGraph(name = Account.WITH_PLAYER, attributeNodes = @NamedAttributeNode(Account.PLAYER))
 })
 public class Account extends Entry {
 
+    // entity graphs
     public static final String WITH_ALL = "graph.account.all";
     public static final String WITH_ELEMENT = "graph.account.element";
     public static final String WITH_PLAYER = "graph.account.player";
+
+    // field names
+    public static final String ID = "id";
+    public static final String NUMBER = "number";
+    public static final String NAME = "name";
+    public static final String ELEMENT = "element";
+    public static final String PLAYER = "player";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

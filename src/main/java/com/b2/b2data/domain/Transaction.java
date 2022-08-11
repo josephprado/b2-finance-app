@@ -9,6 +9,11 @@ import java.util.Objects;
 @Table(name = "gl_transaction")
 public class Transaction extends Entry {
 
+    // field names
+    public static final String ID = "id";
+    public static final String DATE = "date";
+    public static final String MEMO = "memo";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
