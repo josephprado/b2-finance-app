@@ -1,8 +1,6 @@
 package com.b2.b2data.service;
 
 import com.b2.b2data.domain.Account;
-import com.b2.b2data.domain.Element;
-import com.b2.b2data.domain.Player;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -153,22 +151,21 @@ public class AccountServiceTest {
     }
 
     /**
-     * public List<Account> findAll(Element element)
+     * public List<Account> findAll(Integer element, String player, Boolean isBank)
      */
     @Nested
-    @DisplayName("FindAllByElement")
-    public class FindAllByElement {
+    @DisplayName("FindAllParams")
+    public class FindAllParams {
 
-        @DisplayName("can find all by element")
+        @DisplayName("can find all by element number")
         @ParameterizedTest
-        @MethodSource("findAllByElement_test1_generator")
-        public void findAllByElement_test1(int elementId, int expectedCount) {
-            Element element = eSvc.findById(elementId);
-            int count = svc.findAll(element).size();
+        @MethodSource("findAllParams_test1_generator")
+        public void findAllParams_test1(int element, int expectedCount) {
+            int count = svc.findAll(element, null, null).size();
             assertEquals(count, expectedCount);
         }
 
-        private static Stream<Arguments> findAllByElement_test1_generator() {
+        private static Stream<Arguments> findAllParams_test1_generator() {
             return Stream.of(
                     Arguments.of(1, 2),
                     Arguments.of(2, 1),
@@ -176,50 +173,73 @@ public class AccountServiceTest {
                     Arguments.of(4, 2),
                     Arguments.of(5, 2),
                     Arguments.of(6, 2),
-                    Arguments.of(7, 0),
-                    Arguments.of(8, 0),
-                    Arguments.of(9, 0),
-                    Arguments.of(10, 0)
+                    Arguments.of(0, 0),
+                    Arguments.of(99, 0),
+                    Arguments.of(999, 0),
+                    Arguments.of(-1, 0)
             );
         }
-    }
 
-    /**
-     *  public List<Account> findAll(Player player)
-     */
-    @Nested
-    @DisplayName("FindAllByPlayer")
-    public class FindAllByPlayer {
-
-        @DisplayName("can find all by player")
+        @DisplayName("can find all by player name")
         @ParameterizedTest
-        @MethodSource("findAllByPlayer_test1_generator")
-        public void findAllByPlayer_test1(Integer playerId, int expectedCount) {
-            Player player = pSvc.findById(playerId);
-            int count = svc.findAll(player).size();
+        @MethodSource("findAllParams_test2_generator")
+        public void findAllParams_test2(String player, int expectedCount) {
+            int count = svc.findAll(null, player, null).size();
             assertEquals(count, expectedCount);
         }
 
-        private static Stream<Arguments> findAllByPlayer_test1_generator() {
+        private static Stream<Arguments> findAllParams_test2_generator() {
             return Stream.of(
-                    Arguments.of(1, 1),
-                    Arguments.of(2, 1),
-                    Arguments.of(3, 0),
-                    Arguments.of(4, 0),
-                    Arguments.of(5, 0),
-                    Arguments.of(6, 0),
-                    Arguments.of(7, 0),
-                    Arguments.of(8, 0),
-                    Arguments.of(9, 0),
-                    Arguments.of(10, 0)
+                    Arguments.of("Chase Bank", 1),
+                    Arguments.of("Bank of America", 1),
+                    Arguments.of("US Bank", 1),
+                    Arguments.of("Vanguard", 1),
+                    Arguments.of("McDonald's", 1),
+                    Arguments.of("Walmart", 1),
+                    Arguments.of("Target", 1),
+                    Arguments.of("Costco", 0),
+                    Arguments.of("Amazon", 0),
+                    Arguments.of("99", 0)
             );
         }
 
-        @DisplayName("can find all by player (2)")
+        @DisplayName("can find all by isBank")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test3_generator")
+        public void findAllParams_test3(boolean isBank, int expectedCount) {
+            int count = svc.findAll(null, null, isBank).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllParams_test3_generator() {
+            return Stream.of(
+                    Arguments.of(true, 4),
+                    Arguments.of(false, 6)
+            );
+        }
+
+        @DisplayName("can find all by all 3 properties")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test4_generator")
+        public void findAllParams_test4(int element, String player, boolean isBank, int expectedCount) {
+            int count = svc.findAll(element, player, isBank).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllParams_test4_generator() {
+            return Stream.of(
+                    Arguments.of(1, "Chase Bank", true, 1),
+                    Arguments.of(1, "Bank of America", true, 1),
+                    Arguments.of(2, "US Bank", true, 1),
+                    Arguments.of(5, "Target", false, 1)
+            );
+        }
+
+        @DisplayName("passing all null parameters finds all")
         @Test
-        public void findAllByPlayer_test2() {
-            int count = svc.findAll((Player) null).size();
-            assertEquals(count, 8);
+        public void findAllParams_test5() {
+            List<Account> accounts = svc.findAll(null, null, null);
+            assertEquals(accounts, initialState);
         }
     }
 
