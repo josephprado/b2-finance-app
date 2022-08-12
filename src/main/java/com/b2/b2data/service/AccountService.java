@@ -37,7 +37,7 @@ public class AccountService {
     }
 
     public List<Account> findAll() {
-        return REPO.findAll(null, Sort.by(Account.NUMBER).ascending()).stream().toList();
+        return REPO.findAll(null, Sort.by(Account.NUMBER).ascending());
     }
 
     public List<Account> findAll(Integer element, String player, Boolean isBank) {
