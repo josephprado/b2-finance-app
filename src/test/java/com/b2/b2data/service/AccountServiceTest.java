@@ -136,6 +136,82 @@ public class AccountServiceTest {
     }
 
     /**
+     * public List<Account> findAllByElement(Integer element)
+     */
+    @Nested
+    @DisplayName("FindAllByElement")
+    public class FindAllByElement {
+
+        @DisplayName("can find all by element number")
+        @ParameterizedTest
+        @MethodSource("findAllByElement_test1_generator")
+        public void findAllByElement_test1(int elementNumber, int expectedCount) {
+            int count = svc.findAllByElement(elementNumber).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllByElement_test1_generator() {
+            return Stream.of(
+                    Arguments.of(1, 2),
+                    Arguments.of(2, 1),
+                    Arguments.of(3, 1),
+                    Arguments.of(4, 2),
+                    Arguments.of(5, 2),
+                    Arguments.of(6, 2),
+                    Arguments.of(7, 0),
+                    Arguments.of(8, 0),
+                    Arguments.of(9, 0),
+                    Arguments.of(10, 0)
+            );
+        }
+
+        @DisplayName("search for null element number returns empty list")
+        @Test
+        public void findAllByElement_test2() {
+            int count = svc.findAllByElement(null).size();
+            assertEquals(count, 0);
+        }
+    }
+
+    /**
+     *  public List<Account> findAllByPlayer(String player)
+     */
+    @Nested
+    @DisplayName("FindAllByPlayer")
+    public class FindAllByPlayer {
+
+        @DisplayName("can find all by player name")
+        @ParameterizedTest
+        @MethodSource("findAllByPlayer_test1_generator")
+        public void findAllByPlayer_test1(String playerName, int expectedCount) {
+            int count = svc.findAllByPlayer(playerName).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllByPlayer_test1_generator() {
+            return Stream.of(
+                    Arguments.of("Chase Bank", 1),
+                    Arguments.of("Bank of America", 1),
+                    Arguments.of("US Bank", 1),
+                    Arguments.of("Vanguard", 1),
+                    Arguments.of("McDonald's", 1),
+                    Arguments.of("Walmart", 1),
+                    Arguments.of("Target", 1),
+                    Arguments.of("Costco", 0),
+                    Arguments.of("Amazon", 0),
+                    Arguments.of("99", 0)
+            );
+        }
+
+        @DisplayName("search for null player name returns account list of null players")
+        @Test
+        public void findAllByPlayer_test2() {
+            int count = svc.findAllByPlayer(null).size();
+            assertEquals(count, 3);
+        }
+    }
+
+    /**
      * public List<Account> findAll()
      */
     @Nested

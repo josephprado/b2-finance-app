@@ -36,15 +36,23 @@ public class AccountService {
         return REPO.findByName(name).orElse(null);
     }
 
-    public List<Account> findAll() {
-        return REPO.findAll(null, Sort.by(Account.NUMBER).ascending());
+    public List<Account> findAllByElement(Integer number) {
+        return REPO.findAllByElementNumberOrderByNumberAsc(number);
     }
 
-    public List<Account> findAll(Integer element, String player, Boolean isBank) {
+    public List<Account> findAllByPlayer(String name) {
+        return REPO.findAllByPlayerNameOrderByNumberAsc(name);
+    }
+
+    public List<Account> findAll() {
+        return REPO.findAllByOrderByNumberAsc();
+    }
+
+    public List<Account> findAll(Integer elementNumber, String playerName, Boolean isBank) {
         return REPO.findAll(
                 Specification
-                        .where(elementNumberEquals(element))
-                        .and(playerNameEquals(player))
+                        .where(elementNumberEquals(elementNumber))
+                        .and(playerNameEquals(playerName))
                         .and(isBankEquals(isBank)),
                 Sort.by(Account.NUMBER).ascending()
         );

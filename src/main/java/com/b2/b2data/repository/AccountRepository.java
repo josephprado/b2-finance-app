@@ -21,6 +21,15 @@ public interface AccountRepository
     @EntityGraph(value = Account.WITH_ALL, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Account> findByName(String name);
 
+    @EntityGraph(value = Account.WITH_PLAYER, type = EntityGraph.EntityGraphType.LOAD)
+    List<Account> findAllByElementNumberOrderByNumberAsc(Integer elementNumber);
+
+    @EntityGraph(value = Account.WITH_ELEMENT, type = EntityGraph.EntityGraphType.LOAD)
+    List<Account> findAllByPlayerNameOrderByNumberAsc(String playerName);
+
+    @EntityGraph(value = Account.WITH_ALL, type = EntityGraph.EntityGraphType.LOAD)
+    List<Account> findAllByOrderByNumberAsc();
+
     @EntityGraph(value = Account.WITH_ALL, type = EntityGraph.EntityGraphType.LOAD)
     @Override
     List<Account> findAll(Specification<Account> specification, Sort sort);
