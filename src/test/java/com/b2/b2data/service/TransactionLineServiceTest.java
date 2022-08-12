@@ -87,22 +87,7 @@ public class TransactionLineServiceTest {
     }
 
     /**
-     * public List<TransactionLine> findAll()
-     */
-    @Nested
-    @DisplayName("FindAll")
-    public class FindAll {
-
-        @DisplayName("can find all lines")
-        @Test
-        public void findAll_test1() {
-            List<TransactionLine> lines = svc.findAll();
-            assertEquals(lines, initialState);
-        }
-    }
-
-    /**
-     * public List<TransactionLine> findAll(Transaction transaction)
+     * public List<TransactionLine> findAllByTransaction(Integer transactionId)
      */
     @Nested
     @DisplayName("FindAllByTransaction")
@@ -112,8 +97,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllByTransaction_test1_generator")
         public void findAllByTransaction_test1(int transactionId, int expectedCount) {
-            Transaction transaction = tSvc.findById(transactionId);
-            int count = svc.findAll(transaction).size();
+            int count = svc.findAllByTransaction(transactionId).size();
             assertEquals(count, expectedCount);
         }
 
@@ -136,7 +120,7 @@ public class TransactionLineServiceTest {
     }
 
     /**
-     * public List<TransactionLine> findAll(Account account)
+     * public List<TransactionLine> findAllByAccount(String account)
      */
     @Nested
     @DisplayName("FindAllByAccount")
@@ -145,30 +129,29 @@ public class TransactionLineServiceTest {
         @DisplayName("can find all lines of account")
         @ParameterizedTest
         @MethodSource("findAllByAccount_test1_generator")
-        public void findAllByAccount_test1(int accountId, int expectedCount) {
-            Account account = aSvc.findById(accountId);
-            int count = svc.findAll(account).size();
+        public void findAllByAccount_test1(String accountNumber, int expectedCount) {
+            int count = svc.findAllByAccount(accountNumber).size();
             assertEquals(count, expectedCount);
         }
 
         private static Stream<Arguments> findAllByAccount_test1_generator() {
             return Stream.of(
-                    Arguments.of(1, 9),
-                    Arguments.of(2, 2),
-                    Arguments.of(3, 0),
-                    Arguments.of(4, 0),
-                    Arguments.of(5, 1),
-                    Arguments.of(6, 1),
-                    Arguments.of(7, 10),
-                    Arguments.of(8, 3),
-                    Arguments.of(9, 0),
-                    Arguments.of(10, 0)
+                    Arguments.of("1000", 9),
+                    Arguments.of("1001", 2),
+                    Arguments.of("2000", 0),
+                    Arguments.of("3000", 0),
+                    Arguments.of("4000", 1),
+                    Arguments.of("4001", 1),
+                    Arguments.of("5000", 10),
+                    Arguments.of("5001", 3),
+                    Arguments.of("6000", 0),
+                    Arguments.of("99", 0)
             );
         }
     }
 
     /**
-     * public List<TransactionLine> findAll(Player player)
+     * public List<TransactionLine> findAllByPlayer(String player)
      */
     @Nested
     @DisplayName("FindAllByPlayer")
@@ -177,30 +160,29 @@ public class TransactionLineServiceTest {
         @DisplayName("can find all lines of player")
         @ParameterizedTest
         @MethodSource("findAllByPlayer_test1_generator")
-        public void findAllByPlayer_test1(int playerId, int expectedCount) {
-            Player player = pSvc.findById(playerId);
-            int count = svc.findAll(player).size();
+        public void findAllByPlayer_test1(String playerName, int expectedCount) {
+            int count = svc.findAllByPlayer(playerName).size();
             assertEquals(count, expectedCount);
         }
 
         private static Stream<Arguments> findAllByPlayer_test1_generator() {
             return Stream.of(
-                    Arguments.of(1, 2),
-                    Arguments.of(2, 2),
-                    Arguments.of(3, 0),
-                    Arguments.of(4, 0),
-                    Arguments.of(5, 0),
-                    Arguments.of(6, 18),
-                    Arguments.of(7, 0),
-                    Arguments.of(8, 0),
-                    Arguments.of(9, 4),
-                    Arguments.of(10, 0)
+                    Arguments.of("Chase Bank", 2),
+                    Arguments.of("Bank of America", 2),
+                    Arguments.of("US Bank", 0),
+                    Arguments.of("Vanguard", 0),
+                    Arguments.of("McDonald's", 0),
+                    Arguments.of("Walmart", 18),
+                    Arguments.of("Target", 0),
+                    Arguments.of("Costco", 0),
+                    Arguments.of("Amazon", 4),
+                    Arguments.of("99", 0)
             );
         }
     }
 
     /**
-     * public List<TransactionLine> findAll(String memoPattern)
+     * public List<TransactionLine> findAllByMemo(String memoPattern)
      */
     @Nested
     @DisplayName("FindAllByMemo")
@@ -210,11 +192,120 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllByMemo_test1_generator")
         public void findAllByMemo_test1(String memoPattern, int expectedCount) {
-            int count = svc.findAll(memoPattern).size();
+            int count = svc.findAllByMemo(memoPattern).size();
             assertEquals(count, expectedCount);
         }
 
         private static Stream<Arguments> findAllByMemo_test1_generator() {
+            return Stream.of(
+                    Arguments.of("memo%", 12),
+                    Arguments.of("%mo", 20),
+                    Arguments.of("%memo%", 22),
+                    Arguments.of("1%o", 2),
+                    Arguments.of("_-%", 4)
+            );
+        }
+    }
+
+    /**
+     * public List<TransactionLine> findAll()
+     */
+    @Nested
+    @DisplayName("FindAll")
+    public class FindAll {
+
+        @DisplayName("can find all lines")
+        @Test
+        public void findAll_test1() {
+            List<TransactionLine> lines = svc.findAll();
+            assertEquals(lines, initialState);
+        }
+    }
+
+    @Nested
+    @DisplayName("FindAllParams")
+    public class FindAllParams {
+
+        @DisplayName("can find all by transaction id")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test1_generator")
+        public void findAllParams_test1(int transactionId, int expectedCount) {
+            int count = svc.findAll(transactionId, null, null, null).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllParams_test1_generator() {
+            return Stream.of(
+                    Arguments.of(1, 4),
+                    Arguments.of(2, 4),
+                    Arguments.of(3, 2),
+                    Arguments.of(4, 2),
+                    Arguments.of(5, 2),
+                    Arguments.of(6, 2),
+                    Arguments.of(7, 2),
+                    Arguments.of(8, 2),
+                    Arguments.of(9, 2),
+                    Arguments.of(10, 2),
+                    Arguments.of(11, 2),
+                    Arguments.of(12, 0)
+            );
+        }
+
+        @DisplayName("can find all by account number")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test2_generator")
+        public void findAllParams_test2(String accountNumber, int expectedCount) {
+            int count = svc.findAll(null, accountNumber, null, null).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllParams_test2_generator() {
+            return Stream.of(
+                    Arguments.of("1000", 9),
+                    Arguments.of("1001", 2),
+                    Arguments.of("2000", 0),
+                    Arguments.of("3000", 0),
+                    Arguments.of("4000", 1),
+                    Arguments.of("4001", 1),
+                    Arguments.of("5000", 10),
+                    Arguments.of("5001", 3),
+                    Arguments.of("6000", 0),
+                    Arguments.of("99", 0)
+            );
+        }
+
+        @DisplayName("can find all by player name")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test3_generator")
+        public void findAllParams_test3(String playerName, int expectedCount) {
+            int count = svc.findAll(null, null, playerName, null).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllParams_test3_generator() {
+            return Stream.of(
+                    Arguments.of("Chase Bank", 2),
+                    Arguments.of("Bank of America", 2),
+                    Arguments.of("US Bank", 0),
+                    Arguments.of("Vanguard", 0),
+                    Arguments.of("McDonald's", 0),
+                    Arguments.of("Walmart", 18),
+                    Arguments.of("Target", 0),
+                    Arguments.of("Costco", 0),
+                    Arguments.of("Amazon", 4),
+                    Arguments.of("99", 0)
+            );
+        }
+
+        @DisplayName("can find all by memo pattern")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test4_generator")
+        public void findAllParams_test4(String memoPattern, int expectedCount) {
+            int count = svc.findAll(null, null, null, memoPattern).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllParams_test4_generator() {
             return Stream.of(
                     Arguments.of("memo%", 12),
                     Arguments.of("%mo", 20),
@@ -255,7 +346,7 @@ public class TransactionLineServiceTest {
             line.setMemo(memo);
             svc.save(line);
             svc.save(line);
-            boolean saved = svc.findAll(memo).size() == 1;
+            boolean saved = svc.findAllByMemo(memo).size() == 1;
             svc.delete(line);
             assertTrue(saved);
         }
