@@ -97,9 +97,7 @@ public class TransactionService {
         return !REPO.existsById(transaction.getId());
     }
 
-    /********************************************************************************
-     *                              SPECIFICATIONS
-     ********************************************************************************/
+    //region SPECIFICATIONS
 
     /**
      * Creates a specification for a transaction with a date >= the given from date
@@ -145,4 +143,5 @@ public class TransactionService {
                         : criteriaBuilder.like(root.get(Transaction.MEMO), memoPattern)
         );
     }
+    //endregion
 }

@@ -139,9 +139,7 @@ public class AccountService {
         return !REPO.existsById(account.getId());
     }
 
-    /********************************************************************************
-     *                              SPECIFICATIONS
-     ********************************************************************************/
+    //region SPECIFICATIONS
 
     /**
      * Creates a specification for an account with the given element number
@@ -195,4 +193,5 @@ public class AccountService {
                             criteriaBuilder.isFalse(playerIsBank));
         });
     }
+    //endregion
 }

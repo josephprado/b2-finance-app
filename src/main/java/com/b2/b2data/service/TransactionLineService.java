@@ -149,9 +149,7 @@ public class TransactionLineService {
         return !REPO.existsById(new TransactionLineId(line.getTransaction().getId(), line.getLine()));
     }
 
-    /********************************************************************************
-     *                              SPECIFICATIONS
-     ********************************************************************************/
+    //region SPECIFICATIONS
 
     /**
      * Creates a specification for a transaction line with the given transaction id
@@ -212,4 +210,5 @@ public class TransactionLineService {
                         : criteriaBuilder.like(root.get(TransactionLine.MEMO), memoPattern)
         );
     }
+    //endregion
 }
