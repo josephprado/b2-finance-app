@@ -92,12 +92,12 @@ public class AccountService {
     }
 
     /**
-     * Finds all accounts matching the given specification
+     * Finds all accounts matching the given parameters
      *
      * @param elementNumber An element number
      * @param playerName A player name
      * @param isBank True if the account is associated with a bank
-     * @return A list of accounts matching the given specification, sorted by number ascending
+     * @return A list of accounts matching the given parameters, sorted by number ascending
      */
     public List<Account> findAll(Integer elementNumber, String playerName, Boolean isBank) {
         return REPO.findAll(

@@ -50,12 +50,12 @@ public class TransactionService {
     }
 
     /**
-     * Finds all transactions matching the given specification
+     * Finds all transactions matching the given parameters
      *
      * @param from A minimum bounding date
      * @param to A maximum bounding date
      * @param memoPattern A memo pattern
-     * @return A list of transactions matching the given specification, sorted by transaction date descending
+     * @return A list of transactions matching the given parameters, sorted by transaction date descending
      */
     public List<Transaction> findAll(LocalDate from, LocalDate to, String memoPattern) {
         return REPO.findAll(

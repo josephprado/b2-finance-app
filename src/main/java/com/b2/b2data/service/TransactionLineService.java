@@ -92,13 +92,13 @@ public class TransactionLineService {
 
     // TODO: sort by transaction date descending
     /**
-     * Finds all transaction lines matching the given specification
+     * Finds all transaction lines matching the given parameters
      *
      * @param transactionId A transaction id
      * @param accountNumber An account number
      * @param playerName A player name
      * @param memoPattern A memo pattern
-     * @return A list of transaction lines matching the given specification, sorted by transaction descending
+     * @return A list of transaction lines matching the given parameters, sorted by transaction descending
      */
     public List<TransactionLine> findAll(Integer transactionId, String accountNumber,
                                          String playerName, String memoPattern) {
