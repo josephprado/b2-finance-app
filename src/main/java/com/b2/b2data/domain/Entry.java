@@ -6,5 +6,5 @@ import javax.persistence.MappedSuperclass;
  * A base class for all domain entities
  */
 @MappedSuperclass
-public class Entry {
+public abstract class Entry {
 }
