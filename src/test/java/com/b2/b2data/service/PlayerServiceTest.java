@@ -113,23 +113,23 @@ public class PlayerServiceTest {
     }
 
     /**
-     * public List<Player> findAllBanks(boolean isBank)
+     * public List<Player> findAllByBankStatus(Boolean isBank)
      */
     @Nested
-    @DisplayName("FindAllBanks")
-    public  class FindAllBanks {
+    @DisplayName("FindAllByBankStatus")
+    public class FindAllByBankStatus {
 
         @DisplayName("can find all banks")
         @Test
-        public void findAllBanks_test1() {
-            int count = svc.findAllBanks(true).size();
+        public void findAllByBankStatus_test1() {
+            int count = svc.findAllByBankStatus(true).size();
             assertEquals(count, 4);
         }
 
         @DisplayName("can find all non-banks")
         @Test
-        public void findAllBanks_test2() {
-            int count = svc.findAllBanks(false).size();
+        public void findAllByBankStatus_test2() {
+            int count = svc.findAllByBankStatus(false).size();
             assertEquals(count, 6);
         }
     }

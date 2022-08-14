@@ -62,7 +62,7 @@ public class PlayerService {
      * @param isBank True if the player is a bank
      * @return A list of players with the given isBank status, sorted by name ascending
      */
-    public List<Player> findAllBanks(Boolean isBank) {
+    public List<Player> findAllByBankStatus(Boolean isBank) {
         return REPO.findAllByIsBankOrderByNameAsc(isBank);
     }
 
