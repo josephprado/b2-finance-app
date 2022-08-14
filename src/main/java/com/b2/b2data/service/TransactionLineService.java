@@ -71,17 +71,6 @@ public class TransactionLineService {
     }
 
     /**
-     * Finds all transaction lines with a memo matching the given memo pattern
-     *
-     * @param memoPattern A memo pattern
-     * @return A list of transaction lines with a memo matching the given memo pattern, sorted by transaction
-     *         date descending
-     */
-    public List<TransactionLine> findAllByMemo(String memoPattern) {
-        return REPO.findAllByMemoLikeOrderByTransactionDateDesc(memoPattern);
-    }
-
-    /**
      * Finds all transaction lines
      *
      * @return A list of transaction lines sorted by transaction date descending

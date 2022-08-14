@@ -182,32 +182,6 @@ public class TransactionLineServiceTest {
     }
 
     /**
-     * public List<TransactionLine> findAllByMemo(String memoPattern)
-     */
-    @Nested
-    @DisplayName("FindAllByMemo")
-    public class FindAllByMemo {
-
-        @DisplayName("can find all with memo like pattern")
-        @ParameterizedTest
-        @MethodSource("findAllByMemo_test1_generator")
-        public void findAllByMemo_test1(String memoPattern, int expectedCount) {
-            int count = svc.findAllByMemo(memoPattern).size();
-            assertEquals(count, expectedCount);
-        }
-
-        private static Stream<Arguments> findAllByMemo_test1_generator() {
-            return Stream.of(
-                    Arguments.of("memo%", 12),
-                    Arguments.of("%mo", 20),
-                    Arguments.of("%memo%", 22),
-                    Arguments.of("1%o", 2),
-                    Arguments.of("_-%", 4)
-            );
-        }
-    }
-
-    /**
      * public List<TransactionLine> findAll()
      */
     @Nested
@@ -385,7 +359,7 @@ public class TransactionLineServiceTest {
             line.setMemo(memo);
             svc.save(line);
             svc.save(line);
-            boolean saved = svc.findAllByMemo(memo).size() == 1;
+            boolean saved = svc.findAll(null, null, null, memo, null).size() == 1;
             svc.delete(line);
             assertTrue(saved);
         }

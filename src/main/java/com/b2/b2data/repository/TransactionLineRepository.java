@@ -54,16 +54,6 @@ public interface TransactionLineRepository
     List<TransactionLine> findAllByPlayerNameOrderByTransactionDateDesc(String playerName);
 
     /**
-     * Finds all transaction lines with a memo matching the given memo pattern
-     *
-     * @param memoPattern A memo pattern
-     * @return A list of transaction lines with a memo matching the given memo pattern, sorted by
-     *         transaction date descending
-     */
-    @EntityGraph(value = TransactionLine.WITH_ALL, type = EntityGraph.EntityGraphType.LOAD)
-    List<TransactionLine> findAllByMemoLikeOrderByTransactionDateDesc(String memoPattern);
-
-    /**
      * Finds all transaction lines matching the given specification
      *
      * @param specification can be {@literal null}.
