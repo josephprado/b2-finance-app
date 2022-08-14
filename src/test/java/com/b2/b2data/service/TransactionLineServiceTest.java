@@ -43,9 +43,6 @@ public class TransactionLineServiceTest {
         assert svc.findAll().equals(initialState);
     }
 
-    /**
-     * public TransactionLine findById(int transactionId, int lineId)
-     */
     @Nested
     @DisplayName("FindById")
     public class FindById {
@@ -86,9 +83,6 @@ public class TransactionLineServiceTest {
         }
     }
 
-    /**
-     * public List<TransactionLine> findAllByTransaction(Integer transactionId)
-     */
     @Nested
     @DisplayName("FindAllByTransaction")
     public class FindAllByTransaction {
@@ -119,9 +113,6 @@ public class TransactionLineServiceTest {
         }
     }
 
-    /**
-     * public List<TransactionLine> findAllByAccount(String account)
-     */
     @Nested
     @DisplayName("FindAllByAccount")
     public class FindAllByAccount {
@@ -150,9 +141,6 @@ public class TransactionLineServiceTest {
         }
     }
 
-    /**
-     * public List<TransactionLine> findAllByPlayer(String player)
-     */
     @Nested
     @DisplayName("FindAllByPlayer")
     public class FindAllByPlayer {
@@ -181,9 +169,6 @@ public class TransactionLineServiceTest {
         }
     }
 
-    /**
-     * public List<TransactionLine> findAll()
-     */
     @Nested
     @DisplayName("FindAll")
     public class FindAll {
@@ -329,9 +314,6 @@ public class TransactionLineServiceTest {
         }
     }
 
-    /**
-     * public TransactionLine save(TransactionLine line)
-     */
     @Nested
     @DisplayName("Save")
     public class Save {
@@ -380,9 +362,6 @@ public class TransactionLineServiceTest {
         }
     }
 
-    /**
-     * public void delete(TransactionLine line)
-     */
     @Nested
     @DisplayName("Delete")
     public class Delete {

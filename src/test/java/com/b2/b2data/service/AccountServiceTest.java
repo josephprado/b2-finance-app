@@ -41,9 +41,6 @@ public class AccountServiceTest {
         assert svc.findAll().equals(initialState);
     }
 
-    /**
-     * public Account findById(int id)
-     */
     @Nested
     @DisplayName("FindById")
     public class FindById {
@@ -64,9 +61,6 @@ public class AccountServiceTest {
         }
     }
 
-    /**
-     * public Account findByNumber(String number)
-     */
     @Nested
     @DisplayName("FindByNumber")
     public class FindByNumber {
@@ -94,9 +88,6 @@ public class AccountServiceTest {
         }
     }
 
-    /**
-     * public Account findByName(String name)
-     */
     @Nested
     @DisplayName("FindByName")
     public class FindByName {
@@ -135,9 +126,6 @@ public class AccountServiceTest {
         }
     }
 
-    /**
-     * public List<Account> findAllByElement(Integer element)
-     */
     @Nested
     @DisplayName("FindAllByElement")
     public class FindAllByElement {
@@ -173,9 +161,6 @@ public class AccountServiceTest {
         }
     }
 
-    /**
-     *  public List<Account> findAllByPlayer(String player)
-     */
     @Nested
     @DisplayName("FindAllByPlayer")
     public class FindAllByPlayer {
@@ -211,9 +196,6 @@ public class AccountServiceTest {
         }
     }
 
-    /**
-     * public List<Account> findAll()
-     */
     @Nested
     @DisplayName("FindAll")
     public class FindAll {
@@ -226,9 +208,6 @@ public class AccountServiceTest {
         }
     }
 
-    /**
-     * public List<Account> findAll(Integer element, String player, Boolean isBank)
-     */
     @Nested
     @DisplayName("FindAllParams")
     public class FindAllParams {
@@ -319,9 +298,6 @@ public class AccountServiceTest {
         }
     }
 
-    /**
-     * public Account save(Account account)
-     */
     @Nested
     @DisplayName("Save")
     public class Save {
@@ -363,9 +339,6 @@ public class AccountServiceTest {
         }
     }
 
-    /**
-     * public void delete(Account account)
-     */
     @Nested
     @DisplayName("Delete")
     public class Delete {

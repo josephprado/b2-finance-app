@@ -34,9 +34,6 @@ public class ElementServiceTest {
         assert svc.findAll().equals(initialState);
     }
 
-    /**
-     * public Element findById(int id)
-     */
     @Nested
     @DisplayName("FindById")
     public class FindById {
@@ -57,9 +54,6 @@ public class ElementServiceTest {
         }
     }
 
-    /**
-     * public Element findByNumber(Integer number)
-     */
     @Nested
     @DisplayName("FindByNumber")
     public class FindByNumber {
@@ -80,9 +74,6 @@ public class ElementServiceTest {
         }
     }
 
-    /**
-     * public Element findByName(String name)
-     */
     @Nested
     @DisplayName("FindByName")
     public class FindByName {
@@ -121,9 +112,6 @@ public class ElementServiceTest {
         }
     }
 
-    /**
-     * public List<Element> findAll()
-     */
     @Nested
     @DisplayName("FindAll")
     public class FindAll {
@@ -136,9 +124,6 @@ public class ElementServiceTest {
         }
     }
 
-    /**
-     * public Element save(Element element)
-     */
     @Nested
     @DisplayName("Save")
     public class Save {
@@ -176,9 +161,6 @@ public class ElementServiceTest {
         }
     }
 
-    /**
-     * public void delete(Element element)
-     */
     @Nested
     @DisplayName("Delete")
     public class Delete {

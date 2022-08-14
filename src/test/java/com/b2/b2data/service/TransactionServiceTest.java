@@ -37,9 +37,6 @@ public class TransactionServiceTest {
         assert svc.findAll().equals(initialState);
     }
 
-    /**
-     * public Transaction findById(int id)
-     */
     @Nested
     @DisplayName("FindById")
     public class FindById {
@@ -60,9 +57,6 @@ public class TransactionServiceTest {
         }
     }
 
-    /**
-     * public List<Transaction> findAll()
-     */
     @Nested
     @DisplayName("FindAll")
     public class FindAll {
@@ -75,9 +69,6 @@ public class TransactionServiceTest {
         }
     }
 
-    /**
-     * public List<Transaction> findAll(LocalDate from, LocalDate to, String memo)
-     */
     @Nested
     @DisplayName("FindAllParams")
     public class FindAllParams {
@@ -176,9 +167,6 @@ public class TransactionServiceTest {
         }
     }
 
-    /**
-     * public Transaction save(Transaction transaction)
-     */
     @Nested
     @DisplayName("Save")
     public class Save {
@@ -216,9 +204,6 @@ public class TransactionServiceTest {
         }
     }
 
-    /**
-     * public void delete(Transaction transaction)
-     */
     @Nested
     @DisplayName("Delete")
     public class Delete {

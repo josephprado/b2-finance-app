@@ -33,9 +33,6 @@ public class PlayerServiceTest {
         assert svc.findAll().equals(initialState);
     }
 
-    /**
-     * public Player findById(int id)
-     */
     @Nested
     @DisplayName("FindById")
     public class FindById {
@@ -56,9 +53,6 @@ public class PlayerServiceTest {
         }
     }
 
-    /**
-     * public Player findByName(String name)
-     */
     @Nested
     @DisplayName("FindByName")
     public class FindByName {
@@ -97,9 +91,6 @@ public class PlayerServiceTest {
         }
     }
 
-    /**
-     * public List<Player> findAll()
-     */
     @Nested
     @DisplayName("FindAll")
     public class FindAll {
@@ -112,9 +103,6 @@ public class PlayerServiceTest {
         }
     }
 
-    /**
-     * public List<Player> findAllByBankStatus(Boolean isBank)
-     */
     @Nested
     @DisplayName("FindAllByBankStatus")
     public class FindAllByBankStatus {
@@ -134,9 +122,6 @@ public class PlayerServiceTest {
         }
     }
 
-    /**
-     * public Player save(Player player)
-     */
     @Nested
     @DisplayName("Save")
     public class Save {
@@ -174,9 +159,6 @@ public class PlayerServiceTest {
         }
     }
 
-    /**
-     * public void delete(Player player)
-     */
     @Nested
     @DisplayName("Delete")
     public class Delete {
