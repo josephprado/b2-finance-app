@@ -98,10 +98,11 @@ public class TransactionLineService {
      * @param accountNumber An account number
      * @param playerName A player name
      * @param memoPattern A memo pattern
+     * @param isReconciled True if the reconciled date is not null
      * @return A list of transaction lines matching the given parameters, sorted by transaction descending
      */
-    public List<TransactionLine> findAll(Integer transactionId, String accountNumber,
-                                         String playerName, String memoPattern) {
+    public List<TransactionLine> findAll(Integer transactionId, String accountNumber, String playerName,
+                                         String memoPattern, Boolean isReconciled) {
 
         List<TransactionLine> lines =
                 REPO.findAll(
@@ -109,7 +110,8 @@ public class TransactionLineService {
                                 .where(transactionIdEquals(transactionId))
                                 .and(accountNumberEquals(accountNumber))
                                 .and(playerNameEquals(playerName))
-                                .and(memoLike(memoPattern)),
+                                .and(memoLike(memoPattern))
+                                .and(reconciledIs(isReconciled)),
                         Sort.by(TransactionLine.TRANSACTION).descending()
         );
         return lines
@@ -209,6 +211,26 @@ public class TransactionLineService {
                         ? criteriaBuilder.conjunction()
                         : criteriaBuilder.like(root.get(TransactionLine.MEMO), memoPattern)
         );
+    }
+
+    /**
+     * Creates a specification for a transaction line that is reconciled
+     *
+     * @param isReconciled True if the reconciled date is not null
+     * @return A specification for a transaction line that is reconciled,
+     *         or an always true specification if isReconciled is null
+     */
+    private Specification<TransactionLine> reconciledIs(Boolean isReconciled) {
+        return ((root, query, criteriaBuilder) -> {
+
+            if (isReconciled == null)
+                return criteriaBuilder.conjunction();
+
+            if (isReconciled)
+                return criteriaBuilder.isNotNull(root.get(TransactionLine.DATE_RECONCILED));
+
+            return criteriaBuilder.isNull(root.get(TransactionLine.DATE_RECONCILED));
+        });
     }
     //endregion
 }

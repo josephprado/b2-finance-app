@@ -230,7 +230,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllParams_test1_generator")
         public void findAllParams_test1(int transactionId, int expectedCount) {
-            int count = svc.findAll(transactionId, null, null, null).size();
+            int count = svc.findAll(transactionId, null, null, null, null).size();
             assertEquals(count, expectedCount);
         }
 
@@ -255,7 +255,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllParams_test2_generator")
         public void findAllParams_test2(String accountNumber, int expectedCount) {
-            int count = svc.findAll(null, accountNumber, null, null).size();
+            int count = svc.findAll(null, accountNumber, null, null, null).size();
             assertEquals(count, expectedCount);
         }
 
@@ -278,7 +278,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllParams_test3_generator")
         public void findAllParams_test3(String playerName, int expectedCount) {
-            int count = svc.findAll(null, null, playerName, null).size();
+            int count = svc.findAll(null, null, playerName, null, null).size();
             assertEquals(count, expectedCount);
         }
 
@@ -301,7 +301,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllParams_test4_generator")
         public void findAllParams_test4(String memoPattern, int expectedCount) {
-            int count = svc.findAll(null, null, null, memoPattern).size();
+            int count = svc.findAll(null, null, null, memoPattern, null).size();
             assertEquals(count, expectedCount);
         }
 
@@ -313,6 +313,45 @@ public class TransactionLineServiceTest {
                     Arguments.of("1%o", 2),
                     Arguments.of("_-%", 4)
             );
+        }
+
+        @DisplayName("can find all by reconciled status")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test5_generator")
+        public void findAllParams_test5(boolean isReconciled, int expectedCount) {
+            int count = svc.findAll(null, null, null, null, isReconciled).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllParams_test5_generator() {
+            return Stream.of(
+                    Arguments.of(true, 6),
+                    Arguments.of(false, 20)
+            );
+        }
+
+        @DisplayName("can find all by all 5 parameters")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test6_generator")
+        public void findAllParams_test6(int transactionId, String accountNumber, String playerName,
+                                        String memoPattern, boolean isReconciled, int expectedCount) {
+
+            int count = svc.findAll(transactionId, accountNumber, playerName, memoPattern, isReconciled).size();
+            assertEquals(count, expectedCount);
+        }
+
+        private static Stream<Arguments> findAllParams_test6_generator() {
+            return Stream.of(
+                    Arguments.of(1, "5000", "Walmart", "%", true, 1),
+                    Arguments.of(1, "5000", "Walmart", "%", false, 2)
+            );
+        }
+
+        @DisplayName("passing all null parameters finds all")
+        @Test
+        public void findAllParams_test7() {
+            int count = svc.findAll(null, null, null, null, null).size();
+            assertEquals(count, initialState.size());
         }
     }
 
