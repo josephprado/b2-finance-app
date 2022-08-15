@@ -125,18 +125,11 @@ public class AccountService {
      * Deletes the given account from the database
      *
      * @param account An account to delete
-     * @return True if the delete operation was successful, or false if
-     *         unsuccessful or if the account is null or does not exist
      */
     @Transactional
     @Modifying
-    public boolean delete(Account account) {
-
-        if (account == null || !REPO.existsById(account.getId()))
-            return false;
-
+    public void delete(Account account) {
         REPO.delete(account);
-        return !REPO.existsById(account.getId());
     }
 
     //region SPECIFICATIONS

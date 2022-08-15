@@ -169,7 +169,8 @@ public class PlayerServiceTest {
             String name = "-delete-test-1-";
             Player player = svc.save(new Player(name, true));
             assert svc.findByName(name) != null;
-            boolean deleted = svc.delete(player);
+            svc.delete(player);
+            boolean deleted = svc.findByName(name) == null;
             assertTrue(deleted);
         }
     }

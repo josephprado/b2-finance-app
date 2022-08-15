@@ -82,17 +82,10 @@ public class ElementService {
      * Deletes the given element from the database
      *
      * @param element An element to delete
-     * @return True if the delete operation was successful, or false if
-     *         unsuccessful or if the element is null or does not exist
      */
     @Transactional
     @Modifying
-    public boolean delete(Element element) {
-
-        if (element == null || !REPO.existsById(element.getId()))
-            return false;
-
+    public void delete(Element element) {
         REPO.delete(element);
-        return !REPO.existsById(element.getId());
     }
 }

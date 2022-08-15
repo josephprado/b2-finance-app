@@ -214,7 +214,8 @@ public class TransactionServiceTest {
             String memo = "-delete-test-1-";
             Transaction transaction = svc.save(new Transaction(LocalDate.now(), memo));
             assert svc.findAll(null, null, memo).size() == 1;
-            boolean deleted = svc.delete(transaction);
+            svc.delete(transaction);
+            boolean deleted = svc.findById(transaction.getId()) == null;
             assertTrue(deleted);
         }
     }

@@ -374,7 +374,8 @@ public class TransactionLineServiceTest {
             TransactionLine line =
                     svc.save(new TransactionLine(tSvc.findById(tranId), lineId, aSvc.findById(1), 100.00));
             assert svc.findById(tranId, lineId) != null;
-            boolean deleted = svc.delete(line);
+            svc.delete(line);
+            boolean deleted = svc.findById(tranId, lineId) == null;
             assertTrue(deleted);
         }
     }

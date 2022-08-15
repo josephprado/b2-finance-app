@@ -171,7 +171,8 @@ public class ElementServiceTest {
             int number = 1234567890;
             Element element = svc.save(new Element(number, "-delete-test-1-"));
             assert svc.findByNumber(number) != null;
-            boolean deleted = svc.delete(element);
+            svc.delete(element);
+            boolean deleted = svc.findByNumber(number) == null;
             assertTrue(deleted);
         }
     }

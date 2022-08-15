@@ -82,17 +82,10 @@ public class PlayerService {
      * Deletes the given player from the database
      *
      * @param player A player to delete
-     * @return True if the delete operation was successful, or false if
-     *         unsuccessful or if the player is null or does not exist
      */
     @Transactional
     @Modifying
-    public boolean delete(Player player) {
-
-        if (player == null || !REPO.existsById(player.getId()))
-            return false;
-
+    public void delete(Player player) {
         REPO.delete(player);
-        return !REPO.existsById(player.getId());
     }
 }

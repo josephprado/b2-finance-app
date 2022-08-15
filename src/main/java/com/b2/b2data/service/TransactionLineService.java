@@ -125,19 +125,11 @@ public class TransactionLineService {
      * Deletes the given transaction line from the database
      *
      * @param line A transaction line to delete
-     * @return True if the delete operation was successful, or false if
-     *         unsuccessful or if the transaction line is null or does not exist
      */
     @Transactional
     @Modifying
-    public boolean delete(TransactionLine line) {
-
-        if (line == null ||
-                !REPO.existsById(new TransactionLineId(line.getTransaction().getId(), line.getLine())))
-            return false;
-
+    public void delete(TransactionLine line) {
         REPO.delete(line);
-        return !REPO.existsById(new TransactionLineId(line.getTransaction().getId(), line.getLine()));
     }
 
     //region SPECIFICATIONS

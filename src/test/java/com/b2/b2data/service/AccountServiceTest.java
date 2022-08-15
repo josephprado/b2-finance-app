@@ -351,7 +351,8 @@ public class AccountServiceTest {
                     new Account(number, "-delete-test-1-", eSvc.findById(1))
             );
             assert svc.findByNumber(number) != null;
-            boolean deleted = svc.delete(account);
+            svc.delete(account);
+            boolean deleted = svc.findByNumber(number) == null;
             assertTrue(deleted);
         }
     }

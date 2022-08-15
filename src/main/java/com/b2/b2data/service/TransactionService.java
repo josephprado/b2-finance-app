@@ -83,18 +83,11 @@ public class TransactionService {
      * Deletes the given transaction from the database
      *
      * @param transaction A transaction to delete
-     * @return True if the delete operation was successful, or false if
-     *         unsuccessful or if the transaction is null of does not exist
      */
     @Transactional
     @Modifying
-    public boolean delete(Transaction transaction) {
-
-        if (transaction == null || !REPO.existsById(transaction.getId()))
-            return false;
-
+    public void delete(Transaction transaction) {
         REPO.delete(transaction);
-        return !REPO.existsById(transaction.getId());
     }
 
     //region SPECIFICATIONS
