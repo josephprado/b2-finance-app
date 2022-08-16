@@ -162,11 +162,11 @@ public class TransactionLine extends Entry {
         if (!(o instanceof TransactionLine that))
             return false;
 
-        return transaction.equals(that.transaction)
-                && line.equals(that.line)
-                && amount.equals(that.amount)
-                && account.equals(that.account)
+        return Objects.equals(transaction, that.transaction)
+                && Objects.equals(line, that.line)
+                && Objects.equals(account, that.account)
                 && Objects.equals(player, that.player)
+                && Objects.equals(amount, that.amount)
                 && Objects.equals(memo, that.memo)
                 && Objects.equals(dateReconciled, that.dateReconciled);
     }

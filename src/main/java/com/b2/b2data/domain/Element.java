@@ -62,8 +62,8 @@ public class Element extends Entry {
             return false;
 
         return Objects.equals(id, element.id)
-                && number.equals(element.number)
-                && name.equals(element.name);
+                && Objects.equals(number, element.number)
+                && Objects.equals(name, element.name);
     }
 
     /**

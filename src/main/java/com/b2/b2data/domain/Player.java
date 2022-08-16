@@ -63,8 +63,8 @@ public class Player extends Entry {
             return false;
 
         return Objects.equals(id, player.id)
-                && name.equals(player.name)
-                && isBank.equals(player.isBank);
+                && Objects.equals(name, player.name)
+                && Objects.equals(isBank, player.isBank);
     }
 
     /**

@@ -97,9 +97,9 @@ public class Account extends Entry {
             return false;
 
         return Objects.equals(id, account.id)
-                && number.equals(account.number)
-                && name.equals(account.name)
-                && element.equals(account.element)
+                && Objects.equals(number, account.number)
+                && Objects.equals(name, account.name)
+                && Objects.equals(element, account.element)
                 && Objects.equals(player, account.player);
     }
 

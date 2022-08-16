@@ -47,7 +47,7 @@ public class TransactionLineId implements Serializable {
         if (!(o instanceof TransactionLineId that))
             return false;
 
-        return transaction.equals(that.transaction) && line.equals(that.line);
+        return Objects.equals(transaction, that.transaction) && Objects.equals(line, that.line);
     }
 
     /**

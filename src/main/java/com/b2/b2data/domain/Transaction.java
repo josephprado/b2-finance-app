@@ -61,7 +61,7 @@ public class Transaction extends Entry {
             return false;
 
         return Objects.equals(id, that.id)
-                && date.equals(that.date)
+                && Objects.equals(date, that.date)
                 && Objects.equals(memo, that.memo);
     }
 
