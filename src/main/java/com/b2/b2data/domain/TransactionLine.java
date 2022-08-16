@@ -185,16 +185,16 @@ public class TransactionLine extends Entry {
      * Returns a string representation of the transaction line
      *
      * @return A string representation of the transaction line in the following format:
-     * <br/><br/>TransactionLine{transaction=transactionId, line=line, account='accountName', player='playerName',
-     *           amount=amount, memo='memo', dateReconciled=dateReconciled}
+     * <br/><br/>TransactionLine{transaction=transactionId, line=line, account='accountNumber',
+     *           player='playerName', amount=amount, memo='memo', dateReconciled=dateReconciled}
      */
     @Override
     public String toString() {
         return "TransactionLine{" +
                 "transaction=" + transaction.getId() +
                 ", line=" + line +
-                ", account='" + account.getName() + '\'' +
-                ", player='" + (player != null ? player.getName() : "null") + '\'' +
+                ", account='" + account.getNumber() + '\'' +
+                ", player=" + (player != null ? '\'' + player.getName() + '\'' : "null") +
                 ", amount=" + amount +
                 ", memo='" + memo + '\'' +
                 ", dateReconciled=" + dateReconciled +

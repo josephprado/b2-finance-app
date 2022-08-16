@@ -117,7 +117,7 @@ public class Account extends Entry {
      * Returns a string representation of the account
      *
      * @return A string representation of the account in the following format:
-     * <br/><br/>Account{id=id, number='number', name='name', element='elementName', player='playerName'}
+     * <br/><br/>Account{id=id, number='number', name='name', element=elementNumber, player='playerName'}
      *
      */
     @Override
@@ -126,8 +126,8 @@ public class Account extends Entry {
                 "id=" + id +
                 ", number='" + number + '\'' +
                 ", name='" + name + '\'' +
-                ", element='" + element.getName() + '\'' +
-                ", player='" + (player != null ? player.getName() : "null") + '\'' +
+                ", element=" + element.getNumber() +
+                ", player=" + (player != null ? '\'' + player.getName() + '\'' : "null") +
                 '}';
     }
 
