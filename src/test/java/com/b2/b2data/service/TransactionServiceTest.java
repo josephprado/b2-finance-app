@@ -65,7 +65,7 @@ public class TransactionServiceTest {
         @Test
         public void findAll_test1() {
             List<Transaction> transactions = svc.findAll();
-            assertEquals(transactions, initialState);
+            assertEquals(initialState, transactions);
         }
     }
 
@@ -78,7 +78,7 @@ public class TransactionServiceTest {
         @MethodSource("findAllParams_test1_generator")
         public void findAllParams_test1(int[] from, int expectedCount) {
             int count = svc.findAll(LocalDate.of(from[0], from[1], from[2]), null, null).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test1_generator() {
@@ -94,7 +94,7 @@ public class TransactionServiceTest {
         @MethodSource("findAllParams_test2_generator")
         public void findAllParams_test2(int[] to, int expectedCount) {
             int count = svc.findAll(null, LocalDate.of(to[0], to[1], to[2]), null).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test2_generator() {
@@ -114,7 +114,7 @@ public class TransactionServiceTest {
                     LocalDate.of(to[0], to[1], to[2]),
                     null
             ).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test3_generator() {
@@ -131,7 +131,7 @@ public class TransactionServiceTest {
         @MethodSource("findAllParams_test4_generator")
         public void findAllParams_test4(String memo, int expectedCount) {
             int count = svc.findAll(null, null, memo).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test4_generator() {
@@ -153,7 +153,7 @@ public class TransactionServiceTest {
                     LocalDate.of(to[0], to[1], to[2]),
                     memo
             ).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test5_generator() {
@@ -200,7 +200,7 @@ public class TransactionServiceTest {
             String newMemo = svc.findById(id).getMemo();
             transaction.setMemo(originalMemo);
             svc.save(transaction);
-            assertNotEquals(newMemo, originalMemo);
+            assertNotEquals(originalMemo, newMemo);
         }
     }
 

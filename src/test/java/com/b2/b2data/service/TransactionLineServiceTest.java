@@ -92,7 +92,7 @@ public class TransactionLineServiceTest {
         @MethodSource("findAllByTransaction_test1_generator")
         public void findAllByTransaction_test1(int transactionId, int expectedCount) {
             int count = svc.findAllByTransaction(transactionId).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllByTransaction_test1_generator() {
@@ -122,7 +122,7 @@ public class TransactionLineServiceTest {
         @MethodSource("findAllByAccount_test1_generator")
         public void findAllByAccount_test1(String accountNumber, int expectedCount) {
             int count = svc.findAllByAccount(accountNumber).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllByAccount_test1_generator() {
@@ -150,7 +150,7 @@ public class TransactionLineServiceTest {
         @MethodSource("findAllByPlayer_test1_generator")
         public void findAllByPlayer_test1(String playerName, int expectedCount) {
             int count = svc.findAllByPlayer(playerName).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllByPlayer_test1_generator() {
@@ -177,7 +177,7 @@ public class TransactionLineServiceTest {
         @Test
         public void findAll_test1() {
             List<TransactionLine> lines = svc.findAll();
-            assertEquals(lines, initialState);
+            assertEquals(initialState, lines);
         }
     }
 
@@ -190,7 +190,7 @@ public class TransactionLineServiceTest {
         @MethodSource("findAllParams_test1_generator")
         public void findAllParams_test1(int transactionId, int expectedCount) {
             int count = svc.findAll(transactionId, null, null, null, null).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test1_generator() {
@@ -215,7 +215,7 @@ public class TransactionLineServiceTest {
         @MethodSource("findAllParams_test2_generator")
         public void findAllParams_test2(String accountNumber, int expectedCount) {
             int count = svc.findAll(null, accountNumber, null, null, null).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test2_generator() {
@@ -238,7 +238,7 @@ public class TransactionLineServiceTest {
         @MethodSource("findAllParams_test3_generator")
         public void findAllParams_test3(String playerName, int expectedCount) {
             int count = svc.findAll(null, null, playerName, null, null).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test3_generator() {
@@ -261,7 +261,7 @@ public class TransactionLineServiceTest {
         @MethodSource("findAllParams_test4_generator")
         public void findAllParams_test4(String memoPattern, int expectedCount) {
             int count = svc.findAll(null, null, null, memoPattern, null).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test4_generator() {
@@ -279,7 +279,7 @@ public class TransactionLineServiceTest {
         @MethodSource("findAllParams_test5_generator")
         public void findAllParams_test5(boolean isReconciled, int expectedCount) {
             int count = svc.findAll(null, null, null, null, isReconciled).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test5_generator() {
@@ -296,7 +296,7 @@ public class TransactionLineServiceTest {
                                         String memoPattern, boolean isReconciled, int expectedCount) {
 
             int count = svc.findAll(transactionId, accountNumber, playerName, memoPattern, isReconciled).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test6_generator() {
@@ -310,7 +310,7 @@ public class TransactionLineServiceTest {
         @Test
         public void findAllParams_test7() {
             int count = svc.findAll(null, null, null, null, null).size();
-            assertEquals(count, initialState.size());
+            assertEquals(initialState.size(), count);
         }
     }
 
@@ -358,7 +358,7 @@ public class TransactionLineServiceTest {
             String newMemo = svc.findById(tranId, lineId).getMemo();
             line.setMemo(originalMemo);
             svc.save(line);
-            assertNotEquals(newMemo, originalMemo);
+            assertNotEquals(originalMemo, newMemo);
         }
     }
 

@@ -135,7 +135,7 @@ public class AccountServiceTest {
         @MethodSource("findAllByElement_test1_generator")
         public void findAllByElement_test1(int elementNumber, int expectedCount) {
             int count = svc.findAllByElement(elementNumber).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllByElement_test1_generator() {
@@ -157,7 +157,7 @@ public class AccountServiceTest {
         @Test
         public void findAllByElement_test2() {
             int count = svc.findAllByElement(null).size();
-            assertEquals(count, 0);
+            assertEquals(0, count);
         }
     }
 
@@ -170,7 +170,7 @@ public class AccountServiceTest {
         @MethodSource("findAllByPlayer_test1_generator")
         public void findAllByPlayer_test1(String playerName, int expectedCount) {
             int count = svc.findAllByPlayer(playerName).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllByPlayer_test1_generator() {
@@ -192,7 +192,7 @@ public class AccountServiceTest {
         @Test
         public void findAllByPlayer_test2() {
             int count = svc.findAllByPlayer(null).size();
-            assertEquals(count, 3);
+            assertEquals(3, count);
         }
     }
 
@@ -204,7 +204,7 @@ public class AccountServiceTest {
         @Test
         public void findAll_test1() {
             List<Account> accounts = svc.findAll();
-            assertEquals(accounts, initialState);
+            assertEquals(initialState, accounts);
         }
     }
 
@@ -217,7 +217,7 @@ public class AccountServiceTest {
         @MethodSource("findAllParams_test1_generator")
         public void findAllParams_test1(int element, int expectedCount) {
             int count = svc.findAll(element, null, null).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test1_generator() {
@@ -240,7 +240,7 @@ public class AccountServiceTest {
         @MethodSource("findAllParams_test2_generator")
         public void findAllParams_test2(String player, int expectedCount) {
             int count = svc.findAll(null, player, null).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test2_generator() {
@@ -263,7 +263,7 @@ public class AccountServiceTest {
         @MethodSource("findAllParams_test3_generator")
         public void findAllParams_test3(boolean isBank, int expectedCount) {
             int count = svc.findAll(null, null, isBank).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test3_generator() {
@@ -278,7 +278,7 @@ public class AccountServiceTest {
         @MethodSource("findAllParams_test4_generator")
         public void findAllParams_test4(int element, String player, boolean isBank, int expectedCount) {
             int count = svc.findAll(element, player, isBank).size();
-            assertEquals(count, expectedCount);
+            assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test4_generator() {
@@ -294,7 +294,7 @@ public class AccountServiceTest {
         @Test
         public void findAllParams_test5() {
             List<Account> accounts = svc.findAll(null, null, null);
-            assertEquals(accounts, initialState);
+            assertEquals(initialState, accounts);
         }
     }
 
@@ -335,7 +335,7 @@ public class AccountServiceTest {
             String newName = svc.findByNumber(number).getName();
             account.setName(originalName);
             svc.save(account);
-            assertNotEquals(newName, originalName);
+            assertNotEquals(originalName, newName);
         }
     }
 

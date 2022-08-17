@@ -120,7 +120,7 @@ public class ElementServiceTest {
         @Test
         public void findAll_test1() {
             List<Element> elements = svc.findAll();
-            assertEquals(elements, initialState);
+            assertEquals(initialState, elements);
         }
     }
 
@@ -157,7 +157,7 @@ public class ElementServiceTest {
             String newName = svc.findByNumber(number).getName();
             element.setName(originalName);
             svc.save(element);
-            assertNotEquals(newName, originalName);
+            assertNotEquals(originalName, newName);
         }
     }
 

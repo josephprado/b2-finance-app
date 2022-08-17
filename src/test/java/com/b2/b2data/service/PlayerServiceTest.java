@@ -99,7 +99,7 @@ public class PlayerServiceTest {
         @Test
         public void findAll_test1() {
             List<Player> players = svc.findAll();
-            assertEquals(players, initialState);
+            assertEquals(initialState, players);
         }
     }
 
@@ -111,14 +111,14 @@ public class PlayerServiceTest {
         @Test
         public void findAllByBankStatus_test1() {
             int count = svc.findAllByBankStatus(true).size();
-            assertEquals(count, 4);
+            assertEquals(4, count);
         }
 
         @DisplayName("can find all non-banks")
         @Test
         public void findAllByBankStatus_test2() {
             int count = svc.findAllByBankStatus(false).size();
-            assertEquals(count, 6);
+            assertEquals(6, count);
         }
     }
 
@@ -155,7 +155,7 @@ public class PlayerServiceTest {
             String newName = svc.findById(id).getName();
             player.setName(originalName);
             svc.save(player);
-            assertNotEquals(newName, originalName);
+            assertNotEquals(originalName, newName);
         }
     }
 
