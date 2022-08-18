@@ -97,7 +97,7 @@ public class AccountController extends Controller<Account, AccountDTO> {
      *         if the update was unsuccessful
      */
     @PatchMapping("/{number}")
-    public ResponseEntity<Response<AccountDTO>> updateOne(@Valid @PathVariable(name = "number") String number,
+    public ResponseEntity<Response<AccountDTO>> updateOne(@PathVariable(name = "number") String number,
                                                           @Valid @RequestBody AccountDTO dto) {
         Account account = svc.findByNumber(number);
 

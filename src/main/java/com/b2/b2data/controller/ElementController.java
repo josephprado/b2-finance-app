@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * Controls requests for {@link Element} resources
+ */
 @RestController
 @RequestMapping("/api/elements")
 public class ElementController extends Controller<Element, ElementDTO> {
@@ -74,7 +77,7 @@ public class ElementController extends Controller<Element, ElementDTO> {
      *         if the update was unsuccessful
      */
     @PatchMapping("/{number}")
-    public ResponseEntity<Response<ElementDTO>> updateOne(@Valid @PathVariable(name = "number") Integer number,
+    public ResponseEntity<Response<ElementDTO>> updateOne(@PathVariable(name = "number") Integer number,
                                                           @Valid @RequestBody ElementDTO dto) {
         Element element = svc.findByNumber(number);
 
@@ -115,8 +118,6 @@ public class ElementController extends Controller<Element, ElementDTO> {
         }
         return responseCodeNoContent();
     }
-
-
 
     @Override
     protected Element convertDTO(ElementDTO dto, Element element) {
