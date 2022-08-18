@@ -88,7 +88,7 @@ public class TransactionLineService {
      * @param playerName A player name
      * @param memoPattern A memo pattern
      * @param isReconciled True if the reconciled date is not null
-     * @return A list of transaction lines matching the given parameters, sorted by transaction descending
+     * @return A list of transaction lines matching the given parameters, sorted by transaction date descending
      */
     public List<TransactionLine> findAll(Integer transactionId, String accountNumber, String playerName,
                                          String memoPattern, Boolean isReconciled) {
