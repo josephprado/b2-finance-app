@@ -145,6 +145,6 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
 
     @Override
     protected String resourceDoesNotExistMessage(Object key) {
-        return "Player name='"+key+"' does not exist";
+        return "Player name='"+key+"' does not exist.";
     }
 }
