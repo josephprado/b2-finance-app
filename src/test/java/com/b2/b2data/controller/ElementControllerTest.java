@@ -53,7 +53,6 @@ public class ElementControllerTest {
             assertEquals(initialState.size(), count);
         }
 
-
         @DisplayName("response from getAll is OK")
         @Test
         public void getAll_test2() {
