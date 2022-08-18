@@ -132,7 +132,7 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
         assert dto != null;
         assert player != null;
 
-        // to avoid mutating element parameter
+        // to avoid mutating player parameter
         Integer id = player.getId();
         player = new Player();
         player.setId(id);
