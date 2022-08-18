@@ -43,7 +43,8 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
      * Gets the player with the given name
      *
      * @param name A player name
-     * @return A response entity containing the requested player, or an error message if it does not exist
+     * @return A response entity containing a DTO of the requested player, or an error message
+     *         if it does not exist
      */
     @GetMapping("/{name}")
     public ResponseEntity<Response<PlayerDTO>> getByName(@PathVariable(name = "name") String name) {

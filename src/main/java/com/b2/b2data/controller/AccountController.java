@@ -54,7 +54,8 @@ public class AccountController extends Controller<Account, AccountDTO> {
      * Gets the account with the given number
      *
      * @param number An account number
-     * @return A response entity containing the requested account, or an error message if it does not exist
+     * @return A response entity containing a DTO of the requested account, or an error message
+     *         if it does not exist
      */
     @GetMapping("/{number}")
     public ResponseEntity<Response<AccountDTO>> getByNumber(@PathVariable(name = "number") String number) {

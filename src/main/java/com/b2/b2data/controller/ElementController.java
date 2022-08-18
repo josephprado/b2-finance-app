@@ -35,7 +35,8 @@ public class ElementController extends Controller<Element, ElementDTO> {
      * Gets the element with the given number
      *
      * @param number An element number
-     * @return A response entity containing the requested element, or an error message if it does not exist
+     * @return A response entity containing a DTO of the requested element, or an error message
+     *         if it does not exist
      */
     @GetMapping("/{number}")
     public ResponseEntity<Response<ElementDTO>> getByNumber(@PathVariable(name = "number") Integer number) {
