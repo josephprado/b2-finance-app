@@ -56,7 +56,7 @@ public class ElementControllerTest {
 
         @DisplayName("response from getAll is OK")
         @Test
-        public void getAll_test6() {
+        public void getAll_test2() {
             HttpStatus status = con.getAll().getStatusCode();
             assertEquals(HttpStatus.OK, status);
         }
@@ -90,7 +90,7 @@ public class ElementControllerTest {
 
         @DisplayName("response from unsuccessful get by number is NOT FOUND")
         @Test
-        public void getByNumber_tes43() {
+        public void getByNumber_tes4() {
             HttpStatus status = con.getByNumber(1234567890).getStatusCode();
             assertEquals(HttpStatus.NOT_FOUND, status);
         }
