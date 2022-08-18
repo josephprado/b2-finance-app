@@ -37,7 +37,7 @@ public class ElementController extends Controller<Element, ElementDTO> {
      * @param number An element number
      * @return A response entity containing the requested element, or an error message if it does not exist
      */
-    @GetMapping(value = "/{number}")
+    @GetMapping("/{number}")
     public ResponseEntity<Response<ElementDTO>> getByNumber(@PathVariable(name = "number") Integer number) {
         Element element = svc.findByNumber(number);
 

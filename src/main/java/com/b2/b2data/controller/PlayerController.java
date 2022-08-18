@@ -45,7 +45,7 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
      * @param name A player name
      * @return A response entity containing the requested player, or an error message if it does not exist
      */
-    @GetMapping(value = "/{name}")
+    @GetMapping("/{name}")
     public ResponseEntity<Response<PlayerDTO>> getByName(@PathVariable(name = "name") String name) {
         Player player = svc.findByName(name);
 

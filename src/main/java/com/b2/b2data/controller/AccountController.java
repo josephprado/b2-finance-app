@@ -36,7 +36,7 @@ public class AccountController extends Controller<Account, AccountDTO> {
      * @param isBank True or false
      * @return A response entity containing a list of account DTOs, sorted by account number ascending
      */
-    @GetMapping(value = "")
+    @GetMapping("")
     public ResponseEntity<Response<AccountDTO>> getAll(
             @RequestParam(name = "element", required = false) Integer elementNumber,
             @RequestParam(name = "player", required = false) String playerName,
@@ -56,7 +56,7 @@ public class AccountController extends Controller<Account, AccountDTO> {
      * @param number An account number
      * @return A response entity containing the requested account, or an error message if it does not exist
      */
-    @GetMapping(value = "/{number}")
+    @GetMapping("/{number}")
     public ResponseEntity<Response<AccountDTO>> getByNumber(@PathVariable(name = "number") String number) {
         Account account = svc.findByNumber(number);
 
