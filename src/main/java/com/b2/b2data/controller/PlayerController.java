@@ -27,6 +27,7 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
      * @see Player#setBank(Boolean) Definition of a bank
      * @return A response entity containing a list of player DTOs, sorted by name ascending
      */
+    @GetMapping("")
     public ResponseEntity<Response<PlayerDTO>> getAll(
             @RequestParam(name = "isBank", required = false) Boolean isBank) {
 

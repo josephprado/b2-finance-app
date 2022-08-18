@@ -25,6 +25,7 @@ public class ElementController extends Controller<Element, ElementDTO> {
      *
      * @return A response entity containing a list of element DTOs, sorted by number ascending
      */
+    @GetMapping("")
     public ResponseEntity<Response<ElementDTO>> getAll() {
         List<ElementDTO> data = svc.findAll().stream().map(ElementDTO::new).toList();
         return responseCodeOk(data);
