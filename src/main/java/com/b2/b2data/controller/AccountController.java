@@ -122,7 +122,7 @@ public class AccountController extends Controller<Account, AccountDTO> {
      * Deletes an existing account from the database
      *
      * @param number An account number
-     * @return A response entity containing the result of the delete operation
+     * @return A response entity containing the result of the deletion
      */
     @DeleteMapping("/{number}")
     public ResponseEntity<Response<AccountDTO>> deleteOne(@PathVariable(name = "number") String number) {

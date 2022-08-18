@@ -111,7 +111,7 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
      * Deletes an existing player from the database
      *
      * @param name A player name
-     * @return A response entity containing the result of the delete operation
+     * @return A response entity containing the result of the deletion
      */
     @DeleteMapping("/{name}")
     public ResponseEntity<Response<PlayerDTO>> deleteOne(@PathVariable(name = "name") String name) {

@@ -103,7 +103,7 @@ public class ElementController extends Controller<Element, ElementDTO> {
      * Deletes an existing element from the database
      *
      * @param number An element number
-     * @return A response entity containing the result of the delete operation
+     * @return A response entity containing the result of the deletion
      */
     @DeleteMapping("/{number}")
     public ResponseEntity<Response<ElementDTO>> deleteOne(@PathVariable(name = "number") Integer number) {
