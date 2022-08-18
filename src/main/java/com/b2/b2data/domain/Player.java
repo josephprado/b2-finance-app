@@ -40,8 +40,8 @@ public class Player extends Entry {
      * Constructs a new player
      *
      * @param name A unique name
-     * @param isBank True if the player is a bank, or false otherwise. See {@link #setBank}
-     *               for the definition of a bank
+     * @param isBank True if the player is a bank, or false otherwise
+     * @see #setBank(Boolean) Definiton of a bank
      */
     public Player(String name, Boolean isBank) {
         this.name = name;
