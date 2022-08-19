@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -88,10 +89,12 @@ public class TransactionLineService {
      * @param playerName A player name
      * @param memoPattern A memo pattern
      * @param isReconciled True if the reconciled date is not null
+     * @param from A minimum bounding date
+     * @param to A maximum bounding date
      * @return A list of transaction lines matching the given parameters, sorted by transaction date descending
      */
     public List<TransactionLine> findAll(Integer transactionId, String accountNumber, String playerName,
-                                         String memoPattern, Boolean isReconciled) {
+                                         String memoPattern, Boolean isReconciled, LocalDate from, LocalDate to) {
 
         List<TransactionLine> lines =
                 REPO.findAll(
@@ -100,7 +103,9 @@ public class TransactionLineService {
                                 .and(accountNumberEquals(accountNumber))
                                 .and(playerNameEquals(playerName))
                                 .and(memoLike(memoPattern))
-                                .and(reconciledIs(isReconciled)),
+                                .and(reconciledIs(isReconciled))
+                                .and(dateOnOrAfter(from))
+                                .and(dateOnOrBefore(to)),
                         Sort.by(TransactionLine.TRANSACTION).descending()
         );
         return lines
@@ -212,6 +217,38 @@ public class TransactionLineService {
 
             return criteriaBuilder.isNull(root.get(TransactionLine.DATE_RECONCILED));
         });
+    }
+
+    /**
+     * Creates a specification for a transaction line with a transaction date >= the given from date
+     *
+     * @param from A minimum bounding date
+     * @return A specification for a transaction line with a transaction date >= the given from date,
+     *         or an always true specification if from is null
+     */
+    private Specification<TransactionLine> dateOnOrAfter(LocalDate from) {
+        return ((root, query, criteriaBuilder) ->
+                from == null
+                        ? criteriaBuilder.conjunction()
+                        : criteriaBuilder.greaterThanOrEqualTo(root.get(TransactionLine.TRANSACTION)
+                                                                    .get(Transaction.DATE), from)
+        );
+    }
+
+    /**
+     * Creates a specification for a transaction line with a transaction date <= the given to date
+     *
+     * @param to A maximum bounding date
+     * @return A specification for a transaction line with a transaction date <= the given to date,
+     *         or an always true specification if to is null
+     */
+    private Specification<TransactionLine> dateOnOrBefore(LocalDate to) {
+        return ((root, query, criteriaBuilder) ->
+                to == null
+                        ? criteriaBuilder.conjunction()
+                        : criteriaBuilder.lessThanOrEqualTo(root.get(TransactionLine.TRANSACTION)
+                                                                .get(Transaction.DATE), to)
+        );
     }
     //endregion
 }

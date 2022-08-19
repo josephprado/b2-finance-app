@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -189,7 +190,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllParams_test1_generator")
         public void findAllParams_test1(int transactionId, int expectedCount) {
-            int count = svc.findAll(transactionId, null, null, null, null).size();
+            int count = svc.findAll(transactionId, null, null, null, null, null, null).size();
             assertEquals(expectedCount, count);
         }
 
@@ -214,7 +215,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllParams_test2_generator")
         public void findAllParams_test2(String accountNumber, int expectedCount) {
-            int count = svc.findAll(null, accountNumber, null, null, null).size();
+            int count = svc.findAll(null, accountNumber, null, null, null, null, null).size();
             assertEquals(expectedCount, count);
         }
 
@@ -237,7 +238,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllParams_test3_generator")
         public void findAllParams_test3(String playerName, int expectedCount) {
-            int count = svc.findAll(null, null, playerName, null, null).size();
+            int count = svc.findAll(null, null, playerName, null, null, null, null).size();
             assertEquals(expectedCount, count);
         }
 
@@ -260,7 +261,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllParams_test4_generator")
         public void findAllParams_test4(String memoPattern, int expectedCount) {
-            int count = svc.findAll(null, null, null, memoPattern, null).size();
+            int count = svc.findAll(null, null, null, memoPattern, null, null, null).size();
             assertEquals(expectedCount, count);
         }
 
@@ -278,7 +279,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllParams_test5_generator")
         public void findAllParams_test5(boolean isReconciled, int expectedCount) {
-            int count = svc.findAll(null, null, null, null, isReconciled).size();
+            int count = svc.findAll(null, null, null, null, isReconciled, null, null).size();
             assertEquals(expectedCount, count);
         }
 
@@ -289,27 +290,68 @@ public class TransactionLineServiceTest {
             );
         }
 
-        @DisplayName("can find all by all 5 parameters")
+        @DisplayName("can find all on or after from date")
         @ParameterizedTest
         @MethodSource("findAllParams_test6_generator")
-        public void findAllParams_test6(int transactionId, String accountNumber, String playerName,
-                                        String memoPattern, boolean isReconciled, int expectedCount) {
-
-            int count = svc.findAll(transactionId, accountNumber, playerName, memoPattern, isReconciled).size();
+        public void findAllParams_test6(LocalDate from, int expectedCount) {
+            int count = svc.findAll(null, null, null, null, null, from, null).size();
             assertEquals(expectedCount, count);
         }
 
         private static Stream<Arguments> findAllParams_test6_generator() {
             return Stream.of(
-                    Arguments.of(1, "5000", "Walmart", "%", true, 1),
-                    Arguments.of(1, "5000", "Walmart", "%", false, 2)
+                    Arguments.of(LocalDate.of(2022,1,31), 26),
+                    Arguments.of(LocalDate.of(2022,8,31), 10),
+                    Arguments.of(LocalDate.of(2022,11,15), 2)
+            );
+        }
+
+        @DisplayName("can find all on or before to date")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test7_generator")
+        public void findAllParams_test7(LocalDate to, int expectedCount) {
+            int count = svc.findAll(null, null, null, null, null, null, to).size();
+            assertEquals(expectedCount, count);
+        }
+
+        private static Stream<Arguments> findAllParams_test7_generator() {
+            return Stream.of(
+                    Arguments.of(LocalDate.of(2022,1,31), 4),
+                    Arguments.of(LocalDate.of(2022,8,31), 20),
+                    Arguments.of(LocalDate.of(2022,11,15), 24)
+            );
+        }
+
+        @DisplayName("can find all by all 7 parameters")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test8_generator")
+        public void findAllParams_test8(int transactionId, String accountNumber, String playerName, String memoPattern,
+                                        boolean isReconciled, LocalDate from, LocalDate to, int expectedCount) {
+
+            int count = svc.findAll(
+                    transactionId,
+                    accountNumber,
+                    playerName,
+                    memoPattern,
+                    isReconciled,
+                    from,
+                    to
+            ).size();
+
+            assertEquals(expectedCount, count);
+        }
+
+        private static Stream<Arguments> findAllParams_test8_generator() {
+            return Stream.of(
+                    Arguments.of(1, "5000", "Walmart", "%", true, LocalDate.of(2022,1,31), LocalDate.of(2022,1,31), 1),
+                    Arguments.of(1, "5000", "Walmart", "%", false, LocalDate.of(2022,1,31), LocalDate.of(2022,1,31), 2)
             );
         }
 
         @DisplayName("passing all null parameters finds all")
         @Test
-        public void findAllParams_test7() {
-            int count = svc.findAll(null, null, null, null, null).size();
+        public void findAllParams_test9() {
+            int count = svc.findAll(null, null, null, null, null, null, null).size();
             assertEquals(initialState.size(), count);
         }
     }
@@ -341,7 +383,7 @@ public class TransactionLineServiceTest {
             line.setMemo(memo);
             svc.save(line);
             svc.save(line);
-            boolean saved = svc.findAll(null, null, null, memo, null).size() == 1;
+            boolean saved = svc.findAll(null, null, null, memo, null, null, null).size() == 1;
             svc.delete(line);
             assertTrue(saved);
         }
