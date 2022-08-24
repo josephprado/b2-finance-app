@@ -17,8 +17,8 @@ public class TransactionLineDTO extends DTO {
     private TransactionLineId id;
 
     @NotBlank
-    private String account;
-    private String player;
+    private String accountNumber;
+    private String playerName;
 
     @NotNull
     private Double amount;
@@ -44,15 +44,15 @@ public class TransactionLineDTO extends DTO {
         id = new TransactionLineId();
 
         if (transactionLine.getTransaction() != null)
-            id.setTransaction(transactionLine.getTransaction().getId());
+            id.setTransactionId(transactionLine.getTransaction().getId());
 
-        id.setLine(transactionLine.getLine());
+        id.setLineId(transactionLine.getLineId());
 
         if (transactionLine.getAccount() != null)
-            account = transactionLine.getAccount().getNumber();
+            accountNumber = transactionLine.getAccount().getNumber();
 
         if (transactionLine.getPlayer() != null)
-            player = transactionLine.getPlayer().getName();
+            playerName = transactionLine.getPlayer().getName();
 
         amount = transactionLine.getAmount();
         memo = transactionLine.getMemo();
@@ -74,8 +74,8 @@ public class TransactionLineDTO extends DTO {
             return false;
 
         return Objects.equals(id, that.id)
-                && Objects.equals(account, that.account)
-                && Objects.equals(player, that.player)
+                && Objects.equals(accountNumber, that.accountNumber)
+                && Objects.equals(playerName, that.playerName)
                 && Objects.equals(amount, that.amount)
                 && Objects.equals(memo, that.memo)
                 && Objects.equals(dateReconciled, that.dateReconciled);
@@ -88,22 +88,22 @@ public class TransactionLineDTO extends DTO {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, account, player, amount, memo, dateReconciled);
+        return Objects.hash(id, accountNumber, playerName, amount, memo, dateReconciled);
     }
 
     /**
      * Returns a string representation of the transaction line DTO
      *
      * @return A string representation of the transaction line DTO in the following format:
-     * <br/><br/>TransactionLineDTO{transaction=transactionNumber, line=line, account='accountNumber',
-     *           player='playerName', amount=amount, memo='memo', dateReconciled=dateReconciled}
+     * <br/><br/>TransactionLineDTO{transaction=transactionNumber, line=line, accountNumber='accountNumber',
+     *           playerName='playerName', amount=amount, memo='memo', dateReconciled=dateReconciled}
      */
     @Override
     public String toString() {
         return "TransactionLineDTO{" +
                 "id=" + id +
-                ", account='" + account + '\'' +
-                ", player='" + player + '\'' +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", playerName='" + playerName + '\'' +
                 ", amount=" + amount +
                 ", memo='" + memo + '\'' +
                 ", dateReconciled=" + dateReconciled +
@@ -133,17 +133,17 @@ public class TransactionLineDTO extends DTO {
      *
      * @return The number of the account associated with the transaction line DTO
      */
-    public String getAccount() {
-        return account;
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
     /**
      * Sets the account number of the transaction line DTO
      *
-     * @param account An account number
+     * @param accountNumber An account number
      */
-    public void setAccount(String account) {
-        this.account = account;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     /**
@@ -151,17 +151,17 @@ public class TransactionLineDTO extends DTO {
      *
      * @return The name of the player associated with the transaction line DTO
      */
-    public String getPlayer() {
-        return player;
+    public String getPlayerName() {
+        return playerName;
     }
 
     /**
      * Sets the player name of the transaction line DTO
      *
-     * @param player A player name
+     * @param playerName A player name
      */
-    public void setPlayer(String player) {
-        this.player = player;
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 
     /**

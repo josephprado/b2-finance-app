@@ -18,8 +18,8 @@ public class AccountDTO extends DTO {
     private String name;
 
     @NotNull
-    private Integer element;
-    private String player;
+    private Integer elementNumber;
+    private String playerName;
 
     /**
      * Constructs a new account DTO
@@ -41,10 +41,10 @@ public class AccountDTO extends DTO {
         name = account.getName();
 
         if (account.getElement() != null)
-            element = account.getElement().getNumber();
+            elementNumber = account.getElement().getNumber();
 
         if (account.getPlayer() != null)
-            player = account.getPlayer().getName();
+            playerName = account.getPlayer().getName();
     }
 
     /**
@@ -63,8 +63,8 @@ public class AccountDTO extends DTO {
 
         return Objects.equals(number, that.number)
                 && Objects.equals(name, that.name)
-                && Objects.equals(element, that.element)
-                && Objects.equals(player, that.player);
+                && Objects.equals(elementNumber, that.elementNumber)
+                && Objects.equals(playerName, that.playerName);
     }
 
     /**
@@ -74,22 +74,22 @@ public class AccountDTO extends DTO {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(number, name, element, player);
+        return Objects.hash(number, name, elementNumber, playerName);
     }
 
     /**
      * Returns a string representation of the account DTO
      *
      * @return A string representation of the account DTO in the following format:
-     * <br/><br/>AccountDTO{number='number', name='name', element=elementNumber, player='playerName'}
+     * <br/><br/>AccountDTO{number='number', name='name', elementNumber=elementNumber, playerName='playerName'}
      */
     @Override
     public String toString() {
         return "AccountDTO{" +
                 "number='" + number + '\'' +
                 ", name='" + name + '\'' +
-                ", element=" + element +
-                ", player='" + player + '\'' +
+                ", elementNumber=" + elementNumber +
+                ", playerName='" + playerName + '\'' +
                 '}';
     }
 
@@ -134,17 +134,17 @@ public class AccountDTO extends DTO {
      *
      * @return The number of the element associated with the account DTO
      */
-    public Integer getElement() {
-        return element;
+    public Integer getElementNumber() {
+        return elementNumber;
     }
 
     /**
      * Sets the element number of the account DTO
      *
-     * @param element An element number
+     * @param elementNumber An element number
      */
-    public void setElement(Integer element) {
-        this.element = element;
+    public void setElementNumber(Integer elementNumber) {
+        this.elementNumber = elementNumber;
     }
 
     /**
@@ -152,16 +152,16 @@ public class AccountDTO extends DTO {
      *
      * @return The name of the player associated with the account DTO
      */
-    public String getPlayer() {
-        return player;
+    public String getPlayerName() {
+        return playerName;
     }
 
     /**
      * Sets the player name of the account DTO
      *
-     * @param player A player name
+     * @param playerName A player name
      */
-    public void setPlayer(String player) {
-        this.player = player;
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 }

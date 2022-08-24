@@ -216,13 +216,13 @@ public class TransactionServiceTest {
         public void save_test4() {
             int id = 1;
             Transaction transaction = svc.findById(id);
-            List<TransactionLine> originalLines = lSvc.findAllByTransaction(transaction.getId());
+            List<TransactionLine> originalLines = lSvc.findAllByTransactionId(transaction.getId());
             List<TransactionLine> newLines = new ArrayList<>();
             newLines.add(new TransactionLine(null, null, aSvc.findById(1), 1000.0));
             newLines.add(new TransactionLine(null, null, aSvc.findById(1), -1000.0));
             assert originalLines.size() > newLines.size();
             svc.save(transaction, newLines);
-            List<TransactionLine> savedLines = lSvc.findAllByTransaction(id);
+            List<TransactionLine> savedLines = lSvc.findAllByTransactionId(id);
             svc.save(transaction, originalLines);
             assertEquals(newLines.size(), savedLines.size());
         }
@@ -252,9 +252,9 @@ public class TransactionServiceTest {
                 new TransactionLine(null, null, aSvc.findById(1), -1000.0)
             );
             transaction = svc.save(transaction, lines);
-            assert lSvc.findAllByTransaction(transaction.getId()).size() == 2;
+            assert lSvc.findAllByTransactionId(transaction.getId()).size() == 2;
             svc.delete(transaction);
-            int count = lSvc.findAllByTransaction(transaction.getId()).size();
+            int count = lSvc.findAllByTransactionId(transaction.getId()).size();
             assertEquals(0, count);
         }
     }

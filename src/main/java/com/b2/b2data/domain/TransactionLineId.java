@@ -9,11 +9,12 @@ import java.util.Objects;
 public class TransactionLineId implements Serializable {
 
     // field names
-    public static final String TRANSACTION = "transaction";
-    public static final String LINE = "line";
+    public static final String TRANSACTION_ID = "transactionId";
+    public static final String LINE_ID = "lineID";
 
+    // field names must match transaction line field names
     private Integer transaction;
-    private Integer line;
+    private Integer lineId;
 
     /**
      * Constructs a new transaction line id
@@ -24,12 +25,12 @@ public class TransactionLineId implements Serializable {
     /**
      * Constructs a new transaction line id
      *
-     * @param transaction A transaction id
-     * @param line A line id
+     * @param transactionId A transaction id
+     * @param lineId A line id
      */
-    public TransactionLineId(Integer transaction, Integer line) {
-        this.transaction = transaction;
-        this.line = line;
+    public TransactionLineId(Integer transactionId, Integer lineId) {
+        this.transaction = transactionId;
+        this.lineId = lineId;
     }
 
     /**
@@ -47,7 +48,7 @@ public class TransactionLineId implements Serializable {
         if (!(o instanceof TransactionLineId that))
             return false;
 
-        return Objects.equals(transaction, that.transaction) && Objects.equals(line, that.line);
+        return Objects.equals(transaction, that.transaction) && Objects.equals(lineId, that.lineId);
     }
 
     /**
@@ -57,7 +58,21 @@ public class TransactionLineId implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(transaction, line);
+        return Objects.hash(transaction, lineId);
+    }
+
+    /**
+     * Returns a string representation of the transaction line id
+     *
+     * @return A string representation of the transaction line id in the following format:
+     * <br/><br/>TransactionLineId{transactionId=transactionId, lineId=lineId}
+     */
+    @Override
+    public String toString() {
+        return "TransactionLineId{" +
+                "transactionId=" + transaction +
+                ", lineId=" + lineId +
+                '}';
     }
 
     /**
@@ -65,17 +80,17 @@ public class TransactionLineId implements Serializable {
      *
      * @return The transaction id of the transaction line id
      */
-    public Integer getTransaction() {
+    public Integer getTransactionId() {
         return transaction;
     }
 
     /**
      * Sets the transaction id of the transaction line id
      *
-     * @param transaction A transaction id
+     * @param transactionId A transaction id
      */
-    public void setTransaction(Integer transaction) {
-        this.transaction = transaction;
+    public void setTransactionId(Integer transactionId) {
+        this.transaction = transactionId;
     }
 
     /**
@@ -83,16 +98,16 @@ public class TransactionLineId implements Serializable {
      *
      * @return The line id of the transaction line id
      */
-    public Integer getLine() {
-        return line;
+    public Integer getLineId() {
+        return lineId;
     }
 
     /**
      * Sets the line id of the transaction line id
      *
-     * @param line A line id
+     * @param lineId A line id
      */
-    public void setLine(Integer line) {
-        this.line = line;
+    public void setLineId(Integer lineId) {
+        this.lineId = lineId;
     }
 }

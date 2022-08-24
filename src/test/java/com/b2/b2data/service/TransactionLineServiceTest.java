@@ -52,7 +52,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findById_test1_generator")
         public void findById_test1(int transactionId, int lineId) {
-            TransactionLine line = svc.findById(transactionId, lineId);
+            TransactionLine line = svc.findById(new TransactionLineId(transactionId, lineId));
             assertNotNull(line);
         }
 
@@ -79,7 +79,7 @@ public class TransactionLineServiceTest {
         @DisplayName("search for non-existent id returns null")
         @Test
         public void findById_test2() {
-            TransactionLine line = svc.findById(-1, -1);
+            TransactionLine line = svc.findById(new TransactionLineId(-1, -1));
             assertNull(line);
         }
     }
@@ -92,7 +92,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllByTransaction_test1_generator")
         public void findAllByTransaction_test1(int transactionId, int expectedCount) {
-            int count = svc.findAllByTransaction(transactionId).size();
+            int count = svc.findAllByTransactionId(transactionId).size();
             assertEquals(expectedCount, count);
         }
 
@@ -122,7 +122,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllByAccount_test1_generator")
         public void findAllByAccount_test1(String accountNumber, int expectedCount) {
-            int count = svc.findAllByAccount(accountNumber).size();
+            int count = svc.findAllByAccountNumber(accountNumber).size();
             assertEquals(expectedCount, count);
         }
 
@@ -150,7 +150,7 @@ public class TransactionLineServiceTest {
         @ParameterizedTest
         @MethodSource("findAllByPlayer_test1_generator")
         public void findAllByPlayer_test1(String playerName, int expectedCount) {
-            int count = svc.findAllByPlayer(playerName).size();
+            int count = svc.findAllByPlayerName(playerName).size();
             assertEquals(expectedCount, count);
         }
 
@@ -367,7 +367,7 @@ public class TransactionLineServiceTest {
             int lineId = 1;
             TransactionLine line =
                     svc.save(new TransactionLine(tSvc.findById(tranId), lineId, aSvc.findById(1), 100.00));
-            boolean saved = svc.findById(tranId, lineId) != null;
+            boolean saved = svc.findById(new TransactionLineId(tranId, lineId)) != null;
             svc.delete(line);
             assertTrue(saved);
         }
@@ -393,11 +393,11 @@ public class TransactionLineServiceTest {
         public void save_test3() {
             int tranId = 11;
             int lineId = 1;
-            TransactionLine line = svc.findById(tranId, lineId);
+            TransactionLine line = svc.findById(new TransactionLineId(tranId, lineId));
             String originalMemo = line.getMemo();
             line.setMemo("-save-test-3-");
             svc.save(line);
-            String newMemo = svc.findById(tranId, lineId).getMemo();
+            String newMemo = svc.findById(new TransactionLineId(tranId, lineId)).getMemo();
             line.setMemo(originalMemo);
             svc.save(line);
             assertNotEquals(originalMemo, newMemo);
@@ -415,9 +415,9 @@ public class TransactionLineServiceTest {
             int lineId = 1;
             TransactionLine line =
                     svc.save(new TransactionLine(tSvc.findById(tranId), lineId, aSvc.findById(1), 100.00));
-            assert svc.findById(tranId, lineId) != null;
+            assert svc.findById(new TransactionLineId(tranId, lineId)) != null;
             svc.delete(line);
-            boolean deleted = svc.findById(tranId, lineId) == null;
+            boolean deleted = svc.findById(new TransactionLineId(tranId, lineId)) == null;
             assertTrue(deleted);
         }
     }

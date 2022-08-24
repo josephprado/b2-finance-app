@@ -101,10 +101,10 @@ public class TransactionService {
         for (int i = 0; i < lines.size(); i++) {
             TransactionLine line = lines.get(i);
             line.setTransaction(tranToSave);
-            line.setLine(i+1);
+            line.setLineId(i+1);
             linesToSave.add(line);
         }
-        List<TransactionLine> existingLines = LINE_REPO.findAllByTransactionIdOrderByLineAsc(tranToSave.getId());
+        List<TransactionLine> existingLines = LINE_REPO.findAllByTransactionIdOrderByLineIdAsc(tranToSave.getId());
 
         // new lines will overwrite existing ones, so if there are more existing lines than new lines,
         // the excess existing lines will not get overwritten, so they must be deleted
@@ -124,7 +124,7 @@ public class TransactionService {
     @Transactional
     @Modifying
     public void delete(Transaction transaction) {
-        LINE_REPO.deleteAll(LINE_REPO.findAllByTransactionIdOrderByLineAsc(transaction.getId()));
+        LINE_REPO.deleteAll(LINE_REPO.findAllByTransactionIdOrderByLineIdAsc(transaction.getId()));
         REPO.delete(transaction);
     }
 

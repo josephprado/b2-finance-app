@@ -200,11 +200,11 @@ public class TransactionControllerTest {
             dto.setMemo("-createOne-test1-");
 
             TransactionLineDTO l1 = new TransactionLineDTO();
-            l1.setAccount("99");
+            l1.setAccountNumber("99");
             l1.setAmount(100.0);
 
             TransactionLineDTO l2 = new TransactionLineDTO();
-            l2.setAccount("99");
+            l2.setAccountNumber("99");
             l2.setAmount(-100.0);
 
             dto.setLines(List.of(l1, l2));
@@ -224,11 +224,11 @@ public class TransactionControllerTest {
             dto.setMemo("-createOne-test2-");
 
             TransactionLineDTO l1 = new TransactionLineDTO();
-            l1.setAccount("99");
+            l1.setAccountNumber("99");
             l1.setAmount(100.0);
 
             TransactionLineDTO l2 = new TransactionLineDTO();
-            l2.setAccount("99");
+            l2.setAccountNumber("99");
             l2.setAmount(-100.0);
 
             dto.setLines(List.of(l1, l2));
@@ -249,11 +249,11 @@ public class TransactionControllerTest {
             dto.setMemo("-createOne-test3-");
 
             TransactionLineDTO l1 = new TransactionLineDTO();
-            l1.setAccount("99");
+            l1.setAccountNumber("99");
             l1.setAmount(100.0);
 
             TransactionLineDTO l2 = new TransactionLineDTO();
-            l2.setAccount("99");
+            l2.setAccountNumber("99");
             l2.setAmount(-100.0);
 
             dto.setLines(List.of(l1, l2));
@@ -275,11 +275,11 @@ public class TransactionControllerTest {
             dto.setMemo("-createOne-test4-");
 
             TransactionLineDTO l1 = new TransactionLineDTO();
-            l1.setAccount("99");
+            l1.setAccountNumber("99");
             l1.setAmount(100.0);
 
             TransactionLineDTO l2 = new TransactionLineDTO();
-            l2.setAccount("99");
+            l2.setAccountNumber("99");
             l2.setAmount(100.0);
 
             dto.setLines(List.of(l1, l2));
@@ -298,7 +298,7 @@ public class TransactionControllerTest {
             dto.setMemo("-createOne-test5-");
 
             TransactionLineDTO l1 = new TransactionLineDTO();
-            l1.setAccount("99");
+            l1.setAccountNumber("99");
             l1.setAmount(100.0);
 
             dto.setLines(List.of(l1));
@@ -317,13 +317,13 @@ public class TransactionControllerTest {
             dto.setMemo("-createOne-test6-a-");
 
             TransactionLineDTO l1 = new TransactionLineDTO();
-            l1.setAccount("99");
+            l1.setAccountNumber("99");
             l1.setAmount(100.0);
 
             TransactionLineDTO l2 = new TransactionLineDTO();
-            l2.setAccount("99");
+            l2.setAccountNumber("99");
             l2.setAmount(-100.0);
-            l2.setPlayer("-createOne-test6-b-");
+            l2.setPlayerName("-createOne-test6-b-");
 
             dto.setLines(List.of(l1, l2));
 
@@ -351,7 +351,7 @@ public class TransactionControllerTest {
             dto.setId(id);
             dto.setDate(transaction.getDate());
             dto.setMemo(newMemo);
-            dto.setLines(lSvc.findAllByTransaction(id).stream().map(TransactionLineDTO::new).toList());
+            dto.setLines(lSvc.findAllByTransactionId(id).stream().map(TransactionLineDTO::new).toList());
 
             dto = Objects.requireNonNull(con.updateOne(id, dto).getBody()).getData().get(0);
             String memo = svc.findById(id).getMemo();
@@ -374,7 +374,7 @@ public class TransactionControllerTest {
             dto.setId(id);
             dto.setDate(transaction.getDate());
             dto.setMemo(newMemo);
-            dto.setLines(lSvc.findAllByTransaction(id).stream().map(TransactionLineDTO::new).toList());
+            dto.setLines(lSvc.findAllByTransactionId(id).stream().map(TransactionLineDTO::new).toList());
 
             HttpStatus status = con.updateOne(id, dto).getStatusCode();
 
@@ -391,7 +391,7 @@ public class TransactionControllerTest {
             dto.setId(id);
             dto.setDate(LocalDate.now());
             dto.setMemo("-updateOne-test3-");
-            dto.setLines(lSvc.findAllByTransaction(id).stream().map(TransactionLineDTO::new).toList());
+            dto.setLines(lSvc.findAllByTransactionId(id).stream().map(TransactionLineDTO::new).toList());
 
             HttpStatus status = con.updateOne(id, dto).getStatusCode();
             assertEquals(HttpStatus.NOT_FOUND, status);
@@ -409,7 +409,7 @@ public class TransactionControllerTest {
             dto.setId(id);
             dto.setDate(transaction.getDate());
             dto.setMemo(newMemo);
-            dto.setLines(lSvc.findAllByTransaction(id).stream().map(TransactionLineDTO::new).toList());
+            dto.setLines(lSvc.findAllByTransactionId(id).stream().map(TransactionLineDTO::new).toList());
 
             String location = Objects.requireNonNull(con.updateOne(id, dto).getHeaders().getLocation()).toString();
             String expectedLocation = ServletUriComponentsBuilder.fromCurrentRequest().toUriString()+"/"+id;
@@ -426,11 +426,11 @@ public class TransactionControllerTest {
             TransactionDTO dto = new TransactionDTO(svc.findById(id));
 
             TransactionLineDTO l1 = new TransactionLineDTO();
-            l1.setAccount("99");
+            l1.setAccountNumber("99");
             l1.setAmount(100.0);
 
             TransactionLineDTO l2 = new TransactionLineDTO();
-            l2.setAccount("99");
+            l2.setAccountNumber("99");
             l2.setAmount(100.0);
 
             dto.setLines(List.of(l1, l2));
@@ -448,7 +448,7 @@ public class TransactionControllerTest {
             TransactionDTO dto = new TransactionDTO(svc.findById(id));
 
             TransactionLineDTO l1 = new TransactionLineDTO();
-            l1.setAccount("99");
+            l1.setAccountNumber("99");
             l1.setAmount(100.0);
 
             dto.setLines(List.of(l1));
@@ -466,13 +466,13 @@ public class TransactionControllerTest {
             TransactionDTO dto = new TransactionDTO(svc.findById(id));
 
             TransactionLineDTO l1 = new TransactionLineDTO();
-            l1.setAccount("99");
+            l1.setAccountNumber("99");
             l1.setAmount(100.0);
 
             TransactionLineDTO l2 = new TransactionLineDTO();
-            l2.setAccount("99");
+            l2.setAccountNumber("99");
             l2.setAmount(-100.0);
-            l2.setPlayer("-updateOne-test7-");
+            l2.setPlayerName("-updateOne-test7-");
 
             dto.setLines(List.of(l1, l2));
 
@@ -493,7 +493,7 @@ public class TransactionControllerTest {
             TransactionDTO dto = new TransactionDTO();
             dto.setDate(LocalDate.now());
             dto.setMemo("-deleteOne-test1-");
-            dto.setLines(lSvc.findAllByTransaction(11).stream().map(TransactionLineDTO::new).toList());
+            dto.setLines(lSvc.findAllByTransactionId(11).stream().map(TransactionLineDTO::new).toList());
 
             int id = Objects.requireNonNull(con.createOne(dto).getBody()).getData().get(0).getId();
             assert svc.findById(id) != null;
@@ -509,7 +509,7 @@ public class TransactionControllerTest {
             TransactionDTO dto = new TransactionDTO();
             dto.setDate(LocalDate.now());
             dto.setMemo("-deleteOne-test2-");
-            dto.setLines(lSvc.findAllByTransaction(11).stream().map(TransactionLineDTO::new).toList());
+            dto.setLines(lSvc.findAllByTransactionId(11).stream().map(TransactionLineDTO::new).toList());
 
             int id = Objects.requireNonNull(con.createOne(dto).getBody()).getData().get(0).getId();
             assert svc.findById(id) != null;
