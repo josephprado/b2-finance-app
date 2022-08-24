@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.ValidationException;
 import java.util.List;
 
 /**
@@ -13,8 +14,18 @@ import java.util.List;
  *
  * @param <T> An entry
  * @param <U> A DTO
+ * @param <V> The public key type of U
  */
-public abstract class Controller<T extends Entry, U extends DTO> {
+public abstract class Controller<T extends Entry, U extends DTO, V> {
+
+    /**
+     * Returns the entry with the given primary key, if it exists
+     *
+     * @param key A primary key
+     * @return The entry with the given primary key
+     * @throws ValidationException If the entry does not exist
+     */
+    protected abstract T getExistingEntry(V key) throws ValidationException;
 
     /**
      * Transfers the given DTO's values into the given entry
@@ -23,15 +34,7 @@ public abstract class Controller<T extends Entry, U extends DTO> {
      * @param entry An entry; must not be null
      * @return An entry with field values matching the DTO
      */
-    protected abstract T convertDTO(U dto, T entry);
-
-    /**
-     * Returns a message indicating that the requested resource does not exist
-     *
-     * @param key The resource identifier
-     * @return A message indicating that no resource with the given key exists
-     */
-    protected abstract String resourceDoesNotExistMessage(Object key);
+    protected abstract T convertDtoToEntry(U dto, T entry);
 
     /**
      * Creates a response entity indicating that the request was successful
@@ -61,7 +64,8 @@ public abstract class Controller<T extends Entry, U extends DTO> {
                 ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .toUriString()
-                        .replace(oldPath, newPath)
+                        .replace(oldPath, "")
+                        +newPath
         );
     }
 

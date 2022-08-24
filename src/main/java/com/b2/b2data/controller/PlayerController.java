@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/players")
-public class PlayerController extends Controller<Player, PlayerDTO> {
+public class PlayerController extends Controller<Player, PlayerDTO, String> {
 
     @Autowired
     private PlayerService svc;
@@ -48,11 +49,15 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
      */
     @GetMapping("/{name}")
     public ResponseEntity<Response<PlayerDTO>> getByName(@PathVariable(name = "name") String name) {
-        Player player = svc.findByName(name);
+        Player player;
 
-        return player == null
-                ? responseCodeNotFound(resourceDoesNotExistMessage(name))
-                : responseCodeOk(List.of(new PlayerDTO(player)));
+        try {
+            player = getExistingEntry(name);
+
+        } catch (ValidationException e) {
+            return responseCodeNotFound(e.getMessage());
+        }
+        return responseCodeOk(List.of(new PlayerDTO(player)));
     }
 
     /**
@@ -67,7 +72,7 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
         Player player;
 
         try {
-            player = svc.save(convertDTO(dto, new Player()));
+            player = svc.save(convertDtoToEntry(dto, new Player()));
 
         } catch (Exception e) {
             return responseCodeBadRequest(e.getMessage());
@@ -89,13 +94,16 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
     @PatchMapping("/{name}")
     public ResponseEntity<Response<PlayerDTO>> updateOne(@PathVariable(name = "name") String name,
                                                          @Valid @RequestBody PlayerDTO dto) {
-        Player player = svc.findByName(name);
-
-        if (player == null)
-            return responseCodeNotFound(resourceDoesNotExistMessage(name));
+        Player player;
 
         try {
-            player = svc.save(convertDTO(dto, player));
+            player = getExistingEntry(name);
+
+        } catch (ValidationException e) {
+            return responseCodeNotFound(e.getMessage());
+
+        } try {
+            player = svc.save(convertDtoToEntry(dto, player));
 
         } catch (Exception e) {
             return responseCodeBadRequest(e.getMessage());
@@ -115,12 +123,15 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
      */
     @DeleteMapping("/{name}")
     public ResponseEntity<Response<PlayerDTO>> deleteOne(@PathVariable(name = "name") String name) {
-        Player player = svc.findByName(name);
-
-        if (player == null)
-            return responseCodeNotFound(resourceDoesNotExistMessage(name));
+        Player player;
 
         try {
+            player = getExistingEntry(name);
+
+        } catch (ValidationException e) {
+            return responseCodeNotFound(e.getMessage());
+
+        } try {
             svc.delete(player);
 
         } catch (Exception e) {
@@ -129,8 +140,32 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
         return responseCodeNoContent();
     }
 
+    /**
+     * Returns the player with the given name
+     *
+     * @param name A player name
+     * @return The player with the given name
+     * @throws ValidationException If the player name does not exist
+     */
     @Override
-    protected Player convertDTO(PlayerDTO dto, Player player) {
+    protected Player getExistingEntry(String name) throws ValidationException {
+        Player player = svc.findByName(name);
+
+        if (player == null)
+            throw new ValidationException("Player name='"+name+"' does not exist.");
+
+        return player;
+    }
+
+    /**
+     * Transfers the given DTO's values into the given player
+     *
+     * @param dto A player DTO; must not be null
+     * @param player A player; must not be null
+     * @return A player with field values matching the player DTO
+     */
+    @Override
+    protected Player convertDtoToEntry(PlayerDTO dto, Player player) {
         assert dto != null;
         assert player != null;
 
@@ -143,10 +178,5 @@ public class PlayerController extends Controller<Player, PlayerDTO> {
         player.setBank(dto.getBank());
 
         return player;
-    }
-
-    @Override
-    protected String resourceDoesNotExistMessage(Object key) {
-        return "Player name='"+key+"' does not exist.";
     }
 }

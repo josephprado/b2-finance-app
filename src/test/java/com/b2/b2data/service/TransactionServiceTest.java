@@ -1,6 +1,7 @@
 package com.b2.b2data.service;
 
 import com.b2.b2data.domain.Transaction;
+import com.b2.b2data.domain.TransactionLine;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -23,6 +25,12 @@ public class TransactionServiceTest {
 
     @Autowired
     private TransactionService svc;
+
+    @Autowired
+    private TransactionLineService lSvc;
+
+    @Autowired
+    private AccountService aSvc;
 
     private List<Transaction> initialState;
 
@@ -202,6 +210,22 @@ public class TransactionServiceTest {
             svc.save(transaction);
             assertNotEquals(originalMemo, newMemo);
         }
+
+        @DisplayName("new saved lines overwrite old ones")
+        @Test
+        public void save_test4() {
+            int id = 1;
+            Transaction transaction = svc.findById(id);
+            List<TransactionLine> originalLines = lSvc.findAllByTransaction(transaction.getId());
+            List<TransactionLine> newLines = new ArrayList<>();
+            newLines.add(new TransactionLine(null, null, aSvc.findById(1), 1000.0));
+            newLines.add(new TransactionLine(null, null, aSvc.findById(1), -1000.0));
+            assert originalLines.size() > newLines.size();
+            svc.save(transaction, newLines);
+            List<TransactionLine> savedLines = lSvc.findAllByTransaction(id);
+            svc.save(transaction, originalLines);
+            assertEquals(newLines.size(), savedLines.size());
+        }
     }
 
     @Nested
@@ -217,6 +241,21 @@ public class TransactionServiceTest {
             svc.delete(transaction);
             boolean deleted = svc.findById(transaction.getId()) == null;
             assertTrue(deleted);
+        }
+
+        @DisplayName("delete transaction deletes all of its child transaction lines")
+        @Test
+        public void delete_test2() {
+            Transaction transaction = new Transaction(LocalDate.now(), "-delete-test2-");
+            List<TransactionLine> lines = List.of(
+                new TransactionLine(null, null, aSvc.findById(1), 1000.0),
+                new TransactionLine(null, null, aSvc.findById(1), -1000.0)
+            );
+            transaction = svc.save(transaction, lines);
+            assert lSvc.findAllByTransaction(transaction.getId()).size() == 2;
+            svc.delete(transaction);
+            int count = lSvc.findAllByTransaction(transaction.getId()).size();
+            assertEquals(0, count);
         }
     }
 }

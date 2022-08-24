@@ -1,6 +1,8 @@
 package com.b2.b2data.service;
 
 import com.b2.b2data.domain.Transaction;
+import com.b2.b2data.domain.TransactionLine;
+import com.b2.b2data.repository.TransactionLineRepository;
 import com.b2.b2data.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,15 +22,18 @@ import java.util.List;
 public class TransactionService {
 
     private final TransactionRepository REPO;
+    private final TransactionLineRepository LINE_REPO;
 
     /**
      * Constructs a new transaction service
      *
      * @param repo A transaction repository
+     * @param lineRepo A transaction line repository
      */
     @Autowired
-    public TransactionService(TransactionRepository repo) {
+    public TransactionService(TransactionRepository repo, TransactionLineRepository lineRepo) {
         REPO = repo;
+        LINE_REPO = lineRepo;
     }
 
     /**
@@ -80,13 +86,45 @@ public class TransactionService {
     }
 
     /**
-     * Deletes the given transaction from the database
+     * Saves the given transaction with transaction lines to the database
+     *
+     * @param transaction A transaction to save
+     * @param lines A list of transaction lines
+     * @return The transaction saved in the database
+     */
+    @Transactional
+    @Modifying
+    public Transaction save(Transaction transaction, List<TransactionLine> lines) {
+        Transaction tranToSave = REPO.save(transaction);
+        List<TransactionLine> linesToSave = new ArrayList<>(lines.size());
+
+        for (int i = 0; i < lines.size(); i++) {
+            TransactionLine line = lines.get(i);
+            line.setTransaction(tranToSave);
+            line.setLine(i+1);
+            linesToSave.add(line);
+        }
+        List<TransactionLine> existingLines = LINE_REPO.findAllByTransactionIdOrderByLineAsc(tranToSave.getId());
+
+        // new lines will overwrite existing ones, so if there are more existing lines than new lines,
+        // the excess existing lines will not get overwritten, so they must be deleted
+        if (existingLines.size() > linesToSave.size())
+            LINE_REPO.deleteAll(existingLines);
+
+        LINE_REPO.saveAll(linesToSave);
+
+        return tranToSave;
+    }
+
+    /**
+     * Deletes the given transaction and all associated transaction lines from the database
      *
      * @param transaction A transaction to delete
      */
     @Transactional
     @Modifying
     public void delete(Transaction transaction) {
+        LINE_REPO.deleteAll(LINE_REPO.findAllByTransactionIdOrderByLineAsc(transaction.getId()));
         REPO.delete(transaction);
     }
 

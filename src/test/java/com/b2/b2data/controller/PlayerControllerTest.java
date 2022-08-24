@@ -253,6 +253,27 @@ public class PlayerControllerTest {
             HttpStatus status = con.updateOne("Chase Bank", dto).getStatusCode();
             assertEquals(HttpStatus.BAD_REQUEST, status);
         }
+
+        @DisplayName("location header URI contains new player name")
+        @Test
+        @Transactional
+        public void updateOne_test5() {
+            int id = 10;
+            Player player = svc.findById(id);
+            String originalName = player.getName();
+            String newName = "-updateOne-test5-";
+
+            PlayerDTO dto = new PlayerDTO();
+            dto.setName(newName);
+            dto.setBank(player.getBank());
+
+            String location = Objects.requireNonNull(con.updateOne(originalName, dto).getHeaders().getLocation()).toString();
+            String expectedLocation = ServletUriComponentsBuilder.fromCurrentRequest().toUriString()+"/"+newName;
+
+            dto.setName(originalName);
+            assert con.updateOne(newName, dto).getStatusCode().equals(HttpStatus.OK);
+            assertEquals(expectedLocation, location);
+        }
     }
 
     @Nested

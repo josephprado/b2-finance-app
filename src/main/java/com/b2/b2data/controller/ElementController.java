@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/elements")
-public class ElementController extends Controller<Element, ElementDTO> {
+public class ElementController extends Controller<Element, ElementDTO, Integer> {
 
     @Autowired
     private ElementService svc;
@@ -40,11 +41,15 @@ public class ElementController extends Controller<Element, ElementDTO> {
      */
     @GetMapping("/{number}")
     public ResponseEntity<Response<ElementDTO>> getByNumber(@PathVariable(name = "number") Integer number) {
-        Element element = svc.findByNumber(number);
+        Element element;
 
-        return element == null
-                ? responseCodeNotFound(resourceDoesNotExistMessage(number))
-                : responseCodeOk(List.of(new ElementDTO(element)));
+        try {
+            element = getExistingEntry(number);
+
+        } catch (ValidationException e) {
+            return responseCodeNotFound(e.getMessage());
+        }
+        return responseCodeOk(List.of(new ElementDTO(element)));
     }
 
     /**
@@ -59,7 +64,7 @@ public class ElementController extends Controller<Element, ElementDTO> {
         Element element;
 
         try {
-            element = svc.save(convertDTO(dto, new Element()));
+            element = svc.save(convertDtoToEntry(dto, new Element()));
 
         } catch (Exception e) {
             return responseCodeBadRequest(e.getMessage());
@@ -81,13 +86,16 @@ public class ElementController extends Controller<Element, ElementDTO> {
     @PatchMapping("/{number}")
     public ResponseEntity<Response<ElementDTO>> updateOne(@PathVariable(name = "number") Integer number,
                                                           @Valid @RequestBody ElementDTO dto) {
-        Element element = svc.findByNumber(number);
-
-        if (element == null)
-            return responseCodeNotFound(resourceDoesNotExistMessage(number));
+        Element element;
 
         try {
-            element = svc.save(convertDTO(dto, element));
+            element = getExistingEntry(number);
+
+        } catch (ValidationException e) {
+            return responseCodeNotFound(e.getMessage());
+
+        } try {
+            element = svc.save(convertDtoToEntry(dto, element));
 
         } catch (Exception e) {
             return responseCodeBadRequest(e.getMessage());
@@ -95,7 +103,7 @@ public class ElementController extends Controller<Element, ElementDTO> {
         return responseCodeOk(
                 List.of(new ElementDTO(element)),
                 "/"+number,
-                "+"+element.getNumber()
+                "/"+element.getNumber()
         );
     }
 
@@ -107,12 +115,15 @@ public class ElementController extends Controller<Element, ElementDTO> {
      */
     @DeleteMapping("/{number}")
     public ResponseEntity<Response<ElementDTO>> deleteOne(@PathVariable(name = "number") Integer number) {
-        Element element = svc.findByNumber(number);
-
-        if (element == null)
-            return responseCodeNotFound(resourceDoesNotExistMessage(number));
+        Element element;
 
         try {
+            element = getExistingEntry(number);
+
+        } catch (ValidationException e) {
+            return responseCodeNotFound(e.getMessage());
+
+        } try {
             svc.delete(element);
 
         } catch (Exception e) {
@@ -121,8 +132,32 @@ public class ElementController extends Controller<Element, ElementDTO> {
         return responseCodeNoContent();
     }
 
+    /**
+     * Returns the element with the given number
+     *
+     * @param number An element number
+     * @return The element with the given number
+     * @throws ValidationException If the element number does not exist
+     */
     @Override
-    protected Element convertDTO(ElementDTO dto, Element element) {
+    protected Element getExistingEntry(Integer number) throws ValidationException {
+        Element element = svc.findByNumber(number);
+
+        if (element == null)
+            throw new ValidationException("Element number="+number+" does not exist.");
+
+        return element;
+    }
+
+    /**
+     * Transfers the given DTO's values into the given element
+     *
+     * @param dto An element DTO; must not be null
+     * @param element An element; must not be null
+     * @return An element with field values matching the element DTO
+     */
+    @Override
+    protected Element convertDtoToEntry(ElementDTO dto, Element element) {
         assert dto != null;
         assert element != null;
 
@@ -135,10 +170,5 @@ public class ElementController extends Controller<Element, ElementDTO> {
         element.setName(dto.getName());
 
         return element;
-    }
-
-    @Override
-    protected String resourceDoesNotExistMessage(Object key) {
-        return "Element number="+key+" does not exist.";
     }
 }

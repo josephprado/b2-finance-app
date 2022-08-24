@@ -1,6 +1,7 @@
 package com.b2.b2data.dto;
 
 import com.b2.b2data.domain.TransactionLine;
+import com.b2.b2data.domain.TransactionLineId;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -10,13 +11,10 @@ import java.util.Objects;
 /**
  * A data transfer object for transmitting {@link TransactionLine} entities to and from the client
  */
-public class TransactionLineDTO extends DTO{
+public class TransactionLineDTO extends DTO {
 
     @NotNull
-    private Integer transaction;
-
-    @NotNull
-    private Integer line;
+    private TransactionLineId id;
 
     @NotBlank
     private String account;
@@ -43,10 +41,12 @@ public class TransactionLineDTO extends DTO{
         if (transactionLine == null)
             throw new IllegalArgumentException("transaction line must not be null.");
 
-        if (transactionLine.getTransaction() != null)
-            transaction = transactionLine.getTransaction().getId();
+        id = new TransactionLineId();
 
-        line = transactionLine.getLine();
+        if (transactionLine.getTransaction() != null)
+            id.setTransaction(transactionLine.getTransaction().getId());
+
+        id.setLine(transactionLine.getLine());
 
         if (transactionLine.getAccount() != null)
             account = transactionLine.getAccount().getNumber();
@@ -73,8 +73,7 @@ public class TransactionLineDTO extends DTO{
         if (!(o instanceof TransactionLineDTO that))
             return false;
 
-        return Objects.equals(transaction, that.transaction)
-                && Objects.equals(line, that.line)
+        return Objects.equals(id, that.id)
                 && Objects.equals(account, that.account)
                 && Objects.equals(player, that.player)
                 && Objects.equals(amount, that.amount)
@@ -89,7 +88,7 @@ public class TransactionLineDTO extends DTO{
      */
     @Override
     public int hashCode() {
-        return Objects.hash(transaction, line, account, player, amount, memo, dateReconciled);
+        return Objects.hash(id, account, player, amount, memo, dateReconciled);
     }
 
     /**
@@ -102,8 +101,7 @@ public class TransactionLineDTO extends DTO{
     @Override
     public String toString() {
         return "TransactionLineDTO{" +
-                "transaction=" + transaction +
-                ", line=" + line +
+                "id=" + id +
                 ", account='" + account + '\'' +
                 ", player='" + player + '\'' +
                 ", amount=" + amount +
@@ -113,39 +111,21 @@ public class TransactionLineDTO extends DTO{
     }
 
     /**
-     * Gets the number of the transaction owning the transaction line DTO
+     * Gets the id of the transaction line DTO
      *
-     * @return The number of the transaction owning the transaction line DTO
+     * @return The id of the transaction line DTO
      */
-    public Integer getTransaction() {
-        return transaction;
+    public TransactionLineId getId() {
+        return id;
     }
 
     /**
-     * Sets the transaction number of the transaction line DTO
+     * Sets the id of the transaction line DTO
      *
-     * @param transaction A transaction number
+     * @param id A transaction line id
      */
-    public void setTransaction(Integer transaction) {
-        this.transaction = transaction;
-    }
-
-    /**
-     * Gets the line number of the transaction line DTO
-     *
-     * @return The line number of the transaction line DTO
-     */
-    public Integer getLine() {
-        return line;
-    }
-
-    /**
-     * Sets the line number of the transaction line DTO
-     *
-     * @param line A line number (must be unique among the lines owned by parent transaction DTO)
-     */
-    public void setLine(Integer line) {
-        this.line = line;
+    public void setId(TransactionLineId id) {
+        this.id = id;
     }
 
     /**

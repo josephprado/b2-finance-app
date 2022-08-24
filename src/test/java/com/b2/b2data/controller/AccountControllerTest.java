@@ -226,7 +226,7 @@ public class AccountControllerTest {
             assertEquals(expectedLocation, location);
         }
 
-        @DisplayName("response from unsuccessful creation is BAD REQUEST")
+        @DisplayName("response from unsuccessful creation (duplicate account) is BAD REQUEST")
         @Test
         public void createOne_test4() {
             String number = "99"; // duplicate number
@@ -234,8 +234,34 @@ public class AccountControllerTest {
             dto.setNumber(number);
             dto.setName("-createOne-test4-");
             dto.setElement(99);
-            dto.setPlayer("99");
-            
+
+            HttpStatus status = con.createOne(dto).getStatusCode();
+            assertEquals(HttpStatus.BAD_REQUEST, status);
+        }
+
+        @DisplayName("response from unsuccessful creation (non-existent element) is BAD REQUEST")
+        @Test
+        public void createOne_test5() {
+            String number = "-createOne-test5-a-";
+            AccountDTO dto = new AccountDTO();
+            dto.setNumber(number);
+            dto.setName("-createOne-test5-b-");
+            dto.setElement(123456789);
+
+            HttpStatus status = con.createOne(dto).getStatusCode();
+            assertEquals(HttpStatus.BAD_REQUEST, status);
+        }
+
+        @DisplayName("response from unsuccessful creation (non-existent player) is BAD REQUEST")
+        @Test
+        public void createOne_test6() {
+            String number = "-createOne-test6-a-";
+            AccountDTO dto = new AccountDTO();
+            dto.setNumber(number);
+            dto.setName("-createOne-test6-b-");
+            dto.setElement(99);
+            dto.setPlayer("-createOne-test6-c-");
+
             HttpStatus status = con.createOne(dto).getStatusCode();
             assertEquals(HttpStatus.BAD_REQUEST, status);
         }
@@ -307,7 +333,7 @@ public class AccountControllerTest {
             assertEquals(HttpStatus.NOT_FOUND, status);
         }
 
-        @DisplayName("response from bad update is BAD REQUEST")
+        @DisplayName("response from bad update (non-existent element) is BAD REQUEST")
         @Test
         public void updateOne_test4() {
             AccountDTO dto = new AccountDTO();
@@ -317,6 +343,36 @@ public class AccountControllerTest {
 
             HttpStatus status = con.updateOne("99", dto).getStatusCode();
             assertEquals(HttpStatus.BAD_REQUEST, status);
+        }
+
+        @DisplayName("response from bad update (non-existent player) is BAD REQUEST")
+        @Test
+        public void updateOne_test5() {
+            AccountDTO dto = new AccountDTO();
+            dto.setNumber("-updateOne-test5-a-");
+            dto.setName("-updateOne-test5-b-");
+            dto.setElement(99);
+            dto.setPlayer("-updateOne-test5-c-"); // non-existent player
+
+            HttpStatus status = con.updateOne("99", dto).getStatusCode();
+            assertEquals(HttpStatus.BAD_REQUEST, status);
+        }
+
+        @DisplayName("location header URI contains new account number")
+        @Test
+        @Transactional
+        public void updateOne_test6() {
+            String number = "99";
+            String newNumber = "-updateOne-test6-a-";
+            AccountDTO dto = new AccountDTO(con.getExistingEntry(number));
+            dto.setNumber(newNumber);
+
+            String location = Objects.requireNonNull(con.updateOne(number, dto).getHeaders().getLocation()).toString();
+            String expectedLocation = ServletUriComponentsBuilder.fromCurrentRequest().toUriString()+"/"+newNumber;
+
+            dto.setNumber(number);
+            assert con.updateOne(newNumber, dto).getStatusCode().equals(HttpStatus.OK);
+            assertEquals(expectedLocation, location);
         }
     }
 

@@ -213,7 +213,7 @@ public class ElementControllerTest {
             assertEquals(HttpStatus.NOT_FOUND, status);
         }
 
-        @DisplayName("response from bad update is BAD REQUEST")
+        @DisplayName("response from bad update (duplicate number) is BAD REQUEST")
         @Test
         public void updateOne_test4() {
             ElementDTO dto = new ElementDTO();
@@ -222,6 +222,27 @@ public class ElementControllerTest {
 
             HttpStatus status = con.updateOne(0, dto).getStatusCode();
             assertEquals(HttpStatus.BAD_REQUEST, status);
+        }
+
+        @DisplayName("location header URI contains new account number")
+        @Test
+        @Transactional
+        public void updateOne_test5() {
+            int number = 99;
+            Element element = svc.findByNumber(number);
+            String originalName = element.getName();
+            String newName = "-updateOne-test2-";
+
+            ElementDTO dto = new ElementDTO();
+            dto.setNumber(number);
+            dto.setName(newName);
+
+            String location = Objects.requireNonNull(con.updateOne(number, dto).getHeaders().getLocation()).toString();
+            String expectedLocation = ServletUriComponentsBuilder.fromCurrentRequest().toUriString()+"/"+number;
+
+            dto.setName(originalName);
+            assert con.updateOne(number, dto).getStatusCode().equals(HttpStatus.OK);
+            assertEquals(expectedLocation, location);
         }
     }
 

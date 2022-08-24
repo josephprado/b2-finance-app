@@ -2,6 +2,8 @@ package com.b2.b2data.controller;
 
 import com.b2.b2data.domain.Transaction;
 import com.b2.b2data.dto.TransactionDTO;
+import com.b2.b2data.dto.TransactionLineDTO;
+import com.b2.b2data.service.TransactionLineService;
 import com.b2.b2data.service.TransactionService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,6 +34,9 @@ public class TransactionControllerTest {
 
     @Autowired
     private TransactionService svc;
+
+    @Autowired
+    private TransactionLineService lSvc;
 
     private List<Transaction> initialState;
 
@@ -194,6 +199,16 @@ public class TransactionControllerTest {
             dto.setDate(LocalDate.now());
             dto.setMemo("-createOne-test1-");
 
+            TransactionLineDTO l1 = new TransactionLineDTO();
+            l1.setAccount("99");
+            l1.setAmount(100.0);
+
+            TransactionLineDTO l2 = new TransactionLineDTO();
+            l2.setAccount("99");
+            l2.setAmount(-100.0);
+
+            dto.setLines(List.of(l1, l2));
+
             dto = Objects.requireNonNull(con.createOne(dto).getBody()).getData().get(0);
             Transaction transaction = svc.findById(dto.getId());
 
@@ -207,6 +222,16 @@ public class TransactionControllerTest {
             TransactionDTO dto = new TransactionDTO();
             dto.setDate(LocalDate.now());
             dto.setMemo("-createOne-test2-");
+
+            TransactionLineDTO l1 = new TransactionLineDTO();
+            l1.setAccount("99");
+            l1.setAmount(100.0);
+
+            TransactionLineDTO l2 = new TransactionLineDTO();
+            l2.setAccount("99");
+            l2.setAmount(-100.0);
+
+            dto.setLines(List.of(l1, l2));
 
             var responseEntity = con.createOne(dto);
             int id = Objects.requireNonNull(responseEntity.getBody()).getData().get(0).getId();
@@ -223,6 +248,16 @@ public class TransactionControllerTest {
             dto.setDate(LocalDate.now());
             dto.setMemo("-createOne-test3-");
 
+            TransactionLineDTO l1 = new TransactionLineDTO();
+            l1.setAccount("99");
+            l1.setAmount(100.0);
+
+            TransactionLineDTO l2 = new TransactionLineDTO();
+            l2.setAccount("99");
+            l2.setAmount(-100.0);
+
+            dto.setLines(List.of(l1, l2));
+
             var responseEntity = con.createOne(dto);
             int id = Objects.requireNonNull(responseEntity.getBody()).getData().get(0).getId();
             String location = Objects.requireNonNull(responseEntity.getHeaders().getLocation()).toString();
@@ -230,6 +265,72 @@ public class TransactionControllerTest {
 
             assert con.deleteOne(id).getStatusCode().equals(HttpStatus.NO_CONTENT);
             assertEquals(expectedLocation, location);
+        }
+
+        @DisplayName("response from bad creation (non-zero sum) is BAD REQUEST")
+        @Test
+        public void createOne_test4() {
+            TransactionDTO dto = new TransactionDTO();
+            dto.setDate(LocalDate.now());
+            dto.setMemo("-createOne-test4-");
+
+            TransactionLineDTO l1 = new TransactionLineDTO();
+            l1.setAccount("99");
+            l1.setAmount(100.0);
+
+            TransactionLineDTO l2 = new TransactionLineDTO();
+            l2.setAccount("99");
+            l2.setAmount(100.0);
+
+            dto.setLines(List.of(l1, l2));
+
+            var responseEntity = con.createOne(dto);
+            HttpStatus status = responseEntity.getStatusCode();
+
+            assertEquals(HttpStatus.BAD_REQUEST, status);
+        }
+
+        @DisplayName("response from bad creation (< 2 lines) is BAD REQUEST")
+        @Test
+        public void createOne_test5() {
+            TransactionDTO dto = new TransactionDTO();
+            dto.setDate(LocalDate.now());
+            dto.setMemo("-createOne-test5-");
+
+            TransactionLineDTO l1 = new TransactionLineDTO();
+            l1.setAccount("99");
+            l1.setAmount(100.0);
+
+            dto.setLines(List.of(l1));
+
+            var responseEntity = con.createOne(dto);
+            HttpStatus status = responseEntity.getStatusCode();
+
+            assertEquals(HttpStatus.BAD_REQUEST, status);
+        }
+
+        @DisplayName("response from bad creation (invalid line) is BAD REQUEST")
+        @Test
+        public void createOne_test6() {
+            TransactionDTO dto = new TransactionDTO();
+            dto.setDate(LocalDate.now());
+            dto.setMemo("-createOne-test6-a-");
+
+            TransactionLineDTO l1 = new TransactionLineDTO();
+            l1.setAccount("99");
+            l1.setAmount(100.0);
+
+            TransactionLineDTO l2 = new TransactionLineDTO();
+            l2.setAccount("99");
+            l2.setAmount(-100.0);
+            l2.setPlayer("-createOne-test6-b-");
+
+            dto.setLines(List.of(l1, l2));
+
+            var responseEntity = con.createOne(dto);
+            HttpStatus status = responseEntity.getStatusCode();
+
+            assertEquals(HttpStatus.BAD_REQUEST, status);
         }
     }
 
@@ -241,7 +342,7 @@ public class TransactionControllerTest {
         @Test
         @Transactional
         public void updateOne_test1() {
-            int id = 12;
+            int id = 11;
             Transaction transaction = svc.findById(id);
             String originalMemo = transaction.getMemo();
             String newMemo = "-updateOne-test1-";
@@ -250,6 +351,7 @@ public class TransactionControllerTest {
             dto.setId(id);
             dto.setDate(transaction.getDate());
             dto.setMemo(newMemo);
+            dto.setLines(lSvc.findAllByTransaction(id).stream().map(TransactionLineDTO::new).toList());
 
             dto = Objects.requireNonNull(con.updateOne(id, dto).getBody()).getData().get(0);
             String memo = svc.findById(id).getMemo();
@@ -263,7 +365,7 @@ public class TransactionControllerTest {
         @Test
         @Transactional
         public void updateOne_test2() {
-            int id = 12;
+            int id = 11;
             Transaction transaction = svc.findById(id);
             String originalMemo = transaction.getMemo();
             String newMemo = "-updateOne-test2-";
@@ -272,6 +374,7 @@ public class TransactionControllerTest {
             dto.setId(id);
             dto.setDate(transaction.getDate());
             dto.setMemo(newMemo);
+            dto.setLines(lSvc.findAllByTransaction(id).stream().map(TransactionLineDTO::new).toList());
 
             HttpStatus status = con.updateOne(id, dto).getStatusCode();
 
@@ -288,9 +391,95 @@ public class TransactionControllerTest {
             dto.setId(id);
             dto.setDate(LocalDate.now());
             dto.setMemo("-updateOne-test3-");
+            dto.setLines(lSvc.findAllByTransaction(id).stream().map(TransactionLineDTO::new).toList());
 
             HttpStatus status = con.updateOne(id, dto).getStatusCode();
             assertEquals(HttpStatus.NOT_FOUND, status);
+        }
+
+        @DisplayName("location header URI contains new transaction id")
+        @Test
+        public void updateOne_test4() {
+            int id = 11;
+            Transaction transaction = svc.findById(id);
+            String originalMemo = transaction.getMemo();
+            String newMemo = "-updateOne-test4-";
+
+            TransactionDTO dto = new TransactionDTO();
+            dto.setId(id);
+            dto.setDate(transaction.getDate());
+            dto.setMemo(newMemo);
+            dto.setLines(lSvc.findAllByTransaction(id).stream().map(TransactionLineDTO::new).toList());
+
+            String location = Objects.requireNonNull(con.updateOne(id, dto).getHeaders().getLocation()).toString();
+            String expectedLocation = ServletUriComponentsBuilder.fromCurrentRequest().toUriString()+"/"+id;
+
+            dto.setMemo(originalMemo);
+            assert con.updateOne(id, dto).getStatusCode().equals(HttpStatus.OK);
+            assertEquals(expectedLocation, location);
+        }
+
+        @DisplayName("response from bad update (non-zero sum) is BAD REQUEST")
+        @Test
+        public void updateOne_test5() {
+            int id = 11;
+            TransactionDTO dto = new TransactionDTO(svc.findById(id));
+
+            TransactionLineDTO l1 = new TransactionLineDTO();
+            l1.setAccount("99");
+            l1.setAmount(100.0);
+
+            TransactionLineDTO l2 = new TransactionLineDTO();
+            l2.setAccount("99");
+            l2.setAmount(100.0);
+
+            dto.setLines(List.of(l1, l2));
+
+            var responseEntity = con.updateOne(id, dto);
+            HttpStatus status = responseEntity.getStatusCode();
+
+            assertEquals(HttpStatus.BAD_REQUEST, status);
+        }
+
+        @DisplayName("response from bad update (< 2 lines) is BAD REQUEST")
+        @Test
+        public void updateOne_test6() {
+            int id = 11;
+            TransactionDTO dto = new TransactionDTO(svc.findById(id));
+
+            TransactionLineDTO l1 = new TransactionLineDTO();
+            l1.setAccount("99");
+            l1.setAmount(100.0);
+
+            dto.setLines(List.of(l1));
+
+            var responseEntity = con.updateOne(id, dto);
+            HttpStatus status = responseEntity.getStatusCode();
+
+            assertEquals(HttpStatus.BAD_REQUEST, status);
+        }
+
+        @DisplayName("response from bad update (invalid line) is BAD REQUEST")
+        @Test
+        public void updateOne_test7() {
+            int id = 11;
+            TransactionDTO dto = new TransactionDTO(svc.findById(id));
+
+            TransactionLineDTO l1 = new TransactionLineDTO();
+            l1.setAccount("99");
+            l1.setAmount(100.0);
+
+            TransactionLineDTO l2 = new TransactionLineDTO();
+            l2.setAccount("99");
+            l2.setAmount(-100.0);
+            l2.setPlayer("-updateOne-test7-");
+
+            dto.setLines(List.of(l1, l2));
+
+            var responseEntity = con.updateOne(id, dto);
+            HttpStatus status = responseEntity.getStatusCode();
+
+            assertEquals(HttpStatus.BAD_REQUEST, status);
         }
     }
 
@@ -304,6 +493,7 @@ public class TransactionControllerTest {
             TransactionDTO dto = new TransactionDTO();
             dto.setDate(LocalDate.now());
             dto.setMemo("-deleteOne-test1-");
+            dto.setLines(lSvc.findAllByTransaction(11).stream().map(TransactionLineDTO::new).toList());
 
             int id = Objects.requireNonNull(con.createOne(dto).getBody()).getData().get(0).getId();
             assert svc.findById(id) != null;
@@ -319,6 +509,7 @@ public class TransactionControllerTest {
             TransactionDTO dto = new TransactionDTO();
             dto.setDate(LocalDate.now());
             dto.setMemo("-deleteOne-test2-");
+            dto.setLines(lSvc.findAllByTransaction(11).stream().map(TransactionLineDTO::new).toList());
 
             int id = Objects.requireNonNull(con.createOne(dto).getBody()).getData().get(0).getId();
             assert svc.findById(id) != null;
@@ -332,13 +523,6 @@ public class TransactionControllerTest {
         public void deleteOne_test3() {
             HttpStatus status = con.deleteOne(1234567890).getStatusCode();
             assertEquals(HttpStatus.NOT_FOUND, status);
-        }
-
-        @DisplayName("response from bad transaction delete is BAD REQUEST")
-        @Test
-        public void deleteOne_test4() {
-            HttpStatus status = con.deleteOne(1).getStatusCode(); // cannot delete due to fk constraints
-            assertEquals(HttpStatus.BAD_REQUEST, status);
         }
     }
 }

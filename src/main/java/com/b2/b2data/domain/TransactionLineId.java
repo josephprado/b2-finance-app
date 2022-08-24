@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Represents the primary key of a transaction line
+ * Represents the primary key of a {@link TransactionLine}
  */
 public class TransactionLineId implements Serializable {
 
@@ -58,5 +58,41 @@ public class TransactionLineId implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(transaction, line);
+    }
+
+    /**
+     * Gets the transaction id of the transaction line id
+     *
+     * @return The transaction id of the transaction line id
+     */
+    public Integer getTransaction() {
+        return transaction;
+    }
+
+    /**
+     * Sets the transaction id of the transaction line id
+     *
+     * @param transaction A transaction id
+     */
+    public void setTransaction(Integer transaction) {
+        this.transaction = transaction;
+    }
+
+    /**
+     * Gets the line id of the transaction line id
+     *
+     * @return The line id of the transaction line id
+     */
+    public Integer getLine() {
+        return line;
+    }
+
+    /**
+     * Sets the line id of the transaction line id
+     *
+     * @param line A line id
+     */
+    public void setLine(Integer line) {
+        this.line = line;
     }
 }

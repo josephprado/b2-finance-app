@@ -4,6 +4,7 @@ import com.b2.b2data.domain.Transaction;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,12 +12,12 @@ import java.util.Objects;
  */
 public class TransactionDTO extends DTO {
 
-    @NotNull
     private Integer id;
 
     @NotNull
     private LocalDate date;
     private String memo;
+    private List<TransactionLineDTO> lines;
 
     /**
      * Constructs a new transaction DTO
@@ -72,7 +73,7 @@ public class TransactionDTO extends DTO {
      * Returns a string representation of the transaction DTO
      *
      * @return A string representation of the transaction DTO in the following format:
-     * <br/><br/>TransactionDTO{id=id, date=date, memo='memo'}
+     * <br/><br/>TransactionDTO{id=id, date=date, memo='memo', lines=lines}
      */
     @Override
     public String toString() {
@@ -80,6 +81,7 @@ public class TransactionDTO extends DTO {
                 "id=" + id +
                 ", date=" + date +
                 ", memo='" + memo + '\'' +
+                ", lines=" + lines +
                 '}';
     }
 
@@ -135,5 +137,23 @@ public class TransactionDTO extends DTO {
      */
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    /**
+     * Gets the lines of the transaction DTO
+     *
+     * @return A list of transaction line DTOs
+     */
+    public List<TransactionLineDTO> getLines() {
+        return lines;
+    }
+
+    /**
+     * Sets the lines of the transaction DTO
+     *
+     * @param lines A list of transaction line DTOs
+     */
+    public void setLines(List<TransactionLineDTO> lines) {
+        this.lines = lines;
     }
 }
