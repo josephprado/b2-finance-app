@@ -33,9 +33,6 @@ public class PlayerServiceTest {
         assert svc.findAll().equals(initialState);
     }
 
-    /**
-     * public Player findById(int id)
-     */
     @Nested
     @DisplayName("FindById")
     public class FindById {
@@ -56,9 +53,6 @@ public class PlayerServiceTest {
         }
     }
 
-    /**
-     * public Player findByName(String name)
-     */
     @Nested
     @DisplayName("FindByName")
     public class FindByName {
@@ -97,9 +91,6 @@ public class PlayerServiceTest {
         }
     }
 
-    /**
-     * public List<Player> findAll()
-     */
     @Nested
     @DisplayName("FindAll")
     public class FindAll {
@@ -108,35 +99,29 @@ public class PlayerServiceTest {
         @Test
         public void findAll_test1() {
             List<Player> players = svc.findAll();
-            assertEquals(players, initialState);
+            assertEquals(initialState, players);
         }
     }
 
-    /**
-     * public List<Player> findAllBanks(boolean isBank)
-     */
     @Nested
-    @DisplayName("FindAllBanks")
-    public  class FindAllBanks {
+    @DisplayName("FindAllByBankStatus")
+    public class FindAllByBankStatus {
 
         @DisplayName("can find all banks")
         @Test
-        public void findAllBanks_test1() {
-            int count = svc.findAllBanks(true).size();
-            assertEquals(count, 4);
+        public void findAllByBankStatus_test1() {
+            int count = svc.findAllByBankStatus(true).size();
+            assertEquals(4, count);
         }
 
         @DisplayName("can find all non-banks")
         @Test
-        public void findAllBanks_test2() {
-            int count = svc.findAllBanks(false).size();
-            assertEquals(count, 6);
+        public void findAllByBankStatus_test2() {
+            int count = svc.findAllByBankStatus(false).size();
+            assertEquals(6, count);
         }
     }
 
-    /**
-     * public Player save(Player player)
-     */
     @Nested
     @DisplayName("Save")
     public class Save {
@@ -158,11 +143,22 @@ public class PlayerServiceTest {
             svc.delete(player);
             assertTrue(saved);
         }
+
+        @DisplayName("can update one player")
+        @Test
+        public void save_test3() {
+            int id = 10;
+            Player player = svc.findById(id);
+            String originalName = player.getName();
+            player.setName("-save-test-3-");
+            svc.save(player);
+            String newName = svc.findById(id).getName();
+            player.setName(originalName);
+            svc.save(player);
+            assertNotEquals(originalName, newName);
+        }
     }
 
-    /**
-     * public void delete(Player player)
-     */
     @Nested
     @DisplayName("Delete")
     public class Delete {

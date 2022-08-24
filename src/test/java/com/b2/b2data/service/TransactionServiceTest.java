@@ -1,6 +1,7 @@
 package com.b2.b2data.service;
 
 import com.b2.b2data.domain.Transaction;
+import com.b2.b2data.domain.TransactionLine;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -23,6 +25,12 @@ public class TransactionServiceTest {
 
     @Autowired
     private TransactionService svc;
+
+    @Autowired
+    private TransactionLineService lSvc;
+
+    @Autowired
+    private AccountService aSvc;
 
     private List<Transaction> initialState;
 
@@ -37,9 +45,6 @@ public class TransactionServiceTest {
         assert svc.findAll().equals(initialState);
     }
 
-    /**
-     * public Transaction findById(int id)
-     */
     @Nested
     @DisplayName("FindById")
     public class FindById {
@@ -60,9 +65,6 @@ public class TransactionServiceTest {
         }
     }
 
-    /**
-     * public List<Transaction> findAll()
-     */
     @Nested
     @DisplayName("FindAll")
     public class FindAll {
@@ -71,29 +73,59 @@ public class TransactionServiceTest {
         @Test
         public void findAll_test1() {
             List<Transaction> transactions = svc.findAll();
-            assertEquals(transactions, initialState);
+            assertEquals(initialState, transactions);
         }
     }
 
-    /**
-     * public List<Transaction> findAll(LocalDate from, LocalDate to)
-     */
     @Nested
-    @DisplayName("FindAllByDate")
-    public class FindAllByDate {
+    @DisplayName("FindAllParams")
+    public class FindAllParams {
 
-        @DisplayName("can find all between two dates")
+        @DisplayName("can find all on or after from date")
         @ParameterizedTest
-        @MethodSource("findAllByDate_test1_generator")
-        public void findAllByDate_test1(int[] from, int[] to, int expectedCount) {
-            int count = svc.findAll(
-                    LocalDate.of(from[0], from[1], from[2]),
-                    LocalDate.of(to[0], to[1], to[2])
-            ).size();
-            assertEquals(count, expectedCount);
+        @MethodSource("findAllParams_test1_generator")
+        public void findAllParams_test1(int[] from, int expectedCount) {
+            int count = svc.findAll(LocalDate.of(from[0], from[1], from[2]), null, null).size();
+            assertEquals(expectedCount, count);
         }
 
-        private static Stream<Arguments> findAllByDate_test1_generator() {
+        private static Stream<Arguments> findAllParams_test1_generator() {
+            return Stream.of(
+                    Arguments.of(new int[]{2022,1,31}, 12),
+                    Arguments.of(new int[]{2022,8,31}, 6),
+                    Arguments.of(new int[]{2021,12,31}, 12)
+            );
+        }
+
+        @DisplayName("can find all on or before to date")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test2_generator")
+        public void findAllParams_test2(int[] to, int expectedCount) {
+            int count = svc.findAll(null, LocalDate.of(to[0], to[1], to[2]), null).size();
+            assertEquals(expectedCount, count);
+        }
+
+        private static Stream<Arguments> findAllParams_test2_generator() {
+            return Stream.of(
+                    Arguments.of(new int[]{2022,1,31}, 1),
+                    Arguments.of(new int[]{2022,8,31}, 8),
+                    Arguments.of(new int[]{2021,12,31}, 0)
+            );
+        }
+
+        @DisplayName("can find all between from and to dates")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test3_generator")
+        public void findAllParams_test3(int[] from, int[] to, int expectedCount) {
+            int count = svc.findAll(
+                    LocalDate.of(from[0], from[1], from[2]),
+                    LocalDate.of(to[0], to[1], to[2]),
+                    null
+            ).size();
+            assertEquals(expectedCount, count);
+        }
+
+        private static Stream<Arguments> findAllParams_test3_generator() {
             return Stream.of(
                     Arguments.of(new int[]{2022,1,31}, new int[]{2022,6,30}, 6),
                     Arguments.of(new int[]{2022,8,31}, new int[]{2022,8,31}, 2),
@@ -101,24 +133,16 @@ public class TransactionServiceTest {
                     Arguments.of(new int[]{2021,12,31}, new int[]{2022,1,30}, 0)
             );
         }
-    }
 
-    /**
-     * public List<Transaction> findAll(String memoPattern)
-     */
-    @Nested
-    @DisplayName("FindAllByMemo")
-    public class FindAllByMemo {
-
-        @DisplayName("can find all with memo like pattern")
+        @DisplayName("can find all by memo pattern")
         @ParameterizedTest
-        @MethodSource("findAllByMemo_test1_generator")
-        public void findAllByMemo_test1(String memoPattern, int expectedCount) {
-            int count = svc.findAll(memoPattern).size();
-            assertEquals(count, expectedCount);
+        @MethodSource("findAllParams_test4_generator")
+        public void findAllParams_test4(String memo, int expectedCount) {
+            int count = svc.findAll(null, null, memo).size();
+            assertEquals(expectedCount, count);
         }
 
-        private static Stream<Arguments> findAllByMemo_test1_generator() {
+        private static Stream<Arguments> findAllParams_test4_generator() {
             return Stream.of(
                     Arguments.of("memo%", 4),
                     Arguments.of("%mo", 5),
@@ -127,11 +151,30 @@ public class TransactionServiceTest {
                     Arguments.of("_-%", 1)
             );
         }
+
+        @DisplayName("can find all by all 3 params")
+        @ParameterizedTest
+        @MethodSource("findAllParams_test5_generator")
+        public void findAllParams_test5(int[] from, int[] to, String memo, int expectedCount) {
+            int count = svc.findAll(
+                    LocalDate.of(from[0], from[1], from[2]),
+                    LocalDate.of(to[0], to[1], to[2]),
+                    memo
+            ).size();
+            assertEquals(expectedCount, count);
+        }
+
+        private static Stream<Arguments> findAllParams_test5_generator() {
+            return Stream.of(
+                    Arguments.of(new int[]{2022,1,31}, new int[]{2022,6,30}, "memo%", 4),
+                    Arguments.of(new int[]{2022,8,31}, new int[]{2022,8,31}, "%mo", 2),
+                    Arguments.of(new int[]{2022,8,31}, new int[]{2022,12,31}, "%memo%", 4),
+                    Arguments.of(new int[]{2021,12,31}, new int[]{2022,12,31}, "8%o", 2),
+                    Arguments.of(new int[]{2021,12,31}, new int[]{2022,12,31}, "_-%", 1)
+            );
+        }
     }
 
-    /**
-     * public Transaction save(Transaction transaction)
-     */
     @Nested
     @DisplayName("Save")
     public class Save {
@@ -149,15 +192,42 @@ public class TransactionServiceTest {
         public void save_test2() {
             String memo = "-save-test-2-";
             Transaction transaction = svc.save(new Transaction(LocalDate.now(), memo));
-            boolean saved = svc.findAll(memo).size() == 1;
+            boolean saved = svc.findAll(null, null, memo).size() == 1;
             svc.delete(transaction);
             assertTrue(saved);
         }
+
+        @DisplayName("can update one transaction")
+        @Test
+        public void save_test3() {
+            int id = 10;
+            Transaction transaction = svc.findById(id);
+            String originalMemo = transaction.getMemo();
+            transaction.setMemo("-save-test-3-");
+            svc.save(transaction);
+            String newMemo = svc.findById(id).getMemo();
+            transaction.setMemo(originalMemo);
+            svc.save(transaction);
+            assertNotEquals(originalMemo, newMemo);
+        }
+
+        @DisplayName("new saved lines overwrite old ones")
+        @Test
+        public void save_test4() {
+            int id = 1;
+            Transaction transaction = svc.findById(id);
+            List<TransactionLine> originalLines = lSvc.findAllByTransaction(transaction.getId());
+            List<TransactionLine> newLines = new ArrayList<>();
+            newLines.add(new TransactionLine(null, null, aSvc.findById(1), 1000.0));
+            newLines.add(new TransactionLine(null, null, aSvc.findById(1), -1000.0));
+            assert originalLines.size() > newLines.size();
+            svc.save(transaction, newLines);
+            List<TransactionLine> savedLines = lSvc.findAllByTransaction(id);
+            svc.save(transaction, originalLines);
+            assertEquals(newLines.size(), savedLines.size());
+        }
     }
 
-    /**
-     * public void delete(Transaction transaction)
-     */
     @Nested
     @DisplayName("Delete")
     public class Delete {
@@ -167,10 +237,25 @@ public class TransactionServiceTest {
         public void delete_test1() {
             String memo = "-delete-test-1-";
             Transaction transaction = svc.save(new Transaction(LocalDate.now(), memo));
-            assert svc.findAll(memo).size() == 1;
+            assert svc.findAll(null, null, memo).size() == 1;
             svc.delete(transaction);
-            boolean deleted = svc.findAll(memo).size() == 0;
+            boolean deleted = svc.findById(transaction.getId()) == null;
             assertTrue(deleted);
+        }
+
+        @DisplayName("delete transaction deletes all of its child transaction lines")
+        @Test
+        public void delete_test2() {
+            Transaction transaction = new Transaction(LocalDate.now(), "-delete-test2-");
+            List<TransactionLine> lines = List.of(
+                new TransactionLine(null, null, aSvc.findById(1), 1000.0),
+                new TransactionLine(null, null, aSvc.findById(1), -1000.0)
+            );
+            transaction = svc.save(transaction, lines);
+            assert lSvc.findAllByTransaction(transaction.getId()).size() == 2;
+            svc.delete(transaction);
+            int count = lSvc.findAllByTransaction(transaction.getId()).size();
+            assertEquals(0, count);
         }
     }
 }

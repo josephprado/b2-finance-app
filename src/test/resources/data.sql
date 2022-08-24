@@ -33,11 +33,11 @@ INSERT INTO gl_account
 VALUES
 ('1000', 'Checking', 1, 1),                -- 1
 ('1001', 'Savings', 1, 2),                 -- 2
-('2000', 'Accounts Payable', 2, NULL),     -- 3
-('3000', 'Retained Earnings', 3, NULL),    -- 4
-('4000', 'Salary', 4, NULL),               -- 5
-('4001', 'Interest Income', 4, NULL),      -- 6
-('5000', 'Food', 5, NULL),                 -- 7
+('2000', 'Accounts Payable', 2, 3),        -- 3
+('3000', 'Retained Earnings', 3, 4),       -- 4
+('4000', 'Salary', 4, 5),                  -- 5
+('4001', 'Interest Income', 4, 6),         -- 6
+('5000', 'Food', 5, 7),                    -- 7
 ('5001', 'Entertainment', 5, NULL),        -- 8
 ('6000', 'Unrealized Gain/Loss', 6, NULL), -- 9
 ('99', 'NINETY-NINE', 6, NULL);            -- 10
@@ -63,16 +63,16 @@ INSERT INTO gl_transaction_line
 VALUES
 (1, 1, 7, 6, 100, '1-memo', NULL),
 (1, 2, 7, 6, 50, '2-memo', NULL),
-(1, 3, 7, 6, 25, '3-memo', NULL),
-(1, 4, 1, 6, -175, '4-memo', NULL),
+(1, 3, 7, 6, 25, '3-memo', '2022-01-31'),
+(1, 4, 1, 6, -175, '4-memo', '2022-01-31'),
 
 (2, 1, 8, 9, 100, '1.memo', NULL),
 (2, 2, 8, 9, 200, '2.memo', NULL),
-(2, 3, 8, 9, 300, '3.memo', NULL),
-(2, 4, 2, 9, -600, '4.memo', NULL),
+(2, 3, 8, 9, 300, '3.memo', '2022-03-01'),
+(2, 4, 2, 9, -600, '4.memo', '2022-04-01'),
 
-(3, 1, 1, 1, 300, 'memo-1', NULL),
-(3, 2, 5, 1, -300, 'memo-2', NULL),
+(3, 1, 1, 1, 300, 'memo-1', '2022-04-01'),
+(3, 2, 5, 1, -300, 'memo-2', '2022-04-02'),
 
 (4, 1, 2, 2, 400, 'memo.1', NULL),
 (4, 2, 6, 2, -400, 'memo.2', NULL),

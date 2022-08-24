@@ -34,9 +34,6 @@ public class ElementServiceTest {
         assert svc.findAll().equals(initialState);
     }
 
-    /**
-     * public Element findById(int id)
-     */
     @Nested
     @DisplayName("FindById")
     public class FindById {
@@ -57,9 +54,6 @@ public class ElementServiceTest {
         }
     }
 
-    /**
-     * public Element findByNumber(Integer number)
-     */
     @Nested
     @DisplayName("FindByNumber")
     public class FindByNumber {
@@ -80,9 +74,6 @@ public class ElementServiceTest {
         }
     }
 
-    /**
-     * public Element findByName(String name)
-     */
     @Nested
     @DisplayName("FindByName")
     public class FindByName {
@@ -121,9 +112,6 @@ public class ElementServiceTest {
         }
     }
 
-    /**
-     * public List<Element> findAll()
-     */
     @Nested
     @DisplayName("FindAll")
     public class FindAll {
@@ -132,13 +120,10 @@ public class ElementServiceTest {
         @Test
         public void findAll_test1() {
             List<Element> elements = svc.findAll();
-            assertEquals(elements, initialState);
+            assertEquals(initialState, elements);
         }
     }
 
-    /**
-     * public Element save(Element element)
-     */
     @Nested
     @DisplayName("Save")
     public class Save {
@@ -160,11 +145,22 @@ public class ElementServiceTest {
             svc.delete(element);
             assertTrue(saved);
         }
+
+        @DisplayName("can update one element")
+        @Test
+        public void save_test3() {
+            int number = 99;
+            Element element = svc.findByNumber(number);
+            String originalName = element.getName();
+            element.setName("-save-test-3-");
+            svc.save(element);
+            String newName = svc.findByNumber(number).getName();
+            element.setName(originalName);
+            svc.save(element);
+            assertNotEquals(originalName, newName);
+        }
     }
 
-    /**
-     * public void delete(Element element)
-     */
     @Nested
     @DisplayName("Delete")
     public class Delete {
