@@ -37,8 +37,8 @@ public class AccountController extends Controller<Account, AccountDTO, String> {
      */
     @GetMapping("")
     public ResponseEntity<Response<AccountDTO>> getAll(
-            @RequestParam(name = "element", required = false) Integer elementNumber,
-            @RequestParam(name = "player", required = false) String playerName,
+            @RequestParam(name = "elementNumber", required = false) Integer elementNumber,
+            @RequestParam(name = "playerName", required = false) String playerName,
             @RequestParam(name = "isBank", required = false) Boolean isBank) {
 
         List<AccountDTO> data = svc.findAll(elementNumber, playerName, isBank)
@@ -198,10 +198,10 @@ public class AccountController extends Controller<Account, AccountDTO, String> {
 
         account.setNumber(dto.getNumber());
         account.setName(dto.getName());
-        account.setElement(eCon.getExistingEntry(dto.getElement()));
+        account.setElement(eCon.getExistingEntry(dto.getElementNumber()));
 
-        if (dto.getPlayer() != null)
-            account.setPlayer(pCon.getExistingEntry(dto.getPlayer()));
+        if (dto.getPlayerName() != null)
+            account.setPlayer(pCon.getExistingEntry(dto.getPlayerName()));
 
         return account;
     }

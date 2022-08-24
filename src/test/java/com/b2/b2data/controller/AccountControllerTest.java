@@ -183,8 +183,8 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName("-createOne-test1-b-");
-            dto.setElement(99);
-            dto.setPlayer("99");
+            dto.setElementNumber(99);
+            dto.setPlayerName("99");
 
             dto = Objects.requireNonNull(con.createOne(dto).getBody()).getData().get(0);
             Account account = svc.findByNumber(number);
@@ -200,8 +200,8 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName("-createOne-test2-b-");
-            dto.setElement(99);
-            dto.setPlayer("99");
+            dto.setElementNumber(99);
+            dto.setPlayerName("99");
 
             HttpStatus status = con.createOne(dto).getStatusCode();
 
@@ -216,8 +216,8 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName("-createOne-test3-b-");
-            dto.setElement(99);
-            dto.setPlayer("99");
+            dto.setElementNumber(99);
+            dto.setPlayerName("99");
 
             String location = Objects.requireNonNull(con.createOne(dto).getHeaders().getLocation()).toString();
             String expectedLocation = ServletUriComponentsBuilder.fromCurrentRequest().toUriString()+"/"+number;
@@ -233,7 +233,7 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName("-createOne-test4-");
-            dto.setElement(99);
+            dto.setElementNumber(99);
 
             HttpStatus status = con.createOne(dto).getStatusCode();
             assertEquals(HttpStatus.BAD_REQUEST, status);
@@ -246,7 +246,7 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName("-createOne-test5-b-");
-            dto.setElement(123456789);
+            dto.setElementNumber(123456789);
 
             HttpStatus status = con.createOne(dto).getStatusCode();
             assertEquals(HttpStatus.BAD_REQUEST, status);
@@ -259,8 +259,8 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName("-createOne-test6-b-");
-            dto.setElement(99);
-            dto.setPlayer("-createOne-test6-c-");
+            dto.setElementNumber(99);
+            dto.setPlayerName("-createOne-test6-c-");
 
             HttpStatus status = con.createOne(dto).getStatusCode();
             assertEquals(HttpStatus.BAD_REQUEST, status);
@@ -283,10 +283,10 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName(newName);
-            dto.setElement(account.getElement().getNumber());
+            dto.setElementNumber(account.getElement().getNumber());
 
             if (account.getPlayer() != null)
-                dto.setPlayer(account.getPlayer().getName());
+                dto.setPlayerName(account.getPlayer().getName());
 
             dto = Objects.requireNonNull(con.updateOne(number, dto).getBody()).getData().get(0);
             String name = svc.findByNumber(number).getName();
@@ -308,10 +308,10 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName(newName);
-            dto.setElement(account.getElement().getNumber());
+            dto.setElementNumber(account.getElement().getNumber());
 
             if (account.getPlayer() != null)
-                dto.setPlayer(account.getPlayer().getName());
+                dto.setPlayerName(account.getPlayer().getName());
 
             HttpStatus status = con.updateOne(number, dto).getStatusCode();
 
@@ -327,7 +327,7 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName("-updateOne-test3-a-");
-            dto.setElement(99);
+            dto.setElementNumber(99);
 
             HttpStatus status = con.updateOne(number, dto).getStatusCode();
             assertEquals(HttpStatus.NOT_FOUND, status);
@@ -339,7 +339,7 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber("-updateOne-test4-a-");
             dto.setName("-updateOne-test4-b-");
-            dto.setElement(1234567890); // non-existent element
+            dto.setElementNumber(1234567890); // non-existent element
 
             HttpStatus status = con.updateOne("99", dto).getStatusCode();
             assertEquals(HttpStatus.BAD_REQUEST, status);
@@ -351,8 +351,8 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber("-updateOne-test5-a-");
             dto.setName("-updateOne-test5-b-");
-            dto.setElement(99);
-            dto.setPlayer("-updateOne-test5-c-"); // non-existent player
+            dto.setElementNumber(99);
+            dto.setPlayerName("-updateOne-test5-c-"); // non-existent player
 
             HttpStatus status = con.updateOne("99", dto).getStatusCode();
             assertEquals(HttpStatus.BAD_REQUEST, status);
@@ -387,7 +387,7 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName("-deleteOne-test1-b-");
-            dto.setElement(99);
+            dto.setElementNumber(99);
 
             con.createOne(dto);
             assert svc.findByNumber(number) != null;
@@ -404,7 +404,7 @@ public class AccountControllerTest {
             AccountDTO dto = new AccountDTO();
             dto.setNumber(number);
             dto.setName("-deleteOne-test2-b-");
-            dto.setElement(99);
+            dto.setElementNumber(99);
 
             con.createOne(dto);
             assert svc.findByNumber(number) != null;

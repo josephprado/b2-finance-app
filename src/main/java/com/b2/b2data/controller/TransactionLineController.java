@@ -44,9 +44,9 @@ public class TransactionLineController extends Controller<TransactionLine, Trans
      */
     @GetMapping("")
     public ResponseEntity<Response<TransactionLineDTO>> getAll(
-            @RequestParam(name = "transaction", required = false) Integer transactionId,
-            @RequestParam(name = "account", required = false) String accountNumber,
-            @RequestParam(name = "player", required = false) String playerName,
+            @RequestParam(name = "transactionId", required = false) Integer transactionId,
+            @RequestParam(name = "accountNumber", required = false) String accountNumber,
+            @RequestParam(name = "playerName", required = false) String playerName,
             @RequestParam(name = "memoPattern", required = false) String memoPattern,
             @RequestParam(name = "isReconciled", required = false) Boolean isReconciled,
             @RequestParam(name = "from", required = false) LocalDate from,
@@ -70,10 +70,11 @@ public class TransactionLineController extends Controller<TransactionLine, Trans
      */
     @Override
     protected TransactionLine getExistingEntry(TransactionLineId id) throws ValidationException {
-        TransactionLine transactionLine = svc.findById(id.getTransaction(), id.getLine());
+        TransactionLine transactionLine = svc.findById(id);
 
         if (transactionLine == null)
-            throw new ValidationException("Transaction line="+id.getTransaction()+"-"+id.getLine()+" does not exist.");
+            throw new ValidationException(
+                    "Transaction line="+id.getTransactionId()+"-"+id.getLineId()+" does not exist.");
 
         return transactionLine;
     }
@@ -95,18 +96,18 @@ public class TransactionLineController extends Controller<TransactionLine, Trans
 
         // to avoid mutating transactionLine parameter
         Transaction transaction = transactionLine.getTransaction();
-        Integer line = transactionLine.getLine();
+        Integer lineId = transactionLine.getLineId();
         transactionLine = new TransactionLine();
         transactionLine.setTransaction(transaction);
-        transactionLine.setLine(line);
+        transactionLine.setLineId(lineId);
 
-        transactionLine.setAccount(aCon.getExistingEntry(dto.getAccount()));
+        transactionLine.setAccount(aCon.getExistingEntry(dto.getAccountNumber()));
         transactionLine.setAmount(dto.getAmount());
         transactionLine.setMemo(dto.getMemo());
         transactionLine.setDateReconciled(dto.getDateReconciled());
 
-        if (dto.getPlayer() != null)
-            transactionLine.setPlayer(pCon.getExistingEntry(dto.getPlayer()));
+        if (dto.getPlayerName() != null)
+            transactionLine.setPlayer(pCon.getExistingEntry(dto.getPlayerName()));
 
         return transactionLine;
     }

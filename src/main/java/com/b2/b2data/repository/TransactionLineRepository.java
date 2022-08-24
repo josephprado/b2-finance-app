@@ -30,10 +30,10 @@ public interface TransactionLineRepository
      * Finds all transaction lines with the given transaction id
      *
      * @param transactionId A transaction id
-     * @return A list of transaction lines with the given transaction id, sorted by line ascending
+     * @return A list of transaction lines with the given transaction id, sorted by line id ascending
      */
     @EntityGraph(value = TransactionLine.WITHOUT_TRANSACTION, type = EntityGraph.EntityGraphType.LOAD)
-    List<TransactionLine> findAllByTransactionIdOrderByLineAsc(Integer transactionId);
+    List<TransactionLine> findAllByTransactionIdOrderByLineIdAsc(Integer transactionId);
 
     /**
      * Finds all transaction lines with the given account number

@@ -134,7 +134,7 @@ public class AccountServiceTest {
         @ParameterizedTest
         @MethodSource("findAllByElement_test1_generator")
         public void findAllByElement_test1(int elementNumber, int expectedCount) {
-            int count = svc.findAllByElement(elementNumber).size();
+            int count = svc.findAllByElementNumber(elementNumber).size();
             assertEquals(expectedCount, count);
         }
 
@@ -156,7 +156,7 @@ public class AccountServiceTest {
         @DisplayName("search for null element number returns empty list")
         @Test
         public void findAllByElement_test2() {
-            int count = svc.findAllByElement(null).size();
+            int count = svc.findAllByElementNumber(null).size();
             assertEquals(0, count);
         }
     }
@@ -169,7 +169,7 @@ public class AccountServiceTest {
         @ParameterizedTest
         @MethodSource("findAllByPlayer_test1_generator")
         public void findAllByPlayer_test1(String playerName, int expectedCount) {
-            int count = svc.findAllByPlayer(playerName).size();
+            int count = svc.findAllByPlayerName(playerName).size();
             assertEquals(expectedCount, count);
         }
 
@@ -191,7 +191,7 @@ public class AccountServiceTest {
         @DisplayName("search for null player name returns account list of null players")
         @Test
         public void findAllByPlayer_test2() {
-            int count = svc.findAllByPlayer(null).size();
+            int count = svc.findAllByPlayerName(null).size();
             assertEquals(3, count);
         }
     }

@@ -31,24 +31,23 @@ public class TransactionLineService {
     }
 
     /**
-     * Finds the transaction line with the given transaction and line ids
+     * Finds the transaction line with the given transaction line id
      *
-     * @param transactionId A transaction id
-     * @param lineId A line id
-     * @return The transaction line with the given transaction and line ids, or null if it does not exist
+     * @param id A transaction line id
+     * @return The transaction line with the given transaction line id, or null if it does not exist
      */
-    public TransactionLine findById(Integer transactionId, Integer lineId) {
-        return REPO.findById(new TransactionLineId(transactionId, lineId)).orElse(null);
+    public TransactionLine findById(TransactionLineId id) {
+        return REPO.findById(id).orElse(null);
     }
 
     /**
      * Finds all transaction lines with the given transaction id
      *
      * @param transactionId A transaction id
-     * @return A list of transaction lines with the given transaction id, sorted by line ascending
+     * @return A list of transaction lines with the given transaction id, sorted by line id ascending
      */
-    public List<TransactionLine> findAllByTransaction(Integer transactionId) {
-        return REPO.findAllByTransactionIdOrderByLineAsc(transactionId);
+    public List<TransactionLine> findAllByTransactionId(Integer transactionId) {
+        return REPO.findAllByTransactionIdOrderByLineIdAsc(transactionId);
     }
 
     /**
@@ -57,7 +56,7 @@ public class TransactionLineService {
      * @param accountNumber An account number
      * @return A list of transaction lines with the given account number, sorted by transaction date descending
      */
-    public List<TransactionLine> findAllByAccount(String accountNumber) {
+    public List<TransactionLine> findAllByAccountNumber(String accountNumber) {
         return REPO.findAllByAccountNumberOrderByTransactionDateDesc(accountNumber);
     }
 
@@ -67,7 +66,7 @@ public class TransactionLineService {
      * @param playerName A player name
      * @return A list of transaction lines with the given player name, sorted by transaction date descending
      */
-    public List<TransactionLine> findAllByPlayer(String playerName) {
+    public List<TransactionLine> findAllByPlayerName(String playerName) {
         return REPO.findAllByPlayerNameOrderByTransactionDateDesc(playerName);
     }
 

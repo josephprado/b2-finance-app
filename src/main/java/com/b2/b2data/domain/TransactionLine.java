@@ -76,7 +76,7 @@ public class TransactionLine extends Entry {
 
     // field names
     public static final String TRANSACTION = "transaction";
-    public static final String LINE = "line";
+    public static final String LINE_ID = "lineId";
     public static final String ACCOUNT = "account";
     public static final String PLAYER = "player";
     public static final String AMOUNT = "amount";
@@ -97,7 +97,7 @@ public class TransactionLine extends Entry {
     @Id
     @Column(name = "line_id")
     @NotNull
-    private Integer line;
+    private Integer lineId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
@@ -137,13 +137,13 @@ public class TransactionLine extends Entry {
      * Constructs a new transaction line
      *
      * @param transaction The parent transaction which owns the line
-     * @param line A line number (unique among the lines of the parent transaction)
+     * @param lineId A line id (unique among the lines of the parent transaction)
      * @param account The account associated with the transaction line
      * @param amount The monetary value of the transaction line
      */
-    public TransactionLine(Transaction transaction, Integer line, Account account, Double amount) {
+    public TransactionLine(Transaction transaction, Integer lineId, Account account, Double amount) {
         this.transaction = transaction;
-        this.line = line;
+        this.lineId = lineId;
         this.account = account;
         this.amount = amount;
     }
@@ -163,7 +163,7 @@ public class TransactionLine extends Entry {
             return false;
 
         return Objects.equals(transaction, that.transaction)
-                && Objects.equals(line, that.line)
+                && Objects.equals(lineId, that.lineId)
                 && Objects.equals(account, that.account)
                 && Objects.equals(player, that.player)
                 && Objects.equals(amount, that.amount)
@@ -178,23 +178,23 @@ public class TransactionLine extends Entry {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(transaction, line, account, player, amount, memo, dateReconciled);
+        return Objects.hash(transaction, lineId, account, player, amount, memo, dateReconciled);
     }
 
     /**
      * Returns a string representation of the transaction line
      *
      * @return A string representation of the transaction line in the following format:
-     * <br/><br/>TransactionLine{transaction=transactionId, line=line, account='accountNumber',
-     *           player='playerName', amount=amount, memo='memo', dateReconciled=dateReconciled}
+     * <br/><br/>TransactionLine{transactionId=transactionId, lineId=lineId, accountNumber='accountNumber',
+     *           playerName='playerName', amount=amount, memo='memo', dateReconciled=dateReconciled}
      */
     @Override
     public String toString() {
         return "TransactionLine{" +
-                "transaction=" + transaction.getId() +
-                ", line=" + line +
-                ", account='" + account.getNumber() + '\'' +
-                ", player=" + (player != null ? '\'' + player.getName() + '\'' : "null") +
+                "transactionId=" + transaction.getId() +
+                ", lineId=" + lineId +
+                ", accountNumber='" + account.getNumber() + '\'' +
+                ", playerName=" + (player != null ? '\'' + player.getName() + '\'' : "null") +
                 ", amount=" + amount +
                 ", memo='" + memo + '\'' +
                 ", dateReconciled=" + dateReconciled +
@@ -220,21 +220,21 @@ public class TransactionLine extends Entry {
     }
 
     /**
-     * Gets the line number of the transaction line
+     * Gets the line id of the transaction line
      *
-     * @return The line number of the transaction line
+     * @return The line id of the transaction line
      */
-    public Integer getLine() {
-        return line;
+    public Integer getLineId() {
+        return lineId;
     }
 
     /**
-     * Sets the line number of the transaction line
+     * Sets the line id of the transaction line
      *
-     * @param line A line number (must be unique among the lines owned by parent transaction)
+     * @param lineId A line id (must be unique among the lines owned by parent transaction)
      */
-    public void setLine(Integer line) {
-        this.line = line;
+    public void setLineId(Integer lineId) {
+        this.lineId = lineId;
     }
 
     /**

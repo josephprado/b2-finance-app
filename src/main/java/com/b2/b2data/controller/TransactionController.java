@@ -214,7 +214,7 @@ public class TransactionController extends Controller<Transaction, TransactionDT
 
         TransactionDTO dto = new TransactionDTO(transaction);
         dto.setLines(
-                lSvc.findAllByTransaction(transaction.getId())
+                lSvc.findAllByTransactionId(transaction.getId())
                         .stream()
                         .map(TransactionLineDTO::new)
                         .toList()

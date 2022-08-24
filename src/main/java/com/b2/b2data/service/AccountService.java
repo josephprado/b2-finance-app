@@ -68,7 +68,7 @@ public class AccountService {
      * @param elementNumber An element number
      * @return A list of accounts with the given element number, sorted by number ascending
      */
-    public List<Account> findAllByElement(Integer elementNumber) {
+    public List<Account> findAllByElementNumber(Integer elementNumber) {
         return REPO.findAllByElementNumberOrderByNumberAsc(elementNumber);
     }
 
@@ -78,7 +78,7 @@ public class AccountService {
      * @param playerName A player name
      * @return A list of accounts with the given player name, sorted by number ascending
      */
-    public List<Account> findAllByPlayer(String playerName) {
+    public List<Account> findAllByPlayerName(String playerName) {
         return REPO.findAllByPlayerNameOrderByNumberAsc(playerName);
     }
 
