@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.JoinType;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Provides services for handling {@link Account} objects
@@ -36,30 +37,36 @@ public class AccountService {
      * Finds the account with the given id
      *
      * @param id An account id
-     * @return The account with the given id, or null if it does not exist
+     * @return The account with the given id
+     * @throws NoSuchElementException If the account does not exist
      */
-    public Account findById(Integer id) {
-        return REPO.findById(id).orElse(null);
+    public Account findById(Integer id) throws NoSuchElementException {
+        return REPO.findById(id)
+                    .orElseThrow(() -> new NoSuchElementException("Account id="+id+" does not exist."));
     }
 
     /**
      * Finds the account with the given number
      *
      * @param number An account number
-     * @return The account with the given number, or null if it does not exist
+     * @return The account with the given number
+     * @throws NoSuchElementException If the account does not exist
      */
-    public Account findByNumber(String number) {
-        return REPO.findByNumber(number).orElse(null);
+    public Account findByNumber(String number) throws NoSuchElementException {
+        return REPO.findByNumber(number)
+                    .orElseThrow(() -> new NoSuchElementException("Account number='"+number+"' does not exist."));
     }
 
     /**
      * Finds the account with the given name
      *
      * @param name An account name
-     * @return The account with the given name, or null if it does not exist
+     * @return The account with the given name
+     * @throws NoSuchElementException If the account does not exist
      */
-    public Account findByName(String name) {
-        return REPO.findByName(name).orElse(null);
+    public Account findByName(String name) throws NoSuchElementException {
+        return REPO.findByName(name)
+                    .orElseThrow(() -> new NoSuchElementException("Account name='"+name+"' does not exist."));
     }
 
     /**

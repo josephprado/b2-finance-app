@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Provides services for handling {@link Transaction} objects
@@ -40,10 +41,12 @@ public class TransactionService {
      * Finds the transaction with the given id
      *
      * @param id A transaction id
-     * @return The transaction with the given id, or null if it does not exist
+     * @return The transaction with the given id
+     * @throws NoSuchElementException If the transaction does not exist
      */
-    public Transaction findById(Integer id) {
-        return REPO.findById(id).orElse(null);
+    public Transaction findById(Integer id) throws NoSuchElementException {
+        return REPO.findById(id)
+                    .orElseThrow(() -> new NoSuchElementException("Transaction id="+id+" does not exist."));
     }
 
     /**

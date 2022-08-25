@@ -4,6 +4,8 @@ import com.b2.b2data.domain.Transaction;
 import com.b2.b2data.domain.TransactionLine;
 import com.b2.b2data.domain.TransactionLineId;
 import com.b2.b2data.dto.TransactionLineDTO;
+import com.b2.b2data.service.AccountService;
+import com.b2.b2data.service.PlayerService;
 import com.b2.b2data.service.TransactionLineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/lines")
@@ -24,10 +27,10 @@ public class TransactionLineController extends Controller<TransactionLine, Trans
     private TransactionLineService svc;
 
     @Autowired
-    private AccountController aCon;
+    private AccountService aSvc;
 
     @Autowired
-    private PlayerController pCon;
+    private PlayerService pSvc;
 
     /**
      * Gets all transaction lines from the database filtered by the given parameters
@@ -62,24 +65,6 @@ public class TransactionLineController extends Controller<TransactionLine, Trans
     }
 
     /**
-     * Returns the transaction line with the given transaction line id
-     *
-     * @param id A transaction line id
-     * @return The transaction line with the given transaction line id
-     * @throws ValidationException If the transaction line id does not exist
-     */
-    @Override
-    protected TransactionLine getExistingEntry(TransactionLineId id) throws ValidationException {
-        TransactionLine transactionLine = svc.findById(id);
-
-        if (transactionLine == null)
-            throw new ValidationException(
-                    "Transaction line="+id.getTransactionId()+"-"+id.getLineId()+" does not exist.");
-
-        return transactionLine;
-    }
-
-    /**
      * Transfers the given transaction line DTO's values into the given transaction line
      *
      * @param dto A transaction line DTO; must not be null
@@ -101,13 +86,18 @@ public class TransactionLineController extends Controller<TransactionLine, Trans
         transactionLine.setTransaction(transaction);
         transactionLine.setLineId(lineId);
 
-        transactionLine.setAccount(aCon.getExistingEntry(dto.getAccountNumber()));
+        try {
+            transactionLine.setAccount(aSvc.findByNumber(dto.getAccountNumber()));
+
+            if (dto.getPlayerName() != null)
+                transactionLine.setPlayer(pSvc.findByName(dto.getPlayerName()));
+
+        } catch (NoSuchElementException e) {
+            throw new ValidationException(e);
+        }
         transactionLine.setAmount(dto.getAmount());
         transactionLine.setMemo(dto.getMemo());
         transactionLine.setDateReconciled(dto.getDateReconciled());
-
-        if (dto.getPlayerName() != null)
-            transactionLine.setPlayer(pCon.getExistingEntry(dto.getPlayerName()));
 
         return transactionLine;
     }

@@ -4,10 +4,11 @@ import com.b2.b2data.domain.Entry;
 import com.b2.b2data.dto.DTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.ValidationException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * A base class for all Controllers
@@ -19,15 +20,6 @@ import java.util.List;
 public abstract class Controller<T extends Entry, U extends DTO, V> {
 
     /**
-     * Returns the entry with the given primary key, if it exists
-     *
-     * @param key A primary key
-     * @return The entry with the given primary key
-     * @throws ValidationException If the entry does not exist
-     */
-    protected abstract T getExistingEntry(V key) throws ValidationException;
-
-    /**
      * Transfers the given DTO's values into the given entry
      *
      * @param dto A DTO; must not be null
@@ -35,6 +27,28 @@ public abstract class Controller<T extends Entry, U extends DTO, V> {
      * @return An entry with field values matching the DTO
      */
     protected abstract T convertDtoToEntry(U dto, T entry);
+
+    /**
+     * Handles all NoSuchElementExceptions
+     *
+     * @param e A NoSuchElementException
+     * @return A 404 Not Found response entity
+     */
+    @ExceptionHandler({NoSuchElementException.class})
+    private ResponseEntity<Response<U>> handleNoSuchElementException(NoSuchElementException e) {
+        return responseCodeNotFound(e.getMessage());
+    }
+
+    /**
+     * Handles all general exceptions other than NoSuchElementException
+     *
+     * @param e An exception
+     * @return A 400 Bad Request response entity
+     */
+    @ExceptionHandler({Exception.class})
+    private ResponseEntity<Response<U>> handleGeneralException(Exception e) {
+        return responseCodeBadRequest(e.getMessage());
+    }
 
     /**
      * Creates a response entity indicating that the request was successful

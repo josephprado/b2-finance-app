@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Provides services for handling {@link Element} objects
@@ -31,30 +32,36 @@ public class ElementService {
      * Finds the element with the given id
      *
      * @param id An element id
-     * @return The element with the given id, or null if it does not exist
+     * @return The element with the given id
+     * @throws NoSuchElementException If the element does not exist
      */
-    public Element findById(Integer id) {
-        return REPO.findById(id).orElse(null);
+    public Element findById(Integer id) throws NoSuchElementException {
+        return REPO.findById(id)
+                    .orElseThrow(() -> new NoSuchElementException("Element id="+id+" does not exist."));
     }
 
     /**
      * Finds the element with the given number
      *
      * @param number An element number
-     * @return The element with the given number, or null if it does not exist
+     * @return The element with the given number
+     * @throws NoSuchElementException If the element does not exist
      */
-    public Element findByNumber(Integer number) {
-        return REPO.findByNumber(number).orElse(null);
+    public Element findByNumber(Integer number) throws NoSuchElementException {
+        return REPO.findByNumber(number)
+                    .orElseThrow(() -> new NoSuchElementException("Element number="+number+" does not exist."));
     }
 
     /**
      * Finds the element with the given name
      *
      * @param name An element name
-     * @return The element with the given name, or null if it does not exist
+     * @return The element with the given name
+     * @throws NoSuchElementException If the element does not exist
      */
-    public Element findByName(String name) {
-        return REPO.findByName(name).orElse(null);
+    public Element findByName(String name) throws NoSuchElementException {
+        return REPO.findByName(name)
+                    .orElseThrow(() -> new NoSuchElementException("Element name='"+name+"' does not exist."));
     }
 
     /**

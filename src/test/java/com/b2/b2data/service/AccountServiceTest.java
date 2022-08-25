@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,11 +54,10 @@ public class AccountServiceTest {
             assertNotNull(account);
         }
 
-        @DisplayName("search for non-existent id returns null")
+        @DisplayName("search for non-existent id throws NoSuchElementException")
         @Test
         public void findById_test2() {
-            Account account = svc.findById(-1);
-            assertNull(account);
+            assertThrows(NoSuchElementException.class, () -> svc.findById(-1));
         }
     }
 
@@ -73,18 +73,16 @@ public class AccountServiceTest {
             assertNotNull(account);
         }
 
-        @DisplayName("search for non-existent number returns null")
+        @DisplayName("search for non-existent number throws NoSuchElementException")
         @Test
         public void findByNumber_test2() {
-            Account account = svc.findByNumber("-find-by-number-test-2-");
-            assertNull(account);
+            assertThrows(NoSuchElementException.class, () -> svc.findByNumber("-find-by-number-test-2-"));
         }
 
-        @DisplayName("search for null number returns null")
+        @DisplayName("search for null number throws NoSuchElementException")
         @Test
         public void findByNumber_test3() {
-            Account account = svc.findByNumber(null);
-            assertNull(account);
+            assertThrows(NoSuchElementException.class, () -> svc.findByNumber(null));
         }
     }
 
@@ -111,18 +109,16 @@ public class AccountServiceTest {
             assertNotNull(account);
         }
 
-        @DisplayName("search for non-existent name returns null")
+        @DisplayName("search for non-existent name throws NoSuchElementException")
         @Test
         public void findByName_test2() {
-            Account account = svc.findByName("-find-by-name-test-2-");
-            assertNull(account);
+            assertThrows(NoSuchElementException.class, () -> svc.findByName("-find-by-name-test-2-"));
         }
 
-        @DisplayName("search for null name returns null")
+        @DisplayName("search for null name throws NoSuchElementException")
         @Test
         public void findByName_test3() {
-            Account account = svc.findByName(null);
-            assertNull(account);
+            assertThrows(NoSuchElementException.class, () -> svc.findByName(null));
         }
     }
 
@@ -352,8 +348,7 @@ public class AccountServiceTest {
             );
             assert svc.findByNumber(number) != null;
             svc.delete(account);
-            boolean deleted = svc.findByNumber(number) == null;
-            assertTrue(deleted);
+            assertThrows(NoSuchElementException.class, () -> svc.findByNumber(number));
         }
     }
 }

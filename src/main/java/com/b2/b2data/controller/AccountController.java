@@ -3,6 +3,8 @@ package com.b2.b2data.controller;
 import com.b2.b2data.domain.Account;
 import com.b2.b2data.dto.AccountDTO;
 import com.b2.b2data.service.AccountService;
+import com.b2.b2data.service.ElementService;
+import com.b2.b2data.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +24,10 @@ public class AccountController extends Controller<Account, AccountDTO, String> {
     private AccountService svc;
 
     @Autowired
-    private ElementController eCon;
+    private ElementService eSvc;
 
     @Autowired
-    private PlayerController pCon;
+    private PlayerService pSvc;
 
     /**
      * Gets all accounts from the database filtered by the given parameters
@@ -58,14 +60,7 @@ public class AccountController extends Controller<Account, AccountDTO, String> {
      */
     @GetMapping("/{number}")
     public ResponseEntity<Response<AccountDTO>> getByNumber(@PathVariable(name = "number") String number) {
-        Account account;
-
-        try {
-            account = getExistingEntry(number);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-        }
+        Account account = svc.findByNumber(number);
         return responseCodeOk(List.of(new AccountDTO(account)));
     }
 
@@ -78,20 +73,8 @@ public class AccountController extends Controller<Account, AccountDTO, String> {
      */
     @PostMapping("")
     public ResponseEntity<Response<AccountDTO>> createOne(@Valid @RequestBody AccountDTO dto) {
-        Account account;
-
-        try {
-            account = convertDtoToEntry(dto, new Account());
-
-        } catch (ValidationException e) {
-            return responseCodeBadRequest(e.getMessage());
-
-        } try {
-            account = svc.save(account);
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        Account account = convertDtoToEntry(dto, new Account());
+        account = svc.save(account);
         return responseCodeCreated(
                 List.of(new AccountDTO(account)),
                 "/"+account.getNumber()
@@ -109,26 +92,9 @@ public class AccountController extends Controller<Account, AccountDTO, String> {
     @PatchMapping("/{number}")
     public ResponseEntity<Response<AccountDTO>> updateOne(@PathVariable(name = "number") String number,
                                                           @Valid @RequestBody AccountDTO dto) {
-        Account account;
-
-        try {
-            account = getExistingEntry(number);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-
-        } try {
-            account = convertDtoToEntry(dto, account);
-
-        } catch (ValidationException e) {
-            return responseCodeBadRequest(e.getMessage());
-
-        } try {
-            account = svc.save(account);
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        Account account = svc.findByNumber(number);
+        account = convertDtoToEntry(dto, account);
+        account = svc.save(account);
         return responseCodeOk(
                 List.of(new AccountDTO(account)),
                 "/"+number,
@@ -144,38 +110,9 @@ public class AccountController extends Controller<Account, AccountDTO, String> {
      */
     @DeleteMapping("/{number}")
     public ResponseEntity<Response<AccountDTO>> deleteOne(@PathVariable(name = "number") String number) {
-        Account account;
-
-        try {
-            account = getExistingEntry(number);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-
-        } try {
-            svc.delete(account);
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
-        return responseCodeNoContent();
-    }
-
-    /**
-     * Returns the account with the given number
-     *
-     * @param number An account number
-     * @return The account with the given number
-     * @throws ValidationException If the account number does not exist
-     */
-    @Override
-    protected Account getExistingEntry(String number) throws ValidationException {
         Account account = svc.findByNumber(number);
-
-        if (account == null)
-            throw new ValidationException("Account number='"+number+"' does not exist.");
-
-        return account;
+        svc.delete(account);
+        return responseCodeNoContent();
     }
 
     /**
@@ -196,12 +133,17 @@ public class AccountController extends Controller<Account, AccountDTO, String> {
         account = new Account();
         account.setId(id);
 
+        try {
+            account.setElement(eSvc.findByNumber(dto.getElementNumber()));
+
+            if (dto.getPlayerName() != null)
+                account.setPlayer(pSvc.findByName(dto.getPlayerName()));
+
+        } catch (NoSuchElementException e) {
+            throw new ValidationException(e);
+        }
         account.setNumber(dto.getNumber());
         account.setName(dto.getName());
-        account.setElement(eCon.getExistingEntry(dto.getElementNumber()));
-
-        if (dto.getPlayerName() != null)
-            account.setPlayer(pCon.getExistingEntry(dto.getPlayerName()));
 
         return account;
     }

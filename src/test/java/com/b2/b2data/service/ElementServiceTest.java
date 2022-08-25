@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,11 +47,10 @@ public class ElementServiceTest {
             assertNotNull(element);
         }
 
-        @DisplayName("search for non-existent id returns null")
+        @DisplayName("search for non-existent id throws NoSuchElementException")
         @Test
         public void findById_test2() {
-            Element element = svc.findById(-1);
-            assertNull(element);
+            assertThrows(NoSuchElementException.class, () -> svc.findById(-1));
         }
     }
 
@@ -66,11 +66,10 @@ public class ElementServiceTest {
             assertNotNull(element);
         }
 
-        @DisplayName("search for non-existent number returns null")
+        @DisplayName("search for non-existent number throws NoSuchElementException")
         @Test
         public void findByNumber_test2() {
-            Element element = svc.findByNumber(1234567890);
-            assertNull(element);
+            assertThrows(NoSuchElementException.class, () -> svc.findByNumber(1234567890));
         }
     }
 
@@ -97,18 +96,16 @@ public class ElementServiceTest {
             assertNotNull(element);
         }
 
-        @DisplayName("search for non-existent name returns null")
+        @DisplayName("search for non-existent name throws NoSuchElementException")
         @Test
         public void findByName_test2() {
-            Element element = svc.findByName("-find-by-name-test-2-");
-            assertNull(element);
+            assertThrows(NoSuchElementException.class, () -> svc.findByName("-find-by-name-test-2-"));
         }
 
-        @DisplayName("search for null name returns null")
+        @DisplayName("search for null name throws NoSuchElementException")
         @Test
         public void findByName_test3() {
-            Element element = svc.findByName(null);
-            assertNull(element);
+            assertThrows(NoSuchElementException.class, () -> svc.findByName(null));
         }
     }
 
@@ -172,8 +169,8 @@ public class ElementServiceTest {
             Element element = svc.save(new Element(number, "-delete-test-1-"));
             assert svc.findByNumber(number) != null;
             svc.delete(element);
-            boolean deleted = svc.findByNumber(number) == null;
-            assertTrue(deleted);
+            assertThrows(NoSuchElementException.class, () -> svc.findByNumber(number));
         }
     }
 }
+

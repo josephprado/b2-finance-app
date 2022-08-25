@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -150,12 +151,12 @@ public class AccountControllerTest {
             assertNotNull(dto);
         }
 
-        @DisplayName("search non-existent account returns null data")
-        @Test
-        public void getByNumber_test2() {
-            List<AccountDTO> data = Objects.requireNonNull(con.getByNumber("-getByNumber-test2-").getBody()).getData();
-            assertNull(data);
-        }
+//        @DisplayName("search non-existent account returns null data")
+//        @Test
+//        public void getByNumber_test2() {
+//            List<AccountDTO> data = Objects.requireNonNull(con.getByNumber("-getByNumber-test2-").getBody()).getData();
+//            assertNull(data);
+//        }
 
         @DisplayName("response from successful get by number is OK")
         @Test
@@ -164,12 +165,12 @@ public class AccountControllerTest {
             assertEquals(HttpStatus.OK, status);
         }
 
-        @DisplayName("response from unsuccessful get by number is NOT FOUND")
-        @Test
-        public void getByNumber_tes43() {
-            HttpStatus status = con.getByNumber("-getByNumber-test4-").getStatusCode();
-            assertEquals(HttpStatus.NOT_FOUND, status);
-        }
+//        @DisplayName("response from unsuccessful get by number is NOT FOUND")
+//        @Test
+//        public void getByNumber_tes43() {
+//            HttpStatus status = con.getByNumber("-getByNumber-test4-").getStatusCode();
+//            assertEquals(HttpStatus.NOT_FOUND, status);
+//        }
     }
 
     @Nested
@@ -226,45 +227,45 @@ public class AccountControllerTest {
             assertEquals(expectedLocation, location);
         }
 
-        @DisplayName("response from unsuccessful creation (duplicate account) is BAD REQUEST")
-        @Test
-        public void createOne_test4() {
-            String number = "99"; // duplicate number
-            AccountDTO dto = new AccountDTO();
-            dto.setNumber(number);
-            dto.setName("-createOne-test4-");
-            dto.setElementNumber(99);
+//        @DisplayName("response from unsuccessful creation (duplicate account) is BAD REQUEST")
+//        @Test
+//        public void createOne_test4() {
+//            String number = "99"; // duplicate number
+//            AccountDTO dto = new AccountDTO();
+//            dto.setNumber(number);
+//            dto.setName("-createOne-test4-");
+//            dto.setElementNumber(99);
+//
+//            HttpStatus status = con.createOne(dto).getStatusCode();
+//            assertEquals(HttpStatus.BAD_REQUEST, status);
+//        }
 
-            HttpStatus status = con.createOne(dto).getStatusCode();
-            assertEquals(HttpStatus.BAD_REQUEST, status);
-        }
+//        @DisplayName("response from unsuccessful creation (non-existent element) is BAD REQUEST")
+//        @Test
+//        public void createOne_test5() {
+//            String number = "-createOne-test5-a-";
+//            AccountDTO dto = new AccountDTO();
+//            dto.setNumber(number);
+//            dto.setName("-createOne-test5-b-");
+//            dto.setElementNumber(123456789);
+//
+//            HttpStatus status = con.createOne(dto).getStatusCode();
+//            assertEquals(HttpStatus.BAD_REQUEST, status);
+//        }
 
-        @DisplayName("response from unsuccessful creation (non-existent element) is BAD REQUEST")
-        @Test
-        public void createOne_test5() {
-            String number = "-createOne-test5-a-";
-            AccountDTO dto = new AccountDTO();
-            dto.setNumber(number);
-            dto.setName("-createOne-test5-b-");
-            dto.setElementNumber(123456789);
-
-            HttpStatus status = con.createOne(dto).getStatusCode();
-            assertEquals(HttpStatus.BAD_REQUEST, status);
-        }
-
-        @DisplayName("response from unsuccessful creation (non-existent player) is BAD REQUEST")
-        @Test
-        public void createOne_test6() {
-            String number = "-createOne-test6-a-";
-            AccountDTO dto = new AccountDTO();
-            dto.setNumber(number);
-            dto.setName("-createOne-test6-b-");
-            dto.setElementNumber(99);
-            dto.setPlayerName("-createOne-test6-c-");
-
-            HttpStatus status = con.createOne(dto).getStatusCode();
-            assertEquals(HttpStatus.BAD_REQUEST, status);
-        }
+//        @DisplayName("response from unsuccessful creation (non-existent player) is BAD REQUEST")
+//        @Test
+//        public void createOne_test6() {
+//            String number = "-createOne-test6-a-";
+//            AccountDTO dto = new AccountDTO();
+//            dto.setNumber(number);
+//            dto.setName("-createOne-test6-b-");
+//            dto.setElementNumber(99);
+//            dto.setPlayerName("-createOne-test6-c-");
+//
+//            HttpStatus status = con.createOne(dto).getStatusCode();
+//            assertEquals(HttpStatus.BAD_REQUEST, status);
+//        }
     }
 
     @Nested
@@ -320,43 +321,43 @@ public class AccountControllerTest {
             assertEquals(HttpStatus.OK, status);
         }
 
-        @DisplayName("response from non-existent account update is NOT FOUND")
-        @Test
-        public void updateOne_test3() {
-            String number = "1234567890"; // non-existent account
-            AccountDTO dto = new AccountDTO();
-            dto.setNumber(number);
-            dto.setName("-updateOne-test3-a-");
-            dto.setElementNumber(99);
+//        @DisplayName("response from non-existent account update is NOT FOUND")
+//        @Test
+//        public void updateOne_test3() {
+//            String number = "1234567890"; // non-existent account
+//            AccountDTO dto = new AccountDTO();
+//            dto.setNumber(number);
+//            dto.setName("-updateOne-test3-a-");
+//            dto.setElementNumber(99);
+//
+//            HttpStatus status = con.updateOne(number, dto).getStatusCode();
+//            assertEquals(HttpStatus.NOT_FOUND, status);
+//        }
 
-            HttpStatus status = con.updateOne(number, dto).getStatusCode();
-            assertEquals(HttpStatus.NOT_FOUND, status);
-        }
+//        @DisplayName("response from bad update (non-existent element) is BAD REQUEST")
+//        @Test
+//        public void updateOne_test4() {
+//            AccountDTO dto = new AccountDTO();
+//            dto.setNumber("-updateOne-test4-a-");
+//            dto.setName("-updateOne-test4-b-");
+//            dto.setElementNumber(1234567890); // non-existent element
+//
+//            HttpStatus status = con.updateOne("99", dto).getStatusCode();
+//            assertEquals(HttpStatus.BAD_REQUEST, status);
+//        }
 
-        @DisplayName("response from bad update (non-existent element) is BAD REQUEST")
-        @Test
-        public void updateOne_test4() {
-            AccountDTO dto = new AccountDTO();
-            dto.setNumber("-updateOne-test4-a-");
-            dto.setName("-updateOne-test4-b-");
-            dto.setElementNumber(1234567890); // non-existent element
-
-            HttpStatus status = con.updateOne("99", dto).getStatusCode();
-            assertEquals(HttpStatus.BAD_REQUEST, status);
-        }
-
-        @DisplayName("response from bad update (non-existent player) is BAD REQUEST")
-        @Test
-        public void updateOne_test5() {
-            AccountDTO dto = new AccountDTO();
-            dto.setNumber("-updateOne-test5-a-");
-            dto.setName("-updateOne-test5-b-");
-            dto.setElementNumber(99);
-            dto.setPlayerName("-updateOne-test5-c-"); // non-existent player
-
-            HttpStatus status = con.updateOne("99", dto).getStatusCode();
-            assertEquals(HttpStatus.BAD_REQUEST, status);
-        }
+//        @DisplayName("response from bad update (non-existent player) is BAD REQUEST")
+//        @Test
+//        public void updateOne_test5() {
+//            AccountDTO dto = new AccountDTO();
+//            dto.setNumber("-updateOne-test5-a-");
+//            dto.setName("-updateOne-test5-b-");
+//            dto.setElementNumber(99);
+//            dto.setPlayerName("-updateOne-test5-c-"); // non-existent player
+//
+//            HttpStatus status = con.updateOne("99", dto).getStatusCode();
+//            assertEquals(HttpStatus.BAD_REQUEST, status);
+//        }
 
         @DisplayName("location header URI contains new account number")
         @Test
@@ -364,7 +365,7 @@ public class AccountControllerTest {
         public void updateOne_test6() {
             String number = "99";
             String newNumber = "-updateOne-test6-a-";
-            AccountDTO dto = new AccountDTO(con.getExistingEntry(number));
+            AccountDTO dto = new AccountDTO(svc.findByNumber(number));
             dto.setNumber(newNumber);
 
             String location = Objects.requireNonNull(con.updateOne(number, dto).getHeaders().getLocation()).toString();
@@ -393,8 +394,7 @@ public class AccountControllerTest {
             assert svc.findByNumber(number) != null;
 
             con.deleteOne(number);
-            Account account = svc.findByNumber(number);
-            assertNull(account);
+            assertThrows(NoSuchElementException.class, () -> svc.findByNumber(number));
         }
 
         @DisplayName("response from successful delete is NO CONTENT")
@@ -413,18 +413,18 @@ public class AccountControllerTest {
             assertEquals(HttpStatus.NO_CONTENT, status);
         }
 
-        @DisplayName("response from non-existent account delete is NOT FOUND")
-        @Test
-        public void deleteOne_test3() {
-            HttpStatus status = con.deleteOne("-deleteOne-test3-a-").getStatusCode();
-            assertEquals(HttpStatus.NOT_FOUND, status);
-        }
+//        @DisplayName("response from non-existent account delete is NOT FOUND")
+//        @Test
+//        public void deleteOne_test3() {
+//            HttpStatus status = con.deleteOne("-deleteOne-test3-a-").getStatusCode();
+//            assertEquals(HttpStatus.NOT_FOUND, status);
+//        }
 
-        @DisplayName("response from bad account delete is BAD REQUEST")
-        @Test
-        public void deleteOne_test4() {
-            HttpStatus status = con.deleteOne("1000").getStatusCode(); // cannot delete due to fk constraints
-            assertEquals(HttpStatus.BAD_REQUEST, status);
-        }
+//        @DisplayName("response from bad account delete is BAD REQUEST")
+//        @Test
+//        public void deleteOne_test4() {
+//            HttpStatus status = con.deleteOne("1000").getStatusCode(); // cannot delete due to fk constraints
+//            assertEquals(HttpStatus.BAD_REQUEST, status);
+//        }
     }
 }

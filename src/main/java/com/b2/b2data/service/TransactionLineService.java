@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Provides services for handling {@link TransactionLine} objects
@@ -34,10 +35,13 @@ public class TransactionLineService {
      * Finds the transaction line with the given transaction line id
      *
      * @param id A transaction line id
-     * @return The transaction line with the given transaction line id, or null if it does not exist
+     * @return The transaction line with the given transaction line id
+     * @throws NoSuchElementException If the transaction line does not exist
      */
-    public TransactionLine findById(TransactionLineId id) {
-        return REPO.findById(id).orElse(null);
+    public TransactionLine findById(TransactionLineId id) throws NoSuchElementException {
+        return REPO.findById(id)
+                    .orElseThrow(() -> new NoSuchElementException(
+                            "Transaction line id="+id.getTransactionId()+"-"+id.getLineId()+" does not exist."));
     }
 
     /**
