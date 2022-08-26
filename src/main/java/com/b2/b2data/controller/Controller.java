@@ -4,9 +4,13 @@ import com.b2.b2data.domain.Entry;
 import com.b2.b2data.dto.DTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.ValidationException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -29,24 +33,57 @@ public abstract class Controller<T extends Entry, U extends DTO, V> {
     protected abstract T convertDtoToEntry(U dto, T entry);
 
     /**
-     * Handles all NoSuchElementExceptions
+     * Handles NoSuchElementExceptions
      *
      * @param e A NoSuchElementException
      * @return A 404 Not Found response entity
      */
     @ExceptionHandler({NoSuchElementException.class})
-    private ResponseEntity<Response<U>> handleNoSuchElementException(NoSuchElementException e) {
+    private ResponseEntity<Response<U>> handleException(NoSuchElementException e) {
         return responseCodeNotFound(e.getMessage());
     }
 
     /**
-     * Handles all general exceptions other than NoSuchElementException
+     * Handles HttpMessageNotReadableExceptions
      *
-     * @param e An exception
+     * @param e An HttpMessageNotReadableException
      * @return A 400 Bad Request response entity
      */
-    @ExceptionHandler({Exception.class})
-    private ResponseEntity<Response<U>> handleGeneralException(Exception e) {
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    private ResponseEntity<Response<U>> handleException(HttpMessageNotReadableException e) {
+        return responseCodeBadRequest(e.getMessage());
+    }
+
+    /**
+     * Handles ValidationExceptions
+     *
+     * @param e A ValidationException
+     * @return A 400 Bad Request response entity
+     */
+    @ExceptionHandler({ValidationException.class})
+    private ResponseEntity<Response<U>> handleException(ValidationException e) {
+        return responseCodeBadRequest(e.getMessage());
+    }
+
+    /**
+     * Handles MethodArgumentNotValidExceptions
+     *
+     * @param e A MethodArgumentNotValidException
+     * @return A 400 Bad Request response entity
+     */
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    private ResponseEntity<Response<U>> handleException(MethodArgumentNotValidException e) {
+        return responseCodeBadRequest(e.getMessage());
+    }
+
+    /**
+     * Handles SQLIntegrityConstraintViolationExceptions
+     *
+     * @param e A SQLIntegrityConstraintViolationException
+     * @return A 400 Bad Request response entity
+     */
+    @ExceptionHandler({SQLIntegrityConstraintViolationException.class})
+    private ResponseEntity<Response<U>> handleException(SQLIntegrityConstraintViolationException e) {
         return responseCodeBadRequest(e.getMessage());
     }
 
