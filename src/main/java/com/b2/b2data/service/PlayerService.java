@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Provides services for handling {@link Player} objects
@@ -31,20 +32,24 @@ public class PlayerService {
      * Finds the player with the given id
      *
      * @param id A player id
-     * @return The element with the given id, or null if it does not exist
+     * @return The player with the given id
+     * @throws NoSuchElementException If the player does not exist
      */
-    public Player findById(Integer id) {
-        return REPO.findById(id).orElse(null);
+    public Player findById(Integer id) throws NoSuchElementException {
+        return REPO.findById(id)
+                    .orElseThrow(() -> new NoSuchElementException("Player id="+id+" does not exist."));
     }
 
     /**
      * Finds the player with the given name
      *
      * @param name A player name
-     * @return The player with the given name, or null if it does not exist
+     * @return The player with the given name
+     * @throws NoSuchElementException If the player does not exist
      */
-    public Player findByName(String name) {
-        return REPO.findByName(name).orElse(null);
+    public Player findByName(String name) throws NoSuchElementException {
+        return REPO.findByName(name)
+                    .orElseThrow(() -> new NoSuchElementException("Player name='"+name+"' does not exist."));
     }
 
     /**

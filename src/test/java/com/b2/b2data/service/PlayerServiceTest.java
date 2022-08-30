@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,11 +46,10 @@ public class PlayerServiceTest {
             assertNotNull(player);
         }
 
-        @DisplayName("search for non-existent id returns null")
+        @DisplayName("search for non-existent id throws NoSuchElementException")
         @Test
         public void findById_test2() {
-            Player player = svc.findById(-1);
-            assertNull(player);
+            assertThrows(NoSuchElementException.class, () -> svc.findById(-1));
         }
     }
 
@@ -76,18 +76,16 @@ public class PlayerServiceTest {
             assertNotNull(player);
         }
 
-        @DisplayName("search for non-existent name returns null")
+        @DisplayName("search for non-existent name throws NoSuchElementException")
         @Test
         public void findByName_test2() {
-            Player player = svc.findByName("-find-by-name-test-2-");
-            assertNull(player);
+            assertThrows(NoSuchElementException.class, () -> svc.findByName("-find-by-name-test-2-"));
         }
 
-        @DisplayName("search for null name returns null")
+        @DisplayName("search for null name throws NoSuchElementException")
         @Test
         public void findByName_test3() {
-            Player player = svc.findByName(null);
-            assertNull(player);
+            assertThrows(NoSuchElementException.class, () -> svc.findByName(null));
         }
     }
 
@@ -170,8 +168,7 @@ public class PlayerServiceTest {
             Player player = svc.save(new Player(name, true));
             assert svc.findByName(name) != null;
             svc.delete(player);
-            boolean deleted = svc.findByName(name) == null;
-            assertTrue(deleted);
+            assertThrows(NoSuchElementException.class, () -> svc.findByName(name));
         }
     }
 }

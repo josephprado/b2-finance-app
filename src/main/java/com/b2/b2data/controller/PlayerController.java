@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.util.List;
 
 /**
@@ -49,14 +48,7 @@ public class PlayerController extends Controller<Player, PlayerDTO, String> {
      */
     @GetMapping("/{name}")
     public ResponseEntity<Response<PlayerDTO>> getByName(@PathVariable(name = "name") String name) {
-        Player player;
-
-        try {
-            player = getExistingEntry(name);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-        }
+        Player player = svc.findByName(name);
         return responseCodeOk(List.of(new PlayerDTO(player)));
     }
 
@@ -69,14 +61,8 @@ public class PlayerController extends Controller<Player, PlayerDTO, String> {
      */
     @PostMapping("")
     public ResponseEntity<Response<PlayerDTO>> createOne(@Valid @RequestBody PlayerDTO dto) {
-        Player player;
-
-        try {
-            player = svc.save(convertDtoToEntry(dto, new Player()));
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        Player player = convertDtoToEntry(dto, new Player());
+        player = svc.save(player);
         return responseCodeCreated(
                 List.of(new PlayerDTO(player)),
                 "/"+player.getName()
@@ -94,20 +80,9 @@ public class PlayerController extends Controller<Player, PlayerDTO, String> {
     @PatchMapping("/{name}")
     public ResponseEntity<Response<PlayerDTO>> updateOne(@PathVariable(name = "name") String name,
                                                          @Valid @RequestBody PlayerDTO dto) {
-        Player player;
-
-        try {
-            player = getExistingEntry(name);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-
-        } try {
-            player = svc.save(convertDtoToEntry(dto, player));
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        Player player = svc.findByName(name);
+        player = convertDtoToEntry(dto, player);
+        player = svc.save(player);
         return responseCodeOk(
                 List.of(new PlayerDTO(player)),
                 "/"+name,
@@ -123,38 +98,9 @@ public class PlayerController extends Controller<Player, PlayerDTO, String> {
      */
     @DeleteMapping("/{name}")
     public ResponseEntity<Response<PlayerDTO>> deleteOne(@PathVariable(name = "name") String name) {
-        Player player;
-
-        try {
-            player = getExistingEntry(name);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-
-        } try {
-            svc.delete(player);
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
-        return responseCodeNoContent();
-    }
-
-    /**
-     * Returns the player with the given name
-     *
-     * @param name A player name
-     * @return The player with the given name
-     * @throws ValidationException If the player name does not exist
-     */
-    @Override
-    protected Player getExistingEntry(String name) throws ValidationException {
         Player player = svc.findByName(name);
-
-        if (player == null)
-            throw new ValidationException("Player name='"+name+"' does not exist.");
-
-        return player;
+        svc.delete(player);
+        return responseCodeNoContent();
     }
 
     /**

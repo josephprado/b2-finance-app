@@ -62,14 +62,7 @@ public class TransactionController extends Controller<Transaction, TransactionDT
      */
     @GetMapping("/{id}")
     public ResponseEntity<Response<TransactionDTO>> getById(@PathVariable(name = "id") Integer id) {
-        Transaction transaction;
-
-        try {
-            transaction = getExistingEntry(id);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-        }
+        Transaction transaction = svc.findById(id);
         return responseCodeOk(List.of(getDtoWithLines(transaction)));
     }
 
@@ -82,22 +75,9 @@ public class TransactionController extends Controller<Transaction, TransactionDT
      */
     @PostMapping("")
     public ResponseEntity<Response<TransactionDTO>> createOne(@Valid @RequestBody TransactionDTO dto) {
-        List<TransactionLine> lines;
-
-        try {
-            lines = validLines(dto.getLines());
-
-        } catch (ValidationException e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        List<TransactionLine> lines = validLines(dto.getLines());
         Transaction transaction = convertDtoToEntry(dto, new Transaction());
-
-        try {
-            transaction = svc.save(transaction, lines);
-        }
-        catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        transaction = svc.save(transaction, lines);
         return responseCodeCreated(
                 List.of(getDtoWithLines(transaction)),
                 "/"+transaction.getId()
@@ -116,29 +96,11 @@ public class TransactionController extends Controller<Transaction, TransactionDT
     @PatchMapping("/{id}")
     public ResponseEntity<Response<TransactionDTO>> updateOne(@PathVariable(name = "id") Integer id,
                                                               @Valid @RequestBody TransactionDTO dto) {
-        Transaction transaction;
 
-        try {
-            transaction = getExistingEntry(id);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-        }
+        Transaction transaction = svc.findById(id);
         transaction = convertDtoToEntry(dto, transaction);
-        List<TransactionLine> lines;
-
-        try {
-            lines = validLines(dto.getLines());
-
-        } catch (ValidationException e) {
-            return responseCodeBadRequest(e.getMessage());
-
-        } try {
-            transaction = svc.save(transaction, lines);
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        List<TransactionLine> lines = validLines(dto.getLines());
+        transaction = svc.save(transaction, lines);
         return responseCodeOk(
                 List.of(getDtoWithLines(transaction)),
                 "/"+id,
@@ -154,20 +116,8 @@ public class TransactionController extends Controller<Transaction, TransactionDT
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<TransactionDTO>> deleteOne(@PathVariable(name = "id") Integer id) {
-        Transaction transaction;
-
-        try {
-            transaction = getExistingEntry(id);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-
-        } try {
-            svc.delete(transaction);
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        Transaction transaction = svc.findById(id);
+        svc.delete(transaction);
         return responseCodeNoContent();
     }
 
@@ -220,23 +170,6 @@ public class TransactionController extends Controller<Transaction, TransactionDT
                         .toList()
         );
         return dto;
-    }
-
-    /**
-     * Returns the transaction with the given id
-     *
-     * @param id A transaction id
-     * @return The transaction with the given id
-     * @throws ValidationException If the transaction id does not exist
-     */
-    @Override
-    protected Transaction getExistingEntry(Integer id) throws ValidationException {
-        Transaction transaction = svc.findById(id);
-
-        if (transaction == null)
-            throw new ValidationException("Transaction id="+id+" does not exist.");
-
-        return transaction;
     }
 
     /**

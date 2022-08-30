@@ -11,6 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -76,11 +77,10 @@ public class TransactionLineServiceTest {
             );
         }
 
-        @DisplayName("search for non-existent id returns null")
+        @DisplayName("search for non-existent id throws NoSuchElementException")
         @Test
         public void findById_test2() {
-            TransactionLine line = svc.findById(new TransactionLineId(-1, -1));
-            assertNull(line);
+            assertThrows(NoSuchElementException.class, () -> svc.findById(new TransactionLineId(-1, -1)));
         }
     }
 
@@ -417,8 +417,7 @@ public class TransactionLineServiceTest {
                     svc.save(new TransactionLine(tSvc.findById(tranId), lineId, aSvc.findById(1), 100.00));
             assert svc.findById(new TransactionLineId(tranId, lineId)) != null;
             svc.delete(line);
-            boolean deleted = svc.findById(new TransactionLineId(tranId, lineId)) == null;
-            assertTrue(deleted);
+            assertThrows(NoSuchElementException.class, () -> svc.findById(new TransactionLineId(tranId, lineId)));
         }
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,11 +58,10 @@ public class TransactionServiceTest {
             assertNotNull(transaction);
         }
 
-        @DisplayName("search for non-existent id returns null")
+        @DisplayName("search for non-existent id throws NoSuchElementException")
         @Test
         public void findById_test2() {
-            Transaction transaction = svc.findById(-1);
-            assertNull(transaction);
+            assertThrows(NoSuchElementException.class, () -> svc.findById(-1));
         }
     }
 
@@ -239,8 +239,7 @@ public class TransactionServiceTest {
             Transaction transaction = svc.save(new Transaction(LocalDate.now(), memo));
             assert svc.findAll(null, null, memo).size() == 1;
             svc.delete(transaction);
-            boolean deleted = svc.findById(transaction.getId()) == null;
-            assertTrue(deleted);
+            assertThrows(NoSuchElementException.class, () -> svc.findById(transaction.getId()));
         }
 
         @DisplayName("delete transaction deletes all of its child transaction lines")

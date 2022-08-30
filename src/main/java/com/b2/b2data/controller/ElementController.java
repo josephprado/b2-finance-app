@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.util.List;
 
 /**
@@ -41,14 +40,7 @@ public class ElementController extends Controller<Element, ElementDTO, Integer> 
      */
     @GetMapping("/{number}")
     public ResponseEntity<Response<ElementDTO>> getByNumber(@PathVariable(name = "number") Integer number) {
-        Element element;
-
-        try {
-            element = getExistingEntry(number);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-        }
+        Element element = svc.findByNumber(number);
         return responseCodeOk(List.of(new ElementDTO(element)));
     }
 
@@ -61,14 +53,8 @@ public class ElementController extends Controller<Element, ElementDTO, Integer> 
      */
     @PostMapping("")
     public ResponseEntity<Response<ElementDTO>> createOne(@Valid @RequestBody ElementDTO dto) {
-        Element element;
-
-        try {
-            element = svc.save(convertDtoToEntry(dto, new Element()));
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        Element element = convertDtoToEntry(dto, new Element());
+        element = svc.save(element);
         return responseCodeCreated(
                 List.of(new ElementDTO(element)),
                 "/"+element.getNumber()
@@ -86,20 +72,9 @@ public class ElementController extends Controller<Element, ElementDTO, Integer> 
     @PatchMapping("/{number}")
     public ResponseEntity<Response<ElementDTO>> updateOne(@PathVariable(name = "number") Integer number,
                                                           @Valid @RequestBody ElementDTO dto) {
-        Element element;
-
-        try {
-            element = getExistingEntry(number);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-
-        } try {
-            element = svc.save(convertDtoToEntry(dto, element));
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
+        Element element = svc.findByNumber(number);
+        element = convertDtoToEntry(dto, element);
+        element = svc.save(element);
         return responseCodeOk(
                 List.of(new ElementDTO(element)),
                 "/"+number,
@@ -115,38 +90,9 @@ public class ElementController extends Controller<Element, ElementDTO, Integer> 
      */
     @DeleteMapping("/{number}")
     public ResponseEntity<Response<ElementDTO>> deleteOne(@PathVariable(name = "number") Integer number) {
-        Element element;
-
-        try {
-            element = getExistingEntry(number);
-
-        } catch (ValidationException e) {
-            return responseCodeNotFound(e.getMessage());
-
-        } try {
-            svc.delete(element);
-
-        } catch (Exception e) {
-            return responseCodeBadRequest(e.getMessage());
-        }
-        return responseCodeNoContent();
-    }
-
-    /**
-     * Returns the element with the given number
-     *
-     * @param number An element number
-     * @return The element with the given number
-     * @throws ValidationException If the element number does not exist
-     */
-    @Override
-    protected Element getExistingEntry(Integer number) throws ValidationException {
         Element element = svc.findByNumber(number);
-
-        if (element == null)
-            throw new ValidationException("Element number="+number+" does not exist.");
-
-        return element;
+        svc.delete(element);
+        return responseCodeNoContent();
     }
 
     /**
